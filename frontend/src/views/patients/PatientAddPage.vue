@@ -3,49 +3,35 @@
     <Breadcrumbs parentTitle="Mis pacientes" subParentTitle="Añadir paciente" />
 
     <base-card class="max-w-3xl mx-auto w-auto">
-      <h4>Añadir paciente</h4>
+      <h4 class="pb-4">Añadir paciente</h4>
       <form
         id="formAddChild"
         class="grid max-w-3xl w-auto mx-auto"
         method="post"
         @submit.prevent="submitForm"
       >
-        <div class="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
-          <BaseFormInput
-            v-model="name"
-            :is-valid="isValidName"
-            error-message="El nombre es obligatorio"
-            text="Nombre"
-            @update:modelValue="validateName"
-          />
-          <div class="md:col-span-2">
-            <BaseFormInput
-              v-model="lastName"
-              :is-valid="isValidLastName"
-              error-message="Los apellidos son obligatorios"
-              text="Apellidos"
-              @update:modelValue="validateLastName"
+        <transition mode="out-in" name="scale">
+          <keep-alive>
+            <component
+              :is="currentComponentPage"
+              :key="currentStep"
+              ref="formPage"
+              :formData="formData"
+              @validation="handleValidation"
             />
-          </div>
-          <div class="md:col-span-3">
-            <BaseFormInput
-              v-model="description"
-              :is-valid="isValidDescription"
-              error-message="La descripción debe tener más de 10 caracteres"
-              text="Description"
-              @update:modelValue="validateDescription"
-            />
-          </div>
+          </keep-alive>
+        </transition>
+
+        <div class="pt-4">
+          <BaseBtn
+            text="Anterior"
+            type="button"
+            @click="previousPage"
+          ></BaseBtn>
+          <BaseBtn text="Siguiente" type="button" @click="nextPage"></BaseBtn>
+          <BaseBtn text="Aceptar" type="submit"></BaseBtn>
         </div>
       </form>
-
-      <div class="submitBtn">
-        <BaseBtn
-          text="Aceptar"
-          type="submit"
-          @submitForm="submitForm"
-        ></BaseBtn>
-      </div>
     </base-card>
   </div>
 </template>
@@ -54,63 +40,60 @@
 import BaseBtn from "@/components/Base/BaseBtn.vue";
 import BaseCard from "@/components/Base/BaseCard.vue";
 import BaseFormInput from "@/components/Base/BaseFormInput.vue";
+import PatientGeneralForm from "@/components/PatientGeneralForm.vue";
+import PatientVaccinesForm from "@/components/PatientVaccinesForm.vue";
+import { markRaw } from "vue";
 
 export default {
   name: "PatientAddPage",
+  computed: {
+    currentComponentPage() {
+      return this.getCurrentPage();
+    },
+  },
   components: { BaseFormInput, BaseCard, BaseBtn },
   data: function () {
     return {
-      name: "",
-      isValidName: true,
-      lastName: "",
-      isValidLastName: true,
-      description: "",
-      isValidDescription: true,
+      formData: {
+        name: "",
+        lastName: "",
+        description: "",
+      },
+      formIsValid: false,
+      pages: [markRaw(PatientGeneralForm), markRaw(PatientVaccinesForm)],
+      currentStep: 0,
+      currentComponent: PatientGeneralForm,
     };
   },
   methods: {
-    validateName() {
-      if (!this.name) {
-        this.isValidName = false;
-      } else {
-        this.isValidName = true;
-      }
+    getCurrentPage() {
+      return this.pages[this.currentStep];
     },
-    validateLastName() {
-      if (this.lastName === "" || this.lastName === null) {
-        this.isValidLastName = false;
-      } else {
-        this.isValidLastName = true;
-      }
+    nextPage() {
+      this.currentStep++;
     },
-    validateDescription() {
-      if (this.description === "" || this.description.length < 10) {
-        this.isValidDescription = false;
-      } else {
-        this.isValidDescription = true;
-      }
+    previousPage() {
+      this.currentStep--;
     },
     submitForm() {
-      this.validateName();
-      this.validateLastName();
-      this.validateDescription();
-      if (this.isValidName && this.isValidLastName && this.isValidDescription) {
-        const child = {
-          nombre: this.name,
-          apellidos: this.lastName,
-          fechaNacimiento: new Date("09/11/2021"),
-          descripcion: this.description,
-        };
-      } else {
-        this.$swal.fire({
-          icon: "error",
-          title: "Los datos introducidos no son correctos",
-          timer: 1500,
-        });
-      }
+      this.$refs.formPage.validateAll();
+    },
+    handleValidation(isValid) {
+      this.formIsValid = isValid;
     },
   },
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.scale-enter-active,
+.scale-leave-active {
+  transition: all 0.5s ease;
+}
+
+.scale-enter-from,
+.scale-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+</style>

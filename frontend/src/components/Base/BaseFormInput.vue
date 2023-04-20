@@ -1,7 +1,13 @@
 <template>
   <div>
     <div :class="validClass" class="e-input-group e-float-input text-left">
-      <input required type="text" @blur="this.validate" />
+      <input
+        ref="inputField"
+        v-model="data"
+        type="text"
+        @blur="validate"
+        @keydown.enter="validate"
+      />
       <span class="e-float-line"></span>
       <label class="e-float-text">{{ text }}</label>
     </div>
@@ -16,6 +22,7 @@ export default {
   name: "BaseFormInput",
   data() {
     return {
+      data: "",
       className: "",
       errorMessageToShow: "",
     };
@@ -27,7 +34,7 @@ export default {
   },
   methods: {
     validate() {
-      this.$emit("update:modelValue", this.$el.querySelector("input").value);
+      this.$emit("update:modelValue", this.data);
     },
   },
 };

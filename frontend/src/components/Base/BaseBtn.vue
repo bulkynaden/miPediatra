@@ -1,39 +1,42 @@
 <template>
-  <button :class="this.class" :type="buttonType" class="e-btn button" isPrimary="true" @click="emitEvent">{{
-      text
-    }}
+  <button
+    :class="this.class"
+    :type="buttonType"
+    class="e-btn button"
+    @click="emitEvent"
+  >
+    {{ text }}
   </button>
   <slot></slot>
 </template>
 
 <script>
-
 export default {
-  emits: ['submitForm', 'click'],
+  emits: ["submitForm", "click"],
   props: {
     text: String,
     class: {
       type: String,
-      default: "e-outline"
+      default: "e-outline",
     },
-    type: String
+    type: String,
   },
   name: "BaseBtn",
   data() {
     return {
-      buttonType: this.type
-    }
+      buttonType: this.type,
+    };
   },
   methods: {
     emitEvent() {
       if (this.type === "submit") {
-        this.$emit('submitForm');
+        this.$emit("submitForm");
       } else {
-        this.$emit('click');
+        this.$emit("click");
       }
-    }
-  }
-}
+    },
+  },
+};
 </script>
 
 <style scoped>
@@ -43,6 +46,5 @@ export default {
 }
 
 button:hover {
-
 }
 </style>

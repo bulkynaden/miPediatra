@@ -1,0 +1,76 @@
+{
+  "patients": [
+    {
+      "name": "María",
+      "surname": "García",
+      "dni": "12345678A",
+      "birthdate": "2016-05-12T10:15:30",
+      "vaccines": [
+        {
+          "name": "Hepatitis B",
+          "date": "2016-05-12T10:15:30"
+        },
+        {
+          "name": "Difteria, tétanos y tosferina",
+          "date": "2016-07-14T10:15:30"
+        },
+        {
+          "name": "Haemophilus influenzae tipo b",
+          "date": "2016-07-14T10:15:30"
+        }
+      ],
+      "consultations": [
+        {
+          "date": "2016-05-12T10:15:30",
+          "doctor": "Juan Pérez",
+          "diagnosis": "Resfriado común"
+        },
+        {
+          "date": "2016-07-14T10:15:30",
+          "doctor": "Ana García",
+          "diagnosis": "Alergia alimentaria"
+        }
+      ]
+    },
+    {
+      "name": "Pablo",
+      "surname": "Martínez",
+      "dni": "23456789B",
+      "birthdate": "2018-09-01T10:15:30",
+      "vaccines": [
+        {
+          "name": "Difteria, tétanos y tosferina",
+          "date": "2018-09-01T10:15:30"
+        },
+        {
+          "name": "Haemophilus influenzae tipo b",
+          "date": "2018-09-01T10:15:30"
+        }
+      ],
+      "consultations": [
+        {
+          "date": "2018-09-01T10:15:30",
+          "doctor": "Laura Ruiz",
+          "diagnosis": "Control del crecimiento"
+        }
+      ]
+    },
+    {
+      "name": "Lucía",
+      "surname": "López",
+      "dni": "34567890C",
+      "birthdate": "2020-03-03T10:15:30",
+      "vaccines": [
+        {
+          "name": "Hepatitis B",
+          "date": "2020-03-03T10:15:30"
+        },
+        {
+          "name": "Difteria, tétanos y tosferina",
+          "date": "2020-05-05T10:15:30"
+        }
+      ],
+      "consultations": []
+    }
+  ]
+}
