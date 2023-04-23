@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mx-auto">
     <BreadCrumbs parentTitle="Mis pacientes" subParentTitle="Añadir paciente" />
     <BaseCard class="max-w-3xl mx-auto w-auto">
       <template #cardHeader>Añadir paciente</template>
@@ -56,7 +56,7 @@ import PatientDetails from "@/components/PatientDetails.vue";
 export default {
   name: "PatientAddPage",
   components: { PatientGeneralForm },
-  data: function () {
+  data() {
     return {
       formData: {
         name: "",
@@ -89,8 +89,6 @@ export default {
   methods: {
     ...mapActions(usePatientStore, {
       addPatient: "addPatient",
-      deletePatient: "deletePatient",
-      editPatient: "editPatient",
     }),
     getCurrentPage() {
       return this.pages[this.currentStep];

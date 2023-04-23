@@ -25,7 +25,7 @@ export default {
   name: "BaseFormInput",
   data() {
     return {
-      data: "",
+      data: this.modelValue,
       className: "",
       errorMessageToShow: "",
     };

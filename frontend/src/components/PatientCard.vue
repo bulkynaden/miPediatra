@@ -27,9 +27,8 @@
         </router-link>
       </ejs-tooltip>
       <ejs-tooltip ref="tooltip" content="Editar">
-        <!-- TODO: Añadir editar -->
         <router-link
-          :to="{ name: 'PatientDetailsPage', params: { id: patient.id } }"
+          :to="{ name: 'PatientEditPage', params: { id: patient.id } }"
           class="hover:text-primary text-2xl"
         >
           <i class="i-Pen-3"></i>

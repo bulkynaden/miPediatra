@@ -52,7 +52,7 @@ const routes = [
             component: () => import("../views/patients/PatientAddPage.vue"),
           },
           {
-            path: "edit/:id",
+            path: "editar/:id",
             name: "PatientEditPage",
             component: () => import("../views/patients/PatientEditPage.vue"),
           },

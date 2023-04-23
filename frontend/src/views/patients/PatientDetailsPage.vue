@@ -1,5 +1,5 @@
 <template>
-  <div class="container mx-auto p-4">
+  <div class="container mx-auto">
     <BreadCrumbs
       v-if="patient"
       :subParentTitle="`Detalles de ${patient.name} ${patient.lastName}`"
@@ -53,7 +53,9 @@
         <p><strong>Comentarios:</strong> {{ patient.comments }}</p>
       </div>
       <div class="mt-12 flex flex-wrap justify-between">
-        <router-link :to="{ name: 'PatientAddPage' }">
+        <router-link
+          :to="{ name: 'PatientEditPage', params: { id: patient.id } }"
+        >
           <BaseBtn class="i-Pen-3" text=" Editar"></BaseBtn>
         </router-link>
         <router-link :to="{ name: 'PatientAddPage' }">
@@ -66,7 +68,6 @@
 
 <script>
 import { usePatientStore } from "@/store/patientStore.js";
-import BaseCard from "@/components/Base/BaseCard.vue";
 import { mapActions } from "pinia";
 import { publicImagesPath } from "@/router/publicPath.js";
 import genders from "@/data/genderData.json";
@@ -75,7 +76,6 @@ import autonomousCommunities from "@/data/autonomousCommunitiesData.json";
 
 export default {
   name: "PatientDetailsPage",
-  components: { BaseCard },
   data() {
     return {
       patient: null,

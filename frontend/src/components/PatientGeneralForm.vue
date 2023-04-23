@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="loaded">
     <h2 class="pb-4">Datos generales</h2>
     <div class="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
       <div class="md:col-span-1">
@@ -39,8 +39,9 @@
         <ejs-datetimepicker
           id="datetimepicker"
           v-model="formData.birthdate"
-          :placeholder="'Fecha de nacimiento'"
           format="dd/MM/yyyy hh:mm"
+          locale="es"
+          placeholder="Fecha de nacimiento"
           @change="validateBirthdate"
         ></ejs-datetimepicker>
         <label v-show="!isValidBirthdate" class="e-error"
@@ -107,6 +108,25 @@ import bloodTypes from "../data/bloodTypeData.json";
 import autonomousCommunities from "../data/autonomousCommunitiesData.json";
 import { NumericTextBoxComponent } from "@syncfusion/ej2-vue-inputs";
 
+//Load the loadCldr from ej2-base
+//Load the L10n from ej2-base
+import { L10n, loadCldr } from "@syncfusion/ej2-base";
+
+import * as numberingSystems from "cldr-data/supplemental/numberingSystems.json";
+import * as gregorian from "cldr-data/main/es/ca-gregorian.json";
+import * as numbers from "cldr-data/main/es/numbers.json";
+import * as timeZoneNames from "cldr-data/main/es/timeZoneNames.json";
+import * as weekData from "cldr-data/supplemental/weekdata.json";
+
+loadCldr(numberingSystems, gregorian, numbers, timeZoneNames, weekData);
+
+//load the locale object to set the localized placeholder value
+L10n.load({
+  es: {
+    datetimepicker: { today: "Hoy" },
+  },
+});
+
 export default {
   name: "PatientGeneralForm",
   components: {
@@ -148,6 +168,11 @@ export default {
         data: autonomousCommunities,
       },
     };
+  },
+  computed: {
+    loaded() {
+      return this.formData != null;
+    },
   },
   methods: {
     onFiltering: function (e) {
