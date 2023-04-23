@@ -111,7 +111,7 @@ import * as numberingSystems from "cldr-data/supplemental/numberingSystems.json"
 import * as gregorian from "cldr-data/main/es/ca-gregorian.json";
 import * as numbers from "cldr-data/main/es/numbers.json";
 import * as timeZoneNames from "cldr-data/main/es/timeZoneNames.json";
-import * as weekData from "cldr-data/supplemental/weekdata.json";
+import * as weekData from "cldr-data/supplemental/weekData.json";
 
 loadCldr(numberingSystems, gregorian, numbers, timeZoneNames, weekData);
 

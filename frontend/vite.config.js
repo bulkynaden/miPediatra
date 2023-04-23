@@ -19,7 +19,7 @@ export default defineConfig({
     chunkSizeWarningLimit: 3200,
     rollupOptions: {
       external: [
-        "./node_modules/cldr-data/supplemental/weekdata.json",
+        "./node_modules/cldr-data/supplemental/weekData.json",
         "./node_modules/cldr-data/supplemental/numberingSystems.json",
         "./node_modules/cldr-data/main/es/ca-gregorian.json",
         "./node_modules/cldr-data/main/es/numbers.json",
