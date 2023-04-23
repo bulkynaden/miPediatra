@@ -87,9 +87,6 @@
           popupHeight="450px"
         >
         </ejs-dropdownlist>
-        <label v-show="!isValidGender" class="e-error"
-          >Debe seleccionar un sexo</label
-        >
       </div>
 
       <div class="md:col-span-3">
@@ -102,14 +99,12 @@
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
 import { DateTimePickerComponent } from "@syncfusion/ej2-vue-calendars";
+import { NumericTextBoxComponent } from "@syncfusion/ej2-vue-inputs";
 import { Query } from "@syncfusion/ej2-data";
 import genders from "../data/genderData.json";
 import bloodTypes from "../data/bloodTypeData.json";
 import autonomousCommunities from "../data/autonomousCommunitiesData.json";
-import { NumericTextBoxComponent } from "@syncfusion/ej2-vue-inputs";
 
-//Load the loadCldr from ej2-base
-//Load the L10n from ej2-base
 import { L10n, loadCldr } from "@syncfusion/ej2-base";
 
 import * as numberingSystems from "cldr-data/supplemental/numberingSystems.json";
@@ -120,7 +115,6 @@ import * as weekData from "cldr-data/supplemental/weekdata.json";
 
 loadCldr(numberingSystems, gregorian, numbers, timeZoneNames, weekData);
 
-//load the locale object to set the localized placeholder value
 L10n.load({
   es: {
     datetimepicker: { today: "Hoy" },
