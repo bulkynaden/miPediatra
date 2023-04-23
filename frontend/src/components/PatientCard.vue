@@ -29,8 +29,6 @@
 </template>
 
 <script>
-import { publicPath } from "@/publicPath.js";
-
 export default {
   data() {
     return {
@@ -47,10 +45,10 @@ export default {
   computed: {
     photoSrc() {
       return this.patient.photoUrls[0]
-        ? publicPath + "src/assets/images/patients/" + this.patient.photoUrls[0]
+        ? publicImagesPath + "patients/" + this.patient.photoUrls[0]
         : this.patient.gender === "HOMBRE"
-        ? publicPath + "images/no-photo-boy.png"
-        : publicPath + "images/no-photo-girl.png";
+        ? publicImagesPath + "no-photo-boy.png"
+        : publicImagesPath + "no-photo-girl.png";
     },
     altText() {
       return this.patient.photoUrls
