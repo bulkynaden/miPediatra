@@ -19,11 +19,11 @@ export default defineConfig({
     chunkSizeWarningLimit: 3200,
     rollupOptions: {
       external: [
-        "cldr-data/supplemental/weekdata.json",
-        "cldr-data/supplemental/numberingSystems.json",
-        "cldr-data/main/es/ca-gregorian.json",
-        "cldr-data/main/es/numbers.json",
-        "cldr-data/main/es/timeZoneNames.json",
+        "./node_modules/cldr-data/supplemental/weekdata.json",
+        "./node_modules/cldr-data/supplemental/numberingSystems.json",
+        "./node_modules/cldr-data/main/es/ca-gregorian.json",
+        "./node_modules/cldr-data/main/es/numbers.json",
+        "./node_modules/cldr-data/main/es/timeZoneNames.json",
       ],
     },
   },
