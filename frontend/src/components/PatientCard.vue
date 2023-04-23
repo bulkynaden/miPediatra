@@ -29,6 +29,8 @@
 </template>
 
 <script>
+import { publicImagesPath } from "@/router/publicPath.js";
+
 export default {
   data() {
     return {
