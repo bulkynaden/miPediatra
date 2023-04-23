@@ -15,6 +15,7 @@ export const usePatientStore = defineStore({
   actions: {
     addPatient(patient) {
       this.patients.push(patient);
+      return true;
     },
     editPatient(editedPatient) {
       this.patients = this.patients.map((patient) => {

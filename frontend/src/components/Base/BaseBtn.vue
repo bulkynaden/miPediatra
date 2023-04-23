@@ -17,7 +17,7 @@ export default {
     text: String,
     class: {
       type: String,
-      default: "e-outline",
+      default: "e-btn e-outline",
     },
     type: String,
   },

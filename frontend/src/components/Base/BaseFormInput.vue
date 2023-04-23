@@ -1,23 +1,26 @@
 <template>
   <div>
-    <div :class="validClass" class="e-input-group e-float-input text-left">
-      <input
+    <div class="text-left">
+      <ejs-textbox
         ref="inputField"
         v-model="data"
-        type="text"
+        :class="validClass"
+        :placeholder="text"
+        floatLabelType="Auto"
         @blur="validate"
         @keydown.enter="validate"
-      />
-      <span class="e-float-line"></span>
-      <label class="e-float-text">{{ text }}</label>
+      ></ejs-textbox>
     </div>
     <label v-show="!isValid" class="e-error">{{ errorMessage }}</label>
   </div>
 </template>
 
 <script>
+import { TextBoxComponent } from "@syncfusion/ej2-vue-inputs";
+
 export default {
   props: ["modelValue", "text", "isValid", "errorMessage"],
+  components: { "ejs-textbox": TextBoxComponent },
   emits: ["update:modelValue"],
   name: "BaseFormInput",
   data() {

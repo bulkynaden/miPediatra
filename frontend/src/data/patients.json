@@ -1,76 +1,74 @@
 {
   "patients": [
     {
+      "id": 1,
       "name": "María",
-      "surname": "García",
+      "lastName": "García Alvarado",
+      "gender": "MUJER",
+      "birthWeight": 2.4,
+      "autonomousCommunity": "1",
+      "bloodType": "A+",
+      "dni": "34567890D",
+      "birthdate": "2016-05-12T12:10:00",
+      "comments": "Cumple con el tratamiento",
+      "photoUrls": [
+        "2.png"
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Juan",
+      "lastName": "Pérez Gómez",
+      "gender": "HOMBRE",
+      "birthWeight": 2.4,
+      "autonomousCommunity": "1",
+      "bloodType": "B+",
+      "dni": "34567890E",
+      "birthdate": "2020-04-10T17:30:00",
+      "comments": "Hay que vigilar su peso",
+      "photoUrls": [
+        "1.png"
+      ]
+    },
+    {
+      "id": 3,
+      "name": "Carlota",
+      "lastName": "González Martín",
+      "gender": "MUJER",
+      "birthWeight": 2.0,
+      "autonomousCommunity": "2",
+      "bloodType": "A-",
+      "dni": "34567890F",
+      "birthdate": "2022-06-12T23:11:28",
+      "comments": "Crece adecuadamente",
+      "photoUrls": []
+    },
+    {
+      "id": 4,
+      "name": "Pedro",
+      "lastName": "Sánchez López",
+      "gender": "HOMBRE",
+      "birthWeight": 3.2,
+      "autonomousCommunity": "3",
+      "bloodType": "O+",
       "dni": "12345678A",
-      "birthdate": "2016-05-12T10:15:30",
-      "vaccines": [
-        {
-          "name": "Hepatitis B",
-          "date": "2016-05-12T10:15:30"
-        },
-        {
-          "name": "Difteria, tétanos y tosferina",
-          "date": "2016-07-14T10:15:30"
-        },
-        {
-          "name": "Haemophilus influenzae tipo b",
-          "date": "2016-07-14T10:15:30"
-        }
-      ],
-      "consultations": [
-        {
-          "date": "2016-05-12T10:15:30",
-          "doctor": "Juan Pérez",
-          "diagnosis": "Resfriado común"
-        },
-        {
-          "date": "2016-07-14T10:15:30",
-          "doctor": "Ana García",
-          "diagnosis": "Alergia alimentaria"
-        }
+      "birthdate": "2015-01-20T00:10:22",
+      "comments": "Requiere atención médica especializada",
+      "photoUrls": [
       ]
     },
     {
-      "name": "Pablo",
-      "surname": "Martínez",
+      "id": 5,
+      "name": "Carmen",
+      "lastName": "Fernández González",
+      "gender": "MUJER",
+      "birthWeight": 2.8,
+      "autonomousCommunity": "4",
+      "bloodType": "B-",
       "dni": "23456789B",
-      "birthdate": "2018-09-01T10:15:30",
-      "vaccines": [
-        {
-          "name": "Difteria, tétanos y tosferina",
-          "date": "2018-09-01T10:15:30"
-        },
-        {
-          "name": "Haemophilus influenzae tipo b",
-          "date": "2018-09-01T10:15:30"
-        }
-      ],
-      "consultations": [
-        {
-          "date": "2018-09-01T10:15:30",
-          "doctor": "Laura Ruiz",
-          "diagnosis": "Control del crecimiento"
-        }
-      ]
-    },
-    {
-      "name": "Lucía",
-      "surname": "López",
-      "dni": "34567890C",
-      "birthdate": "2020-03-03T10:15:30",
-      "vaccines": [
-        {
-          "name": "Hepatitis B",
-          "date": "2020-03-03T10:15:30"
-        },
-        {
-          "name": "Difteria, tétanos y tosferina",
-          "date": "2020-05-05T10:15:30"
-        }
-      ],
-      "consultations": []
+      "birthdate": "2018-11-05T00:12:30",
+      "comments": "Presenta alergias alimentarias",
+      "photoUrls": []
     }
   ]
 }

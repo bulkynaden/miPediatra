@@ -1,20 +1,3 @@
-<script>
-import {useLargeSidebarStore} from '@/store/largeSidebarStore';
-import {mapState} from "pinia";
-import TheFooter from "@/layout/TheFooter.vue";
-import TheSidebar from "@/layout/TheSidebar.vue";
-import TheHeader from "@/layout/TheHeader.vue";
-
-export default {
-  components: {TheHeader, TheSidebar, TheFooter},
-  computed: {
-    ...mapState(useLargeSidebarStore, {
-      sidebarToggleProperties: "sidebarToggleProperties"
-    })
-  },
-}
-</script>
-
 <template>
   <div class="app">
     <TheHeader/>
@@ -36,6 +19,23 @@ export default {
     </div>
   </div>
 </template>
+
+<script>
+import {useLargeSidebarStore} from '@/store/largeSidebarStore';
+import {mapState} from "pinia";
+import TheFooter from "@/layout/TheFooter.vue";
+import TheSidebar from "@/layout/TheSidebar.vue";
+import TheHeader from "@/layout/TheHeader.vue";
+
+export default {
+    components: {TheHeader, TheSidebar, TheFooter},
+    computed: {
+        ...mapState(useLargeSidebarStore, {
+            sidebarToggleProperties: "sidebarToggleProperties"
+        })
+    },
+}
+</script>
 
 <style lang="scss" scoped>
 .scale-enter-active,

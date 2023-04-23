@@ -1,9 +1,8 @@
 <template>
-  <div class="container text-center">
-    <Breadcrumbs parentTitle="Mis pacientes" subParentTitle="Añadir paciente" />
-
-    <base-card class="max-w-3xl mx-auto w-auto">
-      <h4 class="pb-4">Añadir paciente</h4>
+  <div class="container">
+    <BreadCrumbs parentTitle="Mis pacientes" subParentTitle="Añadir paciente" />
+    <BaseCard class="max-w-3xl mx-auto w-auto">
+      <template #cardHeader>Añadir paciente</template>
       <form
         id="formAddChild"
         class="grid max-w-3xl w-auto mx-auto"
@@ -21,62 +20,113 @@
             />
           </keep-alive>
         </transition>
+        <div class="pt-4 flex justify-between">
+          <div>
+            <BaseBtn
+              v-if="hasPreviousPage"
+              text="Anterior"
+              type="button"
+              @click="previousPage"
+            />
+          </div>
 
-        <div class="pt-4">
-          <BaseBtn
-            text="Anterior"
-            type="button"
-            @click="previousPage"
-          ></BaseBtn>
-          <BaseBtn text="Siguiente" type="button" @click="nextPage"></BaseBtn>
-          <BaseBtn text="Aceptar" type="submit"></BaseBtn>
+          <div class="ml-auto self-end">
+            <BaseBtn
+              v-if="hasNextPage"
+              text="Siguiente"
+              type="button"
+              @click="nextPage"
+            />
+            <BaseBtn v-else class="e-primary" text="Aceptar" type="submit" />
+          </div>
         </div>
       </form>
-    </base-card>
+    </BaseCard>
   </div>
 </template>
 
 <script>
-import BaseBtn from "@/components/Base/BaseBtn.vue";
-import BaseCard from "@/components/Base/BaseCard.vue";
-import BaseFormInput from "@/components/Base/BaseFormInput.vue";
 import PatientGeneralForm from "@/components/PatientGeneralForm.vue";
-import PatientVaccinesForm from "@/components/PatientVaccinesForm.vue";
 import { markRaw } from "vue";
+import { usePatientStore } from "@/store/patientStore.js";
+import { mapActions } from "pinia";
+import router from "@/router/router.js";
+import PatientDetails from "@/components/PatientDetails.vue";
 
 export default {
   name: "PatientAddPage",
-  computed: {
-    currentComponentPage() {
-      return this.getCurrentPage();
-    },
-  },
-  components: { BaseFormInput, BaseCard, BaseBtn },
+  components: { PatientGeneralForm },
   data: function () {
     return {
       formData: {
         name: "",
         lastName: "",
-        description: "",
+        comments: "",
+        gender: null,
+        birthdate: null,
+        bloodType: null,
+        birthWeight: 0,
+        photoUrls: [],
       },
       formIsValid: false,
-      pages: [markRaw(PatientGeneralForm), markRaw(PatientVaccinesForm)],
+      pages: [markRaw(PatientGeneralForm), markRaw(PatientDetails)],
       currentStep: 0,
       currentComponent: PatientGeneralForm,
     };
   },
+  computed: {
+    currentComponentPage() {
+      return this.getCurrentPage();
+    },
+    hasPreviousPage() {
+      return this.currentStep > 0;
+    },
+    hasNextPage() {
+      return this.currentStep < this.pages.length - 1;
+    },
+  },
   methods: {
+    ...mapActions(usePatientStore, {
+      addPatient: "addPatient",
+      deletePatient: "deletePatient",
+      editPatient: "editPatient",
+    }),
     getCurrentPage() {
       return this.pages[this.currentStep];
     },
     nextPage() {
-      this.currentStep++;
+      this.$refs.formPage.validateAll();
+      if (this.formIsValid) {
+        this.currentStep++;
+      }
     },
     previousPage() {
       this.currentStep--;
     },
     submitForm() {
       this.$refs.formPage.validateAll();
+      if (this.formIsValid) {
+        if (this.addPatient(this.formData)) {
+          this.$swal.fire({
+            icon: "success",
+            title: "Los datos se han registrado correctamente",
+            timer: 1500,
+          });
+          router.push({ name: "PatientsListPage" });
+        } else {
+          this.$swal.fire({
+            icon: "error",
+            title: "Ha ocurrido un error inesperado",
+            timer: 1500,
+          });
+        }
+      } else {
+        this.$swal.fire({
+          icon: "error",
+          title: "Los datos introducidos no son correctos",
+          timer: 1500,
+        });
+      }
     },
     handleValidation(isValid) {
       this.formIsValid = isValid;

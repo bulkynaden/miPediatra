@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto">
-    <Breadcrumbs parentTitle="Consultas médicas" subParentTitle="Urgencias"/>
+    <BreadCrumbs parentTitle="Consultas médicas" subParentTitle="Urgencias"/>
     <h1>Urgencias</h1>
   </div>
 </template>

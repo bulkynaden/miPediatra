@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto">
-    <Breadcrumbs parentTitle="Gráficos" subParentTitle="Consulta"/>
+    <BreadCrumbs parentTitle="Gráficos" subParentTitle="Consulta"/>
     <h1>Gráficos</h1>
   </div>
 </template>
