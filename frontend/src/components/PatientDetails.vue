@@ -13,6 +13,10 @@
       </div>
       <strong>Fecha de nacimiento:</strong>
       <span>{{ formatDate }}</span>
+      <strong>Comunidad Autónoma:</strong>
+      <span>{{
+        getAutonomousCommunityDisplay(formData.autonomousCommunity)
+      }}</span>
       <strong>Peso al nacer:</strong>
       <span>{{ formData.birthWeight }} kg</span>
       <strong>Tipo de sangre:</strong>
@@ -25,6 +29,7 @@
 
 <script>
 import genders from "../data/genderData.json";
+import autonomousCommunities from "../data/autonomousCommunitiesData.json";
 
 export default {
   name: "PatientDetails",
@@ -47,6 +52,15 @@ export default {
         text: selectedGender ? selectedGender.value : "",
         icon: selectedGender ? selectedGender.icon : "",
       };
+    },
+    getAutonomousCommunityDisplay(id) {
+      let selectedAutonomousCommunity = "";
+      if (id) {
+        selectedAutonomousCommunity = autonomousCommunities.find(
+          (community) => community.id === id
+        ).name;
+      }
+      return selectedAutonomousCommunity;
     },
     validateAll() {
       this.$emit("validation", true);

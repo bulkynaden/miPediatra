@@ -22,7 +22,6 @@
       </div>
       <div class="md:col-span-1">
         <ejs-dropdownlist
-          id="multi-template"
           v-model="formData.gender"
           :dataSource="genderData.data"
           :fields="genderData.fields"
@@ -36,16 +35,35 @@
           >Debe seleccionar un sexo</label
         >
       </div>
-      <div class="md:col-span-2">
-        <ejs-datepicker
+      <div class="md:col-span-1">
+        <ejs-datetimepicker
           id="datetimepicker"
           v-model="formData.birthdate"
-          :placeholder="'Seleccione fecha de nacimiento'"
-          format="dd/MM/yyyy"
+          :placeholder="'Fecha de nacimiento'"
+          format="dd/MM/yyyy hh:mm"
           @change="validateBirthdate"
-        ></ejs-datepicker>
+        ></ejs-datetimepicker>
         <label v-show="!isValidBirthdate" class="e-error"
           >Debe introducir una fecha correcta</label
+        >
+      </div>
+
+      <div class="md:col-span-1">
+        <ejs-dropdownlist
+          v-model="formData.autonomousCommunity"
+          :allowFiltering="true"
+          :dataSource="autonomousCommunityData.data"
+          :fields="autonomousCommunityData.fields"
+          :filtering="onFiltering"
+          :placeholder="autonomousCommunityData.placeholder"
+          filterBarPlaceholder="Buscar"
+          noRecordsTemplate="No se encontraron registros"
+          popupHeight="450px"
+          @change="validateAutonomousCommunity"
+        >
+        </ejs-dropdownlist>
+        <label v-show="!isValidAutonomousCommunity" class="e-error"
+          >Debe seleccionar una CCAA</label
         >
       </div>
 
@@ -61,7 +79,6 @@
 
       <div class="md:col-span-1">
         <ejs-dropdownlist
-          id="multi-template"
           v-model="formData.bloodType"
           :dataSource="bloodTypeData.data"
           :fields="bloodTypeData.fields"
@@ -83,17 +100,18 @@
 
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
-import { DatePickerComponent } from "@syncfusion/ej2-vue-calendars";
-
+import { DateTimePickerComponent } from "@syncfusion/ej2-vue-calendars";
+import { Query } from "@syncfusion/ej2-data";
 import genders from "../data/genderData.json";
 import bloodTypes from "../data/bloodTypeData.json";
+import autonomousCommunities from "../data/autonomousCommunitiesData.json";
 import { NumericTextBoxComponent } from "@syncfusion/ej2-vue-inputs";
 
 export default {
   name: "PatientGeneralForm",
   components: {
     "ejs-dropdownlist": DropDownListComponent,
-    "ejs-datepicker": DatePickerComponent,
+    "ejs-datetimepicker": DateTimePickerComponent,
     "ejs-numerictextbox": NumericTextBoxComponent,
   },
   props: ["formData"],
@@ -104,6 +122,7 @@ export default {
       isValidDescription: true,
       isValidGender: true,
       isValidBirthdate: true,
+      isValidAutonomousCommunity: true,
       genderItemTemplate:
         "<div>\n" +
         "<span class='${icon} pr-1 pl-1 e-avatar'>\n" +
@@ -120,9 +139,24 @@ export default {
         placeholder: "Tipo de sangre",
         data: bloodTypes,
       },
+      autonomousCommunityData: {
+        fields: {
+          text: "name",
+          value: "id",
+        },
+        placeholder: "Comunidad autónoma",
+        data: autonomousCommunities,
+      },
     };
   },
   methods: {
+    onFiltering: function (e) {
+      let query = new Query();
+
+      query =
+        e.text !== "" ? query.where("name", "contains", e.text, true) : query;
+      e.updateData(this.autonomousCommunityData.data, query);
+    },
     validateName() {
       this.isValidName = !!this.formData.name;
     },
@@ -137,16 +171,21 @@ export default {
     validateBirthdate() {
       this.isValidBirthdate = !!this.formData.birthdate;
     },
+    validateAutonomousCommunity() {
+      this.isValidAutonomousCommunity = !!this.formData.autonomousCommunity;
+    },
     validateAll() {
       this.validateName();
       this.validateLastName();
       this.validateGender();
       this.validateBirthdate();
+      this.validateAutonomousCommunity();
       const isValid =
         this.isValidName &&
         this.isValidLastName &&
         this.isValidGender &&
-        this.isValidBirthdate;
+        this.isValidBirthdate &&
+        this.isValidAutonomousCommunity;
       this.$emit("validation", isValid);
     },
   },

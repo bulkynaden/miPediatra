@@ -1,7 +1,7 @@
 {
   "patients": [
     {
-      "id": 1,
+      "id": "1",
       "name": "María",
       "lastName": "García Alvarado",
       "gender": "MUJER",
@@ -16,7 +16,7 @@
       ]
     },
     {
-      "id": 2,
+      "id": "2",
       "name": "Juan",
       "lastName": "Pérez Gómez",
       "gender": "HOMBRE",
@@ -31,7 +31,7 @@
       ]
     },
     {
-      "id": 3,
+      "id": "3",
       "name": "Carlota",
       "lastName": "González Martín",
       "gender": "MUJER",
@@ -44,7 +44,7 @@
       "photoUrls": []
     },
     {
-      "id": 4,
+      "id": "4",
       "name": "Pedro",
       "lastName": "Sánchez López",
       "gender": "HOMBRE",
@@ -58,7 +58,7 @@
       ]
     },
     {
-      "id": 5,
+      "id": "5",
       "name": "Carmen",
       "lastName": "Fernández González",
       "gender": "MUJER",

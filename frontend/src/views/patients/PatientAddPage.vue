@@ -66,6 +66,7 @@ export default {
         birthdate: null,
         bloodType: null,
         birthWeight: 0,
+        autonomousCommunity: "",
         photoUrls: [],
       },
       formIsValid: false,
@@ -103,17 +104,18 @@ export default {
     previousPage() {
       this.currentStep--;
     },
-    submitForm() {
+    async submitForm() {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
-        if (this.addPatient(this.formData)) {
+        try {
+          await this.addPatient(this.formData);
           this.$swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
             timer: 1500,
           });
-          router.push({ name: "PatientsListPage" });
-        } else {
+          await router.push({ name: "PatientsListPage" });
+        } catch (error) {
           this.$swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",

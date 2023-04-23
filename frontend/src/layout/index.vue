@@ -1,19 +1,21 @@
 <template>
   <div class="app">
-    <TheHeader/>
-    <TheSidebar/>
-    <div :class="this.sidebarToggleProperties.isSideNavOpen === true
-                    ? ''
-                    : 'full'" class="main-content-wrap">
+    <TheHeader />
+    <TheSidebar />
+    <div
+      :class="this.sidebarToggleProperties.isSideNavOpen === true ? '' : 'full'"
+      class="main-content-wrap"
+    >
       <main>
         <div class="main-content-wrap flex flex-col flex-grow print-area pt-10">
+          <TheLoadingLogo v-if="showLoadingLogo" />
           <router-view v-slot="{ Component }">
             <transition mode="out-in" name="scale">
-              <component :is="Component"/>
+              <component :is="Component" />
             </transition>
           </router-view>
           <div class="flex-grow-1"></div>
-          <TheFooter/>
+          <TheFooter />
         </div>
       </main>
     </div>
@@ -21,20 +23,46 @@
 </template>
 
 <script>
-import {useLargeSidebarStore} from '@/store/largeSidebarStore';
-import {mapState} from "pinia";
+import { useLargeSidebarStore } from "@/store/largeSidebarStore";
+import { mapState } from "pinia";
 import TheFooter from "@/layout/TheFooter.vue";
 import TheSidebar from "@/layout/TheSidebar.vue";
 import TheHeader from "@/layout/TheHeader.vue";
+import { usePatientStore } from "@/store/patientStore.js";
+import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 
 export default {
-    components: {TheHeader, TheSidebar, TheFooter},
-    computed: {
-        ...mapState(useLargeSidebarStore, {
-            sidebarToggleProperties: "sidebarToggleProperties"
-        })
+  components: { TheHeader, TheSidebar, TheFooter, TheLoadingLogo },
+  data() {
+    return {
+      isLoading: null,
+    };
+  },
+  computed: {
+    ...mapState(useLargeSidebarStore, {
+      sidebarToggleProperties: "sidebarToggleProperties",
+    }),
+    showLoadingLogo() {
+      return this.isLoading;
     },
-}
+  },
+  beforeMount() {
+    this.fetchPatients();
+  },
+  methods: {
+    async fetchPatients() {
+      const patientStore = usePatientStore();
+      try {
+        this.isLoading = true;
+        await patientStore.fetchPatients();
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      } finally {
+        this.isLoading = false;
+      }
+    },
+  },
+};
 </script>
 
 <style lang="scss" scoped>

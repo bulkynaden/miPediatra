@@ -11,39 +11,44 @@
     </p>
     <p class="my-2 text-sm text-gray-500 dark:text-gray-400">
       <strong>Fecha de nacimiento: </strong>
-      {{
-        patient.birthdate
-          ? new Date(patient.birthdate).toLocaleDateString("es-ES", options) +
-            " a las " +
-            new Date(patient.birthdate).toLocaleTimeString("es-ES", {
-              hour: "numeric",
-              minute: "2-digit",
-            })
-          : ""
-      }}
+      {{ formatDate(patient.birthdate) }}
     </p>
+
     <p class="my-2 text-sm text-gray-500 dark:text-gray-400">
       {{ patient.comments }}
     </p>
+    <div class="mt-4 flex justify-center gap-4">
+      <ejs-tooltip ref="tooltip" content="Detalles">
+        <router-link
+          :to="{ name: 'PatientDetailsPage', params: { id: patient.id } }"
+          class="hover:text-primary text-2xl"
+        >
+          <i class="i-Search-People"></i>
+        </router-link>
+      </ejs-tooltip>
+      <ejs-tooltip ref="tooltip" content="Editar">
+        <!-- TODO: Añadir editar -->
+        <router-link
+          :to="{ name: 'PatientDetailsPage', params: { id: patient.id } }"
+          class="hover:text-primary text-2xl"
+        >
+          <i class="i-Pen-3"></i>
+        </router-link>
+      </ejs-tooltip>
+    </div>
   </BaseCard>
 </template>
 
 <script>
 import { publicImagesPath } from "@/router/publicPath.js";
+import { TooltipComponent } from "@syncfusion/ej2-vue-popups";
 
 export default {
-  data() {
-    return {
-      options: {
-        weekday: "long",
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-      },
-    };
-  },
   name: "PatientCard",
   props: ["patient"],
+  components: {
+    "ejs-tooltip": TooltipComponent,
+  },
   computed: {
     photoSrc() {
       return this.patient.photoUrls[0]
@@ -59,7 +64,21 @@ export default {
     },
   },
   methods: {
-    openDetails() {},
+    formatDate(date) {
+      return (
+        new Date(date).toLocaleDateString("es-ES", {
+          weekday: "long",
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+        }) +
+        " a las " +
+        new Date(date).toLocaleTimeString("es-ES", {
+          hour: "numeric",
+          minute: "2-digit",
+        })
+      );
+    },
   },
 };
 </script>
