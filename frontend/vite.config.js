@@ -1,10 +1,10 @@
 import { defineConfig } from "vite";
 import vue from "@vitejs/plugin-vue";
 import { resolve } from "path";
-import json from "@rollup/plugin-json";
+import VitePluginJson from "vite-plugin-json5";
 
 export default defineConfig({
-  plugins: [vue(), json()],
+  plugins: [vue(), VitePluginJson()],
 
   resolve: {
     alias: {
