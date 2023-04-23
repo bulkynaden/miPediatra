@@ -38,11 +38,9 @@ export const usePatientStore = defineStore({
         resolve();
       });
     },
-    async deletePatient(patientToDelete) {
+    async deletePatient(id) {
       return new Promise((resolve) => {
-        this.patients = this.patients.filter(
-          (patient) => patient.id !== patientToDelete.id
-        );
+        this.patients = this.patients.filter((patient) => patient.id !== id);
         resolve();
       });
     },

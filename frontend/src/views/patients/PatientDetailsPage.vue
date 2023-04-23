@@ -58,9 +58,11 @@
         >
           <BaseBtn class="i-Pen-3" text=" Editar"></BaseBtn>
         </router-link>
-        <router-link :to="{ name: 'PatientAddPage' }">
-          <BaseBtn class="i-Eraser-2 e-danger" text=" Borrar"></BaseBtn>
-        </router-link>
+        <BaseBtn
+          class="i-Eraser-2 e-danger"
+          text=" Borrar"
+          @click="confirmDeletePatient"
+        ></BaseBtn>
       </div>
     </BaseCard>
   </div>
@@ -73,6 +75,7 @@ import { publicImagesPath } from "@/router/publicPath.js";
 import genders from "@/data/genderData.json";
 import router from "@/router/router.js";
 import autonomousCommunities from "@/data/autonomousCommunitiesData.json";
+import Swal from "sweetalert2";
 
 export default {
   name: "PatientDetailsPage",
@@ -96,7 +99,10 @@ export default {
     },
   },
   methods: {
-    ...mapActions(usePatientStore, { getPatient: "getPatient" }),
+    ...mapActions(usePatientStore, {
+      getPatient: "getPatient",
+      deletePatient: "deletePatient",
+    }),
     formatDate(date) {
       return (
         new Date(date).toLocaleDateString("es-ES", {
@@ -132,6 +138,32 @@ export default {
         ).name;
       }
       return selectedAutonomousCommunity;
+    },
+    confirmDeletePatient() {
+      Swal.fire({
+        title: "¿Estas seguro de borrar este paciente?",
+        text: "No podrás recuperar a este paciente",
+        icon: "warning",
+        showCancelButton: true,
+      }).then(async (result) => {
+        if (result.isConfirmed) {
+          try {
+            await this.deletePatient(this.patient.id);
+            await Swal.fire(
+              "Borrado!",
+              "El paciente ha sido borrado con éxito.",
+              "success"
+            );
+            await router.push({ name: "PatientsListPage" });
+          } catch (error) {
+            this.$swal.fire({
+              icon: "error",
+              title: "Ha ocurrido un error inesperado",
+              timer: 1500,
+            });
+          }
+        }
+      });
     },
   },
   async beforeMount() {
