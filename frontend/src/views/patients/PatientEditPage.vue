@@ -36,6 +36,7 @@ import { mapActions } from "pinia";
 import { usePatientStore } from "@/store/patientStore.js";
 import router from "@/router/router.js";
 import PatientGeneralForm from "@/components/PatientGeneralForm.vue";
+import Swal from "sweetalert2";
 
 export default {
   name: "PatientEditPage",
@@ -61,21 +62,21 @@ export default {
       if (this.formIsValid) {
         try {
           await this.editPatient(patient);
-          this.$swal.fire({
+          await Swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
             timer: 1500,
           });
           await router.push({ name: "PatientsListPage" });
         } catch (error) {
-          this.$swal.fire({
+          await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
             timer: 1500,
           });
         }
       } else {
-        this.$swal.fire({
+        await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
           timer: 1500,
@@ -89,7 +90,7 @@ export default {
   async beforeMount() {
     this.patient = await this.getPatient(this.$route.params.id);
     if (!this.patient) {
-      this.$swal.fire({
+      await Swal.fire({
         icon: "error",
         title: "No se han podido cargar los datos",
       });

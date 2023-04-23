@@ -1,18 +1,22 @@
 <template>
-  <button
+  <ejs-button
     :class="this.class"
     :type="buttonType"
     class="e-btn button"
     @click="emitEvent"
   >
     {{ text }}
-  </button>
+  </ejs-button>
+
   <slot></slot>
 </template>
 
 <script>
+import { ButtonComponent } from "@syncfusion/ej2-vue-buttons";
+
 export default {
   emits: ["submitForm", "click"],
+  components: { "ejs-button": ButtonComponent },
   props: {
     text: String,
     class: {

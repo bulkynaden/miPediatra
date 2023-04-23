@@ -51,7 +51,7 @@ export default {
   computed: {
     photoSrc() {
       return this.patient.photoUrls[0]
-        ? publicImagesPath + "patients/" + this.patient.photoUrls[0]
+        ? this.patient.photoUrls[0]
         : this.patient.gender === "HOMBRE"
         ? publicImagesPath + "no-photo-boy.png"
         : publicImagesPath + "no-photo-girl.png";

@@ -37,7 +37,15 @@
               type="button"
               @click="nextPage"
             />
-            <BaseBtn v-else class="e-primary" text="Aceptar" type="submit" />
+
+            <ejs-progressbutton
+              v-else
+              :enableProgress="true"
+              content="Guardar"
+              cssClass="e-flat e-success"
+              isPrimary="true"
+              type="submit"
+            ></ejs-progressbutton>
           </div>
         </div>
       </form>
@@ -52,6 +60,7 @@ import { usePatientStore } from "@/store/patientStore.js";
 import { mapActions } from "pinia";
 import router from "@/router/router.js";
 import PatientDetails from "@/components/PatientDetails.vue";
+import Swal from "sweetalert2";
 
 export default {
   name: "PatientAddPage",
@@ -107,21 +116,21 @@ export default {
       if (this.formIsValid) {
         try {
           await this.addPatient(this.formData);
-          this.$swal.fire({
+          await Swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
             timer: 1500,
           });
           await router.push({ name: "PatientsListPage" });
         } catch (error) {
-          this.$swal.fire({
+          await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
             timer: 1500,
           });
         }
       } else {
-        this.$swal.fire({
+        await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
           timer: 1500,

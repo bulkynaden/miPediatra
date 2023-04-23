@@ -92,6 +92,21 @@
       <div class="md:col-span-3">
         <BaseFormInput v-model="formData.comments" text="Comentarios" />
       </div>
+
+      <div class="md:col-span-3">
+        <div class="text-align-right">Foto:</div>
+        <div class="upload-area ml-2">
+          <ejs-uploader
+            :autoUpload="false"
+            :multiple="false"
+            :selected="onFileSelect"
+            allowedExtensions=".jpg, .png"
+            locale="es"
+            name="UploadFiles"
+          ></ejs-uploader>
+        </div>
+        <div id="uploadError"></div>
+      </div>
     </div>
   </div>
 </template>
@@ -99,7 +114,10 @@
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
 import { DateTimePickerComponent } from "@syncfusion/ej2-vue-calendars";
-import { NumericTextBoxComponent } from "@syncfusion/ej2-vue-inputs";
+import {
+  NumericTextBoxComponent,
+  UploaderComponent,
+} from "@syncfusion/ej2-vue-inputs";
 import { Query } from "@syncfusion/ej2-data";
 import genders from "../data/genderData.json";
 import bloodTypes from "../data/bloodTypeData.json";
@@ -118,6 +136,10 @@ loadCldr(numberingSystems, gregorian, numbers, timeZoneNames, weekData);
 L10n.load({
   es: {
     datetimepicker: { today: "Hoy" },
+    uploader: {
+      Browse: "Examinar",
+      dropFilesHint: "...o arrastre sus archivos aquí",
+    },
   },
 });
 
@@ -127,6 +149,7 @@ export default {
     "ejs-dropdownlist": DropDownListComponent,
     "ejs-datetimepicker": DateTimePickerComponent,
     "ejs-numerictextbox": NumericTextBoxComponent,
+    "ejs-uploader": UploaderComponent,
   },
   props: ["formData"],
   data() {
@@ -169,6 +192,9 @@ export default {
     },
   },
   methods: {
+    onFileSelect: function (args) {
+      this.formData.photo = args.filesData[0];
+    },
     onFiltering: function (e) {
       let query = new Query();
 

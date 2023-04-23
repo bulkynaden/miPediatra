@@ -12,7 +12,7 @@
       "birthdate": "2016-05-12T12:10:00",
       "comments": "Cumple con el tratamiento",
       "photoUrls": [
-        "2.png"
+        "https://firebasestorage.googleapis.com/v0/b/mi-pediatra-firebase.appspot.com/o/patients%2F7_1682289356255_2.png?alt=media&token=416ad53c-bf39-4e67-a064-4171ead0e15c"
       ]
     },
     {
@@ -27,7 +27,7 @@
       "birthdate": "2020-04-10T17:30:00",
       "comments": "Hay que vigilar su peso",
       "photoUrls": [
-        "1.png"
+        "https://firebasestorage.googleapis.com/v0/b/mi-pediatra-firebase.appspot.com/o/patients%2F6_1682289341003_1.png?alt=media&token=4c83bd6d-5cf6-4893-afb7-a5b836544dd5"
       ]
     },
     {
