@@ -16,11 +16,12 @@
               :key="currentStep"
               ref="formPage"
               :formData="formData"
+              :mode="'add'"
               @validation="handleValidation"
             />
           </keep-alive>
         </transition>
-        <div class="pt-4 flex justify-between">
+        <div class="pt-8 flex justify-between">
           <div>
             <BaseBtn
               v-if="hasPreviousPage"
@@ -43,6 +44,7 @@
               :enableProgress="true"
               content="Guardar"
               cssClass="e-flat e-success"
+              iconCss="e-icons e-save"
               isPrimary="true"
               type="submit"
             ></ejs-progressbutton>
@@ -58,13 +60,17 @@ import PatientGeneralForm from "@/components/PatientGeneralForm.vue";
 import { markRaw } from "vue";
 import { usePatientStore } from "@/store/patientStore.js";
 import { mapActions } from "pinia";
-import router from "@/router/router.js";
 import PatientDetails from "@/components/PatientDetails.vue";
 import Swal from "sweetalert2";
+import router from "@/router/router.js";
+import { ProgressButtonComponent } from "@syncfusion/ej2-vue-splitbuttons";
 
 export default {
   name: "PatientAddPage",
-  components: { PatientGeneralForm },
+  components: {
+    PatientGeneralForm,
+    "ejs-progressbutton": ProgressButtonComponent,
+  },
   data() {
     return {
       formData: {
@@ -76,7 +82,7 @@ export default {
         bloodType: null,
         birthWeight: 0,
         autonomousCommunity: "",
-        photoUrls: [],
+        photoUrl: "",
       },
       formIsValid: false,
       pages: [markRaw(PatientGeneralForm), markRaw(PatientDetails)],
@@ -115,13 +121,14 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
-          await this.addPatient(this.formData);
+          await this.addPatient(this.formData).then(() => {
+            router.push({ name: "PatientsListPage" });
+          });
           await Swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
             timer: 1500,
           });
-          await router.push({ name: "PatientsListPage" });
         } catch (error) {
           await Swal.fire({
             icon: "error",

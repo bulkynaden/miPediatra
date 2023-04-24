@@ -86,14 +86,14 @@ export default {
   },
   computed: {
     photoSrc() {
-      return this.patient.photoUrls[0]
-        ? this.patient.photoUrls[0]
+      return this.patient.photoUrl !== ""
+        ? this.patient.photoUrl
         : this.patient.gender === "HOMBRE"
         ? publicImagesPath + "no-photo-boy.png"
         : publicImagesPath + "no-photo-girl.png";
     },
     altText() {
-      return this.patient.photoUrls
+      return this.patient.photoUrl !== ""
         ? `Foto de ${this.patient.name}`
         : `No hay foto disponible para ${this.patient.name}`;
     },
@@ -148,13 +148,14 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            await this.deletePatient(this.patient.id);
+            await this.deletePatient(this.patient.id).then(() => {
+              router.push({ name: "PatientsListPage" });
+            });
             await Swal.fire(
-              "Borrado!",
+              "¡Borrado!",
               "El paciente ha sido borrado con éxito.",
               "success"
             );
-            await router.push({ name: "PatientsListPage" });
           } catch (error) {
             this.$swal.fire({
               icon: "error",

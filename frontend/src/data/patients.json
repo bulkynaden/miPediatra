@@ -11,9 +11,7 @@
       "dni": "34567890D",
       "birthdate": "2016-05-12T12:10:00",
       "comments": "Cumple con el tratamiento",
-      "photoUrls": [
-        "https://firebasestorage.googleapis.com/v0/b/mi-pediatra-firebase.appspot.com/o/patients%2F6_1682290017050_2.png?alt=media&token=7732f012-0229-4d4a-931e-236b347b41ed"
-      ]
+      "photoUrl": "https://firebasestorage.googleapis.com/v0/b/mi-pediatra-firebase.appspot.com/o/patients%2F1_1682339126048_2.png?alt=media&token=bd3b8ec8-4ff5-477e-8c64-b5fb0d754fea"
     },
     {
       "id": "2",
@@ -26,9 +24,7 @@
       "dni": "34567890E",
       "birthdate": "2020-04-10T17:30:00",
       "comments": "Hay que vigilar su peso",
-      "photoUrls": [
-        "https://firebasestorage.googleapis.com/v0/b/mi-pediatra-firebase.appspot.com/o/patients%2F6_1682289341003_1.png?alt=media&token=4c83bd6d-5cf6-4893-afb7-a5b836544dd5"
-      ]
+      "photoUrl": "https://firebasestorage.googleapis.com/v0/b/mi-pediatra-firebase.appspot.com/o/patients%2F2_1682331050418_1.png?alt=media&token=f1f0cd6b-5dcb-41c6-aee5-dc81a0db9ce2"
     },
     {
       "id": "3",
@@ -41,7 +37,7 @@
       "dni": "34567890F",
       "birthdate": "2022-06-12T23:11:28",
       "comments": "Crece adecuadamente",
-      "photoUrls": []
+      "photoUrl": ""
     },
     {
       "id": "4",
@@ -54,8 +50,7 @@
       "dni": "12345678A",
       "birthdate": "2015-01-20T00:10:22",
       "comments": "Requiere atención médica especializada",
-      "photoUrls": [
-      ]
+      "photoUrl": ""
     },
     {
       "id": "5",
@@ -68,7 +63,7 @@
       "dni": "23456789B",
       "birthdate": "2018-11-05T00:12:30",
       "comments": "Presenta alergias alimentarias",
-      "photoUrls": []
+      "photoUrl": ""
     }
   ]
 }

@@ -1,6 +1,42 @@
 <template>
   <div v-if="loaded">
     <h2 class="pb-4">Datos generales</h2>
+    <div v-if="!isAdd">
+      <div class="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
+        <div class="md:col-span-1">
+          <img
+            :alt="altText"
+            :src="photoSrc"
+            class="m-auto shadow-lg h-36 rounded-full"
+          />
+          <div v-if="showRemoveButton" class="text-center pt-4">
+            <BaseBtn
+              class="e-danger i-Eraser-2"
+              text=" Borrar"
+              type="button"
+              @click="removeImage"
+            ></BaseBtn>
+          </div>
+        </div>
+        <div class="md:col-span-2">
+          <div class="text-align-right">Cambiar foto:</div>
+          <div class="upload-area ml-2">
+            <ejs-uploader
+              ref="uploader"
+              :autoUpload="false"
+              :multiple="false"
+              :removing="onFileRemove"
+              :selected="onFileSelect"
+              allowedExtensions=".jpg, .png"
+              locale="es"
+              name="UploadFiles"
+            ></ejs-uploader>
+          </div>
+        </div>
+      </div>
+      <hr class="my-6" />
+    </div>
+
     <div class="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
       <div class="md:col-span-1">
         <BaseFormInput
@@ -93,19 +129,32 @@
         <BaseFormInput v-model="formData.comments" text="Comentarios" />
       </div>
 
-      <div class="md:col-span-3">
-        <div class="text-align-right">Foto:</div>
-        <div class="upload-area ml-2">
-          <ejs-uploader
-            :autoUpload="false"
-            :multiple="false"
-            :selected="onFileSelect"
-            allowedExtensions=".jpg, .png"
-            locale="es"
-            name="UploadFiles"
-          ></ejs-uploader>
+      <div v-if="isAdd" class="md:col-span-3">
+        <div class="grid md:grid-cols-3 gap-4">
+          <div v-if="formData.previewImage" class="md:col-span-1">
+            <img
+              :alt="altText"
+              :src="formData.previewImage"
+              class="m-auto shadow-lg h-36"
+            />
+          </div>
+          <div
+            :class="formData.previewImage ? 'md:col-span-2' : 'md:col-span-3'"
+          >
+            <div class="text-align-right">Foto:</div>
+            <div class="upload-area ml-2">
+              <ejs-uploader
+                :autoUpload="false"
+                :multiple="false"
+                :removing="onFileRemove"
+                :selected="onFileSelect"
+                allowedExtensions=".jpg, .png"
+                locale="es"
+                name="UploadFiles"
+              ></ejs-uploader>
+            </div>
+          </div>
         </div>
-        <div id="uploadError"></div>
       </div>
     </div>
   </div>
@@ -130,6 +179,7 @@ import * as gregorian from "cldr-data/main/es/ca-gregorian.json";
 import * as numbers from "cldr-data/main/es/numbers.json";
 import * as timeZoneNames from "cldr-data/main/es/timeZoneNames.json";
 import * as weekData from "cldr-data/supplemental/weekData.json";
+import { publicImagesPath } from "@/router/publicPath.js";
 
 loadCldr(numberingSystems, gregorian, numbers, timeZoneNames, weekData);
 
@@ -139,6 +189,9 @@ L10n.load({
     uploader: {
       Browse: "Examinar",
       dropFilesHint: "...o arrastre sus archivos aquí",
+      remove: "Eliminar",
+      delete: "Borrar archivo",
+      invalidFileType: "El tipo de archivo no está permitido",
     },
   },
 });
@@ -151,7 +204,16 @@ export default {
     "ejs-numerictextbox": NumericTextBoxComponent,
     "ejs-uploader": UploaderComponent,
   },
-  props: ["formData"],
+  props: {
+    formData: {
+      type: Object,
+      required: true,
+    },
+    mode: {
+      type: String,
+      required: true,
+    },
+  },
   data() {
     return {
       isValidName: true,
@@ -160,6 +222,7 @@ export default {
       isValidGender: true,
       isValidBirthdate: true,
       isValidAutonomousCommunity: true,
+      isValidPhoto: true,
       genderItemTemplate:
         "<div>\n" +
         "<span class='${icon} pr-1 pl-1 e-avatar'>\n" +
@@ -190,14 +253,59 @@ export default {
     loaded() {
       return this.formData != null;
     },
+    isAdd() {
+      return this.mode === "add";
+    },
+    photoSrc() {
+      return this.formData.photoUrl !== "" && !this.formData.changedPhoto
+        ? this.formData.photoUrl
+        : this.formData.previewImage
+        ? this.formData.previewImage
+        : this.formData.gender === "HOMBRE"
+        ? publicImagesPath + "no-photo-boy.png"
+        : publicImagesPath + "no-photo-girl.png";
+    },
+    altText() {
+      return this.formData.photoUrl !== ""
+        ? `Foto de ${this.formData.name}`
+        : `No hay foto disponible para ${this.formData.name}`;
+    },
+    showRemoveButton() {
+      return (
+        (this.formData.photoUrl !== "" && !this.formData.changedPhoto) ||
+        this.formData.previewImage
+      );
+    },
   },
   methods: {
-    onFileSelect: function (args) {
-      this.formData.photo = args.filesData[0];
+    onFileSelect(args) {
+      if (args.filesData[0].statusCode !== "1") {
+        this.isValidPhoto = false;
+      } else {
+        this.formData.changedPhoto = true;
+        this.isValidPhoto = true;
+        this.formData.photo = args.filesData[0];
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          this.formData.previewImage = event.target.result;
+        };
+        reader.readAsDataURL(this.formData.photo.rawFile);
+      }
     },
-    onFiltering: function (e) {
+    onFileRemove() {
+      if (this.isValidPhoto) {
+        this.formData.photo = null;
+        this.formData.previewImage = null;
+        this.formData.changedPhoto = true;
+      }
+      this.isValidPhoto = true;
+    },
+    removeImage() {
+      this.onFileRemove();
+      this.$refs.uploader.clearAll();
+    },
+    onFiltering(e) {
       let query = new Query();
-
       query =
         e.text !== "" ? query.where("name", "contains", e.text, true) : query;
       e.updateData(this.autonomousCommunityData.data, query);
@@ -230,7 +338,8 @@ export default {
         this.isValidLastName &&
         this.isValidGender &&
         this.isValidBirthdate &&
-        this.isValidAutonomousCommunity;
+        this.isValidAutonomousCommunity &&
+        this.isValidPhoto;
       this.$emit("validation", isValid);
     },
   },
@@ -242,5 +351,10 @@ export default {
   padding: 8px 42px;
   opacity: 0.87;
   line-height: 1.063em;
+}
+
+hr {
+  border-top: 1px solid #ddd;
+  width: 100%;
 }
 </style>

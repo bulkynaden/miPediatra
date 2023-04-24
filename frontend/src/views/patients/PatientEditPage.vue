@@ -21,10 +21,18 @@
         <PatientGeneralForm
           ref="formPage"
           :formData="patient"
+          mode="edit"
           @validation="handleValidation"
         />
-        <div class="ml-auto self-end">
-          <BaseBtn class="e-primary" text="Aceptar" type="submit" />
+        <div class="ml-auto pt-8 self-end">
+          <ejs-progressbutton
+            :enableProgress="true"
+            content="Guardar"
+            cssClass="e-flat e-success"
+            iconCss="e-icons e-save"
+            isPrimary="true"
+            type="submit"
+          ></ejs-progressbutton>
         </div>
       </form>
     </BaseCard>
@@ -37,10 +45,14 @@ import { usePatientStore } from "@/store/patientStore.js";
 import router from "@/router/router.js";
 import PatientGeneralForm from "@/components/PatientGeneralForm.vue";
 import Swal from "sweetalert2";
+import { ProgressButtonComponent } from "@syncfusion/ej2-vue-splitbuttons";
 
 export default {
   name: "PatientEditPage",
-  components: { PatientGeneralForm },
+  components: {
+    PatientGeneralForm,
+    "ejs-progressbutton": ProgressButtonComponent,
+  },
   data() {
     return {
       patient: null,
@@ -57,17 +69,18 @@ export default {
       getPatient: "getPatient",
       editPatient: "editPatient",
     }),
-    async submitForm(patient) {
+    async submitForm() {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
-          await this.editPatient(patient);
+          await this.editPatient(this.patient).then(() => {
+            router.push({ name: "PatientsListPage" });
+          });
           await Swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
             timer: 1500,
           });
-          await router.push({ name: "PatientsListPage" });
         } catch (error) {
           await Swal.fire({
             icon: "error",
@@ -88,7 +101,8 @@ export default {
     },
   },
   async beforeMount() {
-    this.patient = await this.getPatient(this.$route.params.id);
+    let realPatient = await this.getPatient(this.$route.params.id);
+    this.patient = { ...realPatient };
     if (!this.patient) {
       await Swal.fire({
         icon: "error",

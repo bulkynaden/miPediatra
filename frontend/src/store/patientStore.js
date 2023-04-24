@@ -2,7 +2,13 @@ import { defineStore } from "pinia";
 
 import data from "../data/patients.json";
 
-import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
+import {
+  deleteObject,
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytes,
+} from "firebase/storage";
 
 export const usePatientStore = defineStore({
   id: "patientStore",
@@ -22,41 +28,60 @@ export const usePatientStore = defineStore({
         }, 500);
       });
     },
-    async addPatient(patient) {
-      patient.id = this.patients.length + 1 + "";
-      return new Promise((resolve) => {
+    async handlePatientPhoto(patient) {
+      if (!patient.photo || !patient.photo.rawFile) {
+        patient.previewImage = null;
+      } else {
         const timestamp = Date.now();
         const fileName = `${patient.id}_${timestamp}_${patient.photo.name}`;
         const storage = getStorage();
         const storageRef = ref(storage, `patients/${fileName}`);
-        // 'file' comes from the Blob or File API
-        uploadBytes(storageRef, patient.photo.rawFile)
-          .then((snapshot) => {
-            getDownloadURL(snapshot.ref).then((url) => {
-              patient.photoUrls.push(url);
 
-              this.patients.push(patient);
-              resolve(patient);
-            });
-          })
-          .catch((error) => {
-            console.log("Error uploading file", error);
-          });
-      });
+        try {
+          const snapshot = await uploadBytes(storageRef, patient.photo.rawFile);
+          patient.photoUrl = await getDownloadURL(snapshot.ref);
+        } catch (error) {
+          console.log("Error uploading file", error);
+        }
+      }
+      return patient;
     },
+    async addPatient(patient) {
+      patient.id = this.patients.length + 1 + "";
+      const newPatient = await this.handlePatientPhoto(patient);
+      this.patients.push(newPatient);
+      return newPatient;
+    },
+
     async editPatient(editedPatient) {
-      return new Promise((resolve) => {
-        this.patients = this.patients.map((patient) => {
-          if (patient.id === editedPatient.id) {
-            return editedPatient;
+      if (editedPatient.changedPhoto) {
+        if (editedPatient.photoUrl !== "") {
+          try {
+            await deleteObject(ref(getStorage(), editedPatient.photoUrl));
+          } catch (e) {
+            console.log("Error deleting file");
           }
-          return patient;
-        });
-        resolve();
+          editedPatient.photoUrl = "";
+        }
+        await this.handlePatientPhoto(editedPatient);
+      }
+      this.patients = this.patients.map((patient) => {
+        if (patient.id === editedPatient.id) {
+          return editedPatient;
+        }
+        return patient;
       });
     },
     async deletePatient(id) {
-      return new Promise((resolve) => {
+      return new Promise(async (resolve) => {
+        const patientToDelete = this.patients.find(
+          (patient) => patient.id === id
+        );
+
+        if (patientToDelete && patientToDelete.photoUrl !== "") {
+          await deleteObject(ref(getStorage(), patientToDelete.photoUrl));
+        }
+
         this.patients = this.patients.filter((patient) => patient.id !== id);
         resolve();
       });
