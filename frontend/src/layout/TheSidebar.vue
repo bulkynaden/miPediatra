@@ -1,153 +1,166 @@
 <script>
-import {useLargeSidebarStore} from '@/store/largeSidebarStore';
-import {useRoute} from 'vue-router'
-import {mapActions, mapState} from 'pinia'
+import { useLargeSidebarStore } from "@/store/largeSidebarStore";
+import { useRoute } from "vue-router";
+import { mapActions, mapState } from "pinia";
 
 export default {
+  name: "TheSidebar",
   data() {
     return {
       route: useRoute(),
-      selectedParentMenu: '',
+      selectedParentMenu: "",
       isMenuOver: false,
-    }
+    };
   },
   mounted() {
-    this.toggleSelectedParentMenu()
-    document.addEventListener('click', this.returnSelectedParentMenu)
-    window.addEventListener('resize', this.handleWindowResize)
+    this.toggleSelectedParentMenu();
+    document.addEventListener("click", this.returnSelectedParentMenu);
+    window.addEventListener("resize", this.handleWindowResize);
   },
   beforeUnmount() {
-    document.removeEventListener('click', this.returnSelectedParentMenu)
-    window.removeEventListener('resize', this.handleWindowResize)
+    document.removeEventListener("click", this.returnSelectedParentMenu);
+    window.removeEventListener("resize", this.handleWindowResize);
   },
   computed: {
     ...mapState(useLargeSidebarStore, {
-      sidebarToggleProperties: "sidebarToggleProperties"
-    })
+      sidebarToggleProperties: "sidebarToggleProperties",
+    }),
   },
   methods: {
     ...mapActions(useLargeSidebarStore, {
       toggleSidebarProperties: "toggleSidebarProperties",
       toggleSecondarySidebarProperties: "toggleSecondarySidebarProperties",
-      toggleSecondarySidebarPropertiesViaMenuItem: "toggleSecondarySidebarPropertiesViaMenuItem"
+      toggleSecondarySidebarPropertiesViaMenuItem:
+        "toggleSecondarySidebarPropertiesViaMenuItem",
     }),
     toggleSelectedParentMenu() {
-      const currentParentUrl = this.route.path.split('/').filter((x) => x !== '')[0]
+      const currentParentUrl = this.route.path
+        .split("/")
+        .filter((x) => x !== "")[0];
 
       if (currentParentUrl !== undefined) {
-        this.selectedParentMenu = currentParentUrl.toLowerCase()
+        this.selectedParentMenu = currentParentUrl.toLowerCase();
       } else {
-        this.selectedParentMenu = 'home'
+        this.selectedParentMenu = "home";
       }
     },
     toggleSubMenu(e) {
-      const hasSubmenu = e.target.dataset.submenu
-      const parent = e.target.dataset.item
+      const hasSubmenu = e.target.dataset.submenu;
+      const parent = e.target.dataset.item;
       if (hasSubmenu) {
-        this.selectedParentMenu = parent
+        this.selectedParentMenu = parent;
         this.toggleSecondarySidebarPropertiesViaMenuItem(true);
       } else {
-        this.selectedParentMenu = parent
+        this.selectedParentMenu = parent;
         this.toggleSecondarySidebarPropertiesViaMenuItem(false);
       }
     },
     handleWindowResize() {
       const sidenav = this.sidebarToggleProperties.isSideNavOpen;
-      const secondarySideNav = this.sidebarToggleProperties.isSecondarySideNavOpen;
+      const secondarySideNav =
+        this.sidebarToggleProperties.isSecondarySideNavOpen;
 
       if (window.innerWidth <= 1200) {
         if (sidenav) {
-          this.toggleSidebarProperties()
+          this.toggleSidebarProperties();
         }
         if (secondarySideNav) {
-          this.toggleSecondarySidebarProperties()
+          this.toggleSecondarySidebarProperties();
         }
       } else {
         if (!sidenav) {
-          this.toggleSidebarProperties()
+          this.toggleSidebarProperties();
         }
       }
     },
     returnSelectedParentMenu() {
       if (!this.isMenuOver) {
-        this.toggleSelectedParentMenu()
+        this.toggleSelectedParentMenu();
       }
     },
     removeOverlay() {
-      this.toggleSecondarySidebarProperties()
+      this.toggleSecondarySidebarProperties();
       if (window.innerWidth <= 1200) {
         this.toggleSidebarProperties();
       }
       this.toggleSelectedParentMenu();
     },
   },
-}
+};
 </script>
 
 <template>
   <div
-      class="side-content-wrap"
-      @mouseenter="isMenuOver = true"
-      @mouseleave="isMenuOver = false"
-      @touchstart="isMenuOver = true">
+    class="side-content-wrap"
+    @mouseenter="isMenuOver = true"
+    @mouseleave="isMenuOver = false"
+    @touchstart="isMenuOver = true"
+  >
     <div class="side-content-wrap">
-      <div :class="
-                    this.sidebarToggleProperties
-                        .isSideNavOpen === true
-                        ? 'open'
-                        : ''"
-           class="sidebar-left bg-white dark:bg-foreground">
+      <div
+        :class="
+          this.sidebarToggleProperties.isSideNavOpen === true ? 'open' : ''
+        "
+        class="sidebar-left bg-white dark:bg-foreground"
+      >
         <perfect-scrollbar>
           <ul class="navigation-left dark:bg-foreground dark:text-gray-300">
             <li
-                :class="selectedParentMenu === 'home'? 'active' : ''"
-                :data-submenu="true"
-                class="nav-item border-b border-gray-200 dark:border-dark"
-                data-item="home"
-                @mouseenter="toggleSubMenu">
+              :class="selectedParentMenu === 'home' ? 'active' : ''"
+              :data-submenu="true"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+              data-item="home"
+              @mouseenter="toggleSubMenu"
+            >
               <a class="nav-item-hold">
                 <i class="i-Home-2 text-3xl"></i>
                 <p>Inicio</p>
               </a>
             </li>
-            <li :class="selectedParentMenu === 'patients' ? 'active' : ''"
-                :data-submenu="true"
-                class="nav-item border-b border-gray-200 dark:border-dark"
-                data-item="patients"
-                @mouseenter="toggleSubMenu">
+            <li
+              :class="selectedParentMenu === 'patients' ? 'active' : ''"
+              :data-submenu="true"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+              data-item="patients"
+              @mouseenter="toggleSubMenu"
+            >
               <a class="nav-item-hold">
                 <i class="i-Baby text-3xl"></i>
                 <p>Mis pacientes</p>
               </a>
             </li>
-            <li :class="selectedParentMenu === 'measurements' ? 'active' : ''"
-                :data-submenu="true"
-                class="nav-item border-b border-gray-200 dark:border-dark"
-                data-item="measurements"
-                @mouseenter="toggleSubMenu">
-              <a class="nav-item-hold">
-                <i class="i-Gaugage-2 text-3xl"></i>
-                <p>Mediciones</p>
-              </a>
-            </li>
-            <li :class="selectedParentMenu === 'consultations' ? 'active' : ''"
-                :data-submenu="true"
-                class="nav-item border-b border-gray-200 dark:border-dark"
-                data-item="consultations"
-                @mouseenter="toggleSubMenu">
+            <li
+              :class="selectedParentMenu === 'consultations' ? 'active' : ''"
+              :data-submenu="true"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+              data-item="consultations"
+              @mouseenter="toggleSubMenu"
+            >
               <a class="nav-item-hold">
                 <i class="i-Hospital1 text-3xl"></i>
                 <p>Consultas médicas</p>
               </a>
             </li>
-            <li :class="selectedParentMenu === 'graphs' ? 'active' : ''"
-                class="nav-item border-b border-gray-200 dark:border-dark"
-                data-item="graphs"
-                @mouseenter="toggleSubMenu">
-              <router-link
-                  class="nav-item-hold"
-                  :to="{ name: 'GraphsPage' }">
-                  <i class="i-Bar-Chart-2 text-3xl"></i>
+            <li
+              :class="selectedParentMenu === 'measurements' ? 'active' : ''"
+              :data-submenu="true"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+              data-item="measurements"
+              @mouseenter="toggleSubMenu"
+            >
+              <a class="nav-item-hold">
+                <i class="i-Gaugage-2 text-3xl"></i>
+                <p>Mediciones</p>
+              </a>
+            </li>
+            <li
+              :class="selectedParentMenu === 'graphs' ? 'active' : ''"
+              class="nav-item border-b border-gray-200 dark:border-dark"
+              data-item="graphs"
+              @mouseenter="toggleSubMenu"
+            >
+              <router-link :to="{ name: 'GraphsPage' }" class="nav-item-hold">
+                <i class="i-Bar-Chart-2 text-3xl"></i>
                 <p>Gráficos</p>
               </router-link>
             </li>
@@ -156,83 +169,92 @@ export default {
       </div>
 
       <div
-          :class="{open: this.sidebarToggleProperties
-                        .isSecondarySideNavOpen,}"
-          class="sidebar-left-secondary shadow bg-white dark:bg-foreground dark:text-gray-300">
-        <ul :class="selectedParentMenu === 'home' ? 'block' : 'hidden'"
-            class="mb-4 childNav"
-            data-parent="home">
+        :class="{ open: this.sidebarToggleProperties.isSecondarySideNavOpen }"
+        class="sidebar-left-secondary shadow bg-white dark:bg-foreground dark:text-gray-300"
+      >
+        <ul
+          :class="selectedParentMenu === 'home' ? 'block' : 'hidden'"
+          class="mb-4 childNav"
+          data-parent="home"
+        >
           <li>
-            <router-link
-                    :to="{ name: 'HomePage' }">
+            <router-link :to="{ name: 'HomePage' }">
               <i class="nav-icon i-Home-2 mr-2"></i>
               <span class="item-name"> Resumen </span>
             </router-link>
           </li>
           <li>
-            <router-link
-                    :to="{ name: 'TimelinePage' }">
+            <router-link :to="{ name: 'TimelinePage' }">
               <i class="nav-icon i-Calendar mr-2"></i>
               <span class="item-name"> Calendario </span>
             </router-link>
           </li>
         </ul>
         <ul
-            :class="selectedParentMenu === 'patients' ? 'block' : 'hidden'"
-            class="mb-4 childNav"
-            data-parent="patients">
+          :class="selectedParentMenu === 'patients' ? 'block' : 'hidden'"
+          class="mb-4 childNav"
+          data-parent="patients"
+        >
           <li>
-            <router-link
-                    :to="{ name: 'PatientsListPage' }">
+            <router-link :to="{ name: 'PatientsListPage' }">
               <i class="nav-icon i-Align-Justify-Right mr-2"></i>
               <span class="item-name"> Listado </span>
             </router-link>
           </li>
 
           <li>
-            <router-link class :to="{ name: 'PatientsNotesPage' }">
+            <router-link :to="{ name: 'PatientsNotesPage' }" class>
               <i class="nav-icon i-Notepad text-base mr-2"></i>
               <span class="item-name"> Notas </span>
             </router-link>
           </li>
         </ul>
         <ul
-            :class="selectedParentMenu === 'measurements' ? 'block' : 'hidden'"
-            class="mb-4 childNav"
-            data-parent="measurements">
+          :class="selectedParentMenu === 'consultations' ? 'block' : 'hidden'"
+          class="mb-4 childNav"
+          data-parent="consultations"
+        >
           <li>
-            <router-link class :to="{ name: 'CranialDiameterPage' }">
-              <i class="nav-icon i-Brain1 mr-2"></i>
-              <span class="item-name"> Diámetro craneal </span>
+            <router-link :to="{ name: 'ConsultationsListPage' }">
+              <i class="nav-icon i-Align-Justify-Right mr-2"></i>
+              <span class="item-name"> Listado </span>
             </router-link>
           </li>
+
           <li>
-            <router-link class :to="{ name: 'HeightPage' }">
-              <i class="nav-icon i-Men mr-2"></i>
-              <span class="item-name"> Altura </span>
-            </router-link>
-          </li>
-          <li>
-            <router-link class :to="{ name: 'WeightPage' }">
-              <i class="nav-icon i-Scale mr-2"></i>
-              <span class="item-name"> Peso </span>
-            </router-link>
-          </li>
-        </ul>
-        <ul
-            :class="selectedParentMenu === 'consultations' ? 'block' : 'hidden'"
-            class="mb-4 childNav"
-            data-parent="consultations">
-          <li>
-            <router-link class :to="{ name: 'RegularVisitPage' }">
+            <router-link :to="{ name: 'RegularVisitPage' }" class>
               <i class="nav-icon i-Stethoscope mr-2"></i>
               <span class="item-name"> Visitas periódicas </span>
             </router-link>
           </li>
           <li>
-            <router-link class :to="{ name: 'EmergencyPage' }">
+            <router-link :to="{ name: 'EmergencyPage' }" class>
               <i class="nav-icon i-Danger mr-2"></i>
               <span class="item-name"> Urgencias </span>
+            </router-link>
+          </li>
+        </ul>
+        <ul
+          :class="selectedParentMenu === 'measurements' ? 'block' : 'hidden'"
+          class="mb-4 childNav"
+          data-parent="measurements"
+        >
+          <li>
+            <router-link :to="{ name: 'CranialDiameterPage' }" class>
+              <i class="nav-icon i-Brain1 mr-2"></i>
+              <span class="item-name"> Diámetro craneal </span>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'HeightPage' }" class>
+              <i class="nav-icon i-Men mr-2"></i>
+              <span class="item-name"> Altura </span>
+            </router-link>
+          </li>
+          <li>
+            <router-link :to="{ name: 'WeightPage' }" class>
+              <i class="nav-icon i-Scale mr-2"></i>
+              <span class="item-name"> Peso </span>
             </router-link>
           </li>
         </ul>
@@ -240,12 +262,11 @@ export default {
     </div>
 
     <div
-        :class="{
-                open: this.sidebarToggleProperties
-                    .isSecondarySideNavOpen,
-            }"
-        class="sidebar-overlay"
-        @click="removeOverlay()"
+      :class="{
+        open: this.sidebarToggleProperties.isSecondarySideNavOpen,
+      }"
+      class="sidebar-overlay"
+      @click="removeOverlay()"
     ></div>
   </div>
 </template>
@@ -293,7 +314,7 @@ export default {
     width: 120px;
 
     box-shadow: 0 4px 20px 1px rgba(0, 0, 0, 0.06),
-    0 1px 4px rgba(0, 0, 0, 0.08);
+      0 1px 4px rgba(0, 0, 0, 0.08);
     z-index: 90;
     transition: left 0.24s ease-in-out;
 
@@ -329,7 +350,7 @@ export default {
           }
 
           &:after {
-            content: '';
+            content: "";
             position: absolute;
             width: 30px;
             height: 30px;
@@ -344,7 +365,7 @@ export default {
           @apply text-primary;
 
           &:after {
-            content: '';
+            content: "";
             position: absolute;
             width: 30px;
             height: 30px;

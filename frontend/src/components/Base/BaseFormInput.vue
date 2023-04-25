@@ -19,10 +19,10 @@
 import { TextBoxComponent } from "@syncfusion/ej2-vue-inputs";
 
 export default {
-  props: ["modelValue", "text", "isValid", "errorMessage"],
-  components: { "ejs-textbox": TextBoxComponent },
-  emits: ["update:modelValue"],
   name: "BaseFormInput",
+  components: { "ejs-textbox": TextBoxComponent },
+  props: ["modelValue", "text", "isValid", "errorMessage"],
+  emits: ["update:modelValue"],
   data() {
     return {
       data: this.modelValue,

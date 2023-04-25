@@ -1,75 +1,72 @@
 <template>
-  <div class="container mx-auto">
-    <BreadCrumbs
-      v-if="patient"
-      :subParentTitle="`Detalles de ${patient.name} ${patient.lastName}`"
-      parentTitle="Mis pacientes"
-    />
-    <BreadCrumbs
-      v-else
-      :subParentTitle="`Detalles de paciente`"
-      parentTitle="Mis pacientes"
-    />
-    <BaseCard v-if="patient">
-      <template #cardHeader>
+  <div>
+    <BasePageCard :subParentTitle="patientData" parentTitle="Mis pacientes">
+      <template #title>
         <div class="flex justify-between items-center">
           <div class="flex items-center">
-            <h2 class="text-3xl font-semibold text-white mr-4">
-              {{ patient.name }} {{ patient.lastName }}
-            </h2>
             <img
               :alt="altText"
               :src="photoSrc"
-              class="h-32 w-32 rounded-full shadow-lg object-cover"
+              class="h-32 w-32 rounded-full shadow-lg object-cover mr-8"
             />
+            <h2 class="text-3xl font-semibold text-white pr-4">
+              {{ patient.name }} {{ patient.lastName }}
+            </h2>
           </div>
         </div>
       </template>
-      <div class="grid md:grid-cols-2 gap-4">
-        <div class="space-y-4">
-          <p><strong>Nombre:</strong> {{ patient.name }}</p>
-          <p><strong>Apellido:</strong> {{ patient.lastName }}</p>
-          <p>
-            <strong>Sexo: </strong>
-            <span>{{ getGenderDisplay().text }}</span>
-            <i :class="getGenderDisplay().icon" class="pl-1"></i>
-          </p>
-          <p>
-            <strong>Fecha de nacimiento:</strong>
-            {{ formatDate(patient.birthdate) }}
-          </p>
+
+      <div class="container mx-auto">
+        <BaseCard>
+          <div class="grid md:grid-cols-2 gap-4">
+            <div class="space-y-4">
+              <p><strong>Nombre:</strong> {{ patient.name }}</p>
+              <p><strong>Apellido:</strong> {{ patient.lastName }}</p>
+              <p>
+                <strong>Sexo: </strong>
+                <span>{{ getGenderDisplay().text }}</span>
+                <i :class="getGenderDisplay().icon" class="pl-1"></i>
+              </p>
+              <p>
+                <strong>Fecha de nacimiento:</strong>
+                {{ formatDate(patient.birthdate) }}
+              </p>
+            </div>
+            <div class="space-y-4">
+              <p>
+                <strong>Peso al nacer:</strong> {{ patient.birthWeight }} kg
+              </p>
+              <p>
+                <strong>Comunidad autónoma:</strong>
+                {{ getAutonomousCommunityDisplay(patient.autonomousCommunity) }}
+              </p>
+              <p><strong>Tipo de sangre:</strong> {{ patient.bloodType }}</p>
+              <p><strong>DNI:</strong> {{ patient.dni }}</p>
+            </div>
+          </div>
+          <div class="space-y-4 mt-4">
+            <p><strong>Comentarios:</strong> {{ patient.comments }}</p>
+          </div>
+        </BaseCard>
+        <div class="mt-4 flex flex-wrap justify-between">
+          <router-link
+            :to="{ name: 'PatientEditPage', params: { id: patient.id } }"
+          >
+            <BaseBtn class="i-Pen-3" text=" Editar"></BaseBtn>
+          </router-link>
+          <BaseBtn
+            class="i-Eraser-2 e-danger"
+            text=" Borrar"
+            @click="confirmDeletePatient"
+          ></BaseBtn>
         </div>
-        <div class="space-y-4">
-          <p><strong>Peso al nacer:</strong> {{ patient.birthWeight }} kg</p>
-          <p>
-            <strong>Comunidad autónoma:</strong>
-            {{ getAutonomousCommunityDisplay(patient.autonomousCommunity) }}
-          </p>
-          <p><strong>Tipo de sangre:</strong> {{ patient.bloodType }}</p>
-          <p><strong>DNI:</strong> {{ patient.dni }}</p>
-        </div>
       </div>
-      <div class="space-y-4 mt-4">
-        <p><strong>Comentarios:</strong> {{ patient.comments }}</p>
-      </div>
-      <div class="mt-12 flex flex-wrap justify-between">
-        <router-link
-          :to="{ name: 'PatientEditPage', params: { id: patient.id } }"
-        >
-          <BaseBtn class="i-Pen-3" text=" Editar"></BaseBtn>
-        </router-link>
-        <BaseBtn
-          class="i-Eraser-2 e-danger"
-          text=" Borrar"
-          @click="confirmDeletePatient"
-        ></BaseBtn>
-      </div>
-    </BaseCard>
+    </BasePageCard>
   </div>
 </template>
 
 <script>
-import { usePatientStore } from "@/store/patientStore.js";
+import { usePatientsStore } from "@/store/patientsStore.js";
 import { mapActions } from "pinia";
 import { publicImagesPath } from "@/router/publicPath.js";
 import genders from "@/data/genderData.json";
@@ -97,9 +94,14 @@ export default {
         ? `Foto de ${this.patient.name}`
         : `No hay foto disponible para ${this.patient.name}`;
     },
+    patientData() {
+      return this.patient
+        ? `Detalles de ${this.patient.name} ${this.patient.lastName}`
+        : "Detalles de paciente";
+    },
   },
   methods: {
-    ...mapActions(usePatientStore, {
+    ...mapActions(usePatientsStore, {
       getPatient: "getPatient",
       deletePatient: "deletePatient",
     }),

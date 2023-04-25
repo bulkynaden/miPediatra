@@ -1,55 +1,50 @@
 <template>
-  <div class="container mx-auto">
-    <BreadCrumbs
+  <div>
+    <BasePageCard
       v-if="patient"
-      :subParentTitle="`Editar ${patient.name} ${patient.lastName}`"
+      :subParentTitle="patientData"
       parentTitle="Mis pacientes"
-    />
-    <BreadCrumbs
-      v-else
-      :subParentTitle="`Editar paciente`"
-      parentTitle="Mis pacientes"
-    />
-    <BaseCard v-if="loaded" class="max-w-3xl mx-auto w-auto">
-      <template #cardHeader>Editar paciente</template>
-      <form
-        id="formAddChild"
-        class="grid max-w-3xl w-auto mx-auto"
-        method="post"
-        @submit.prevent="submitForm"
-      >
-        <PatientGeneralForm
-          ref="formPage"
-          :formData="patient"
-          mode="edit"
-          @validation="handleValidation"
-        />
-        <div class="ml-auto pt-8 self-end">
-          <ejs-progressbutton
-            :enableProgress="true"
-            content="Guardar"
-            cssClass="e-flat e-success"
-            iconCss="e-icons e-save"
-            isPrimary="true"
-            type="submit"
-          ></ejs-progressbutton>
-        </div>
-      </form>
-    </BaseCard>
+    >
+      <template #title>Editar paciente</template>
+      <div class="flex justify-center">
+        <BaseCard class="max-w-full">
+          <form method="post" @submit.prevent="submitForm">
+            <PatientGeneralForm
+              ref="formPage"
+              :formData="patient"
+              mode="edit"
+              @validation="handleValidation"
+            />
+            <div class="ml-auto pt-8 self-end flex justify-end">
+              <ejs-progressbutton
+                :enableProgress="true"
+                content="Guardar"
+                cssClass="e-flat e-success"
+                iconCss="e-icons e-save"
+                isPrimary="true"
+                type="submit"
+              ></ejs-progressbutton>
+            </div>
+          </form>
+        </BaseCard>
+      </div>
+    </BasePageCard>
   </div>
 </template>
 
 <script>
 import { mapActions } from "pinia";
-import { usePatientStore } from "@/store/patientStore.js";
+import { usePatientsStore } from "@/store/patientsStore.js";
 import router from "@/router/router.js";
-import PatientGeneralForm from "@/components/PatientGeneralForm.vue";
+import PatientGeneralForm from "@/components/patients/PatientGeneralForm.vue";
 import Swal from "sweetalert2";
 import { ProgressButtonComponent } from "@syncfusion/ej2-vue-splitbuttons";
+import BaseCard from "@/components/base/BaseCard.vue";
 
 export default {
   name: "PatientEditPage",
   components: {
+    BaseCard,
     PatientGeneralForm,
     "ejs-progressbutton": ProgressButtonComponent,
   },
@@ -63,9 +58,14 @@ export default {
     loaded() {
       return this.patient !== null;
     },
+    patientData() {
+      return this.patient
+        ? `Detalles de ${this.patient.name} ${this.patient.lastName}`
+        : "Detalles de paciente";
+    },
   },
   methods: {
-    ...mapActions(usePatientStore, {
+    ...mapActions(usePatientsStore, {
       getPatient: "getPatient",
       editPatient: "editPatient",
     }),

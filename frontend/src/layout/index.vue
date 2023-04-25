@@ -25,14 +25,15 @@
 <script>
 import { useLargeSidebarStore } from "@/store/largeSidebarStore";
 import { mapState } from "pinia";
-import TheFooter from "@/layout/TheFooter.vue";
-import TheSidebar from "@/layout/TheSidebar.vue";
-import TheHeader from "@/layout/TheHeader.vue";
-import { usePatientStore } from "@/store/patientStore.js";
+import { usePatientsStore } from "@/store/patientsStore.js";
+import { useConsultationsStore } from "@/store/consultationsStore.js";
 import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
+import TheFooter from "@/layout/TheFooter.vue";
+import TheHeader from "@/layout/TheHeader.vue";
+import TheSidebar from "@/layout/TheSidebar.vue";
 
 export default {
-  components: { TheHeader, TheSidebar, TheFooter, TheLoadingLogo },
+  components: { TheSidebar, TheHeader, TheFooter, TheLoadingLogo },
   data() {
     return {
       isLoading: null,
@@ -46,19 +47,27 @@ export default {
       return this.isLoading;
     },
   },
-  beforeMount() {
-    this.fetchPatients();
+  async beforeMount() {
+    this.isLoading = true;
+    await this.fetchPatients();
+    await this.fetchConsultations();
+    this.isLoading = false;
   },
   methods: {
     async fetchPatients() {
-      const patientStore = usePatientStore();
+      const patientsStore = usePatientsStore();
       try {
-        this.isLoading = true;
-        await patientStore.fetchPatients();
+        await patientsStore.fetchPatients();
       } catch (error) {
         console.error("Error fetching patients:", error);
-      } finally {
-        this.isLoading = false;
+      }
+    },
+    async fetchConsultations() {
+      const consultationsStore = useConsultationsStore();
+      try {
+        await consultationsStore.fetchConsultations();
+      } catch (error) {
+        console.error("Error fetching consultations:", error);
       }
     },
   },

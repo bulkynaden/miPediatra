@@ -1,69 +1,67 @@
 <template>
-  <div class="container mx-auto">
-    <BreadCrumbs parentTitle="Mis pacientes" subParentTitle="Añadir paciente" />
-    <BaseCard class="max-w-3xl mx-auto w-auto">
-      <template #cardHeader>Añadir paciente</template>
-      <form
-        id="formAddChild"
-        class="grid max-w-3xl w-auto mx-auto"
-        method="post"
-        @submit.prevent="submitForm"
-      >
-        <transition mode="out-in" name="scale">
-          <keep-alive>
-            <component
-              :is="currentComponentPage"
-              :key="currentStep"
-              ref="formPage"
-              :formData="formData"
-              :mode="'add'"
-              @validation="handleValidation"
-            />
-          </keep-alive>
-        </transition>
-        <div class="pt-8 flex justify-between">
-          <div>
-            <BaseBtn
-              v-if="hasPreviousPage"
-              text="Anterior"
-              type="button"
-              @click="previousPage"
-            />
-          </div>
+  <div>
+    <BasePageCard parentTitle="Mis pacientes" subParentTitle="Añadir paciente">
+      <template #title>Añadir paciente</template>
+      <div class="flex justify-center">
+        <BaseCard class="max-w-full">
+          <form method="post" @submit.prevent="submitForm">
+            <transition mode="out-in" name="scale">
+              <keep-alive>
+                <component
+                  :is="currentComponentPage"
+                  :key="currentStep"
+                  ref="formPage"
+                  :formData="formData"
+                  :mode="'add'"
+                  @validation="handleValidation"
+                />
+              </keep-alive>
+            </transition>
+            <div class="pt-8 flex justify-between">
+              <div>
+                <BaseBtn
+                  v-if="hasPreviousPage"
+                  text="Anterior"
+                  type="button"
+                  @click="previousPage"
+                />
+              </div>
 
-          <div class="ml-auto self-end">
-            <BaseBtn
-              v-if="hasNextPage"
-              text="Siguiente"
-              type="button"
-              @click="nextPage"
-            />
+              <div class="ml-auto self-end">
+                <BaseBtn
+                  v-if="hasNextPage"
+                  text="Siguiente"
+                  type="button"
+                  @click="nextPage"
+                />
 
-            <ejs-progressbutton
-              v-else
-              :enableProgress="true"
-              content="Guardar"
-              cssClass="e-flat e-success"
-              iconCss="e-icons e-save"
-              isPrimary="true"
-              type="submit"
-            ></ejs-progressbutton>
-          </div>
-        </div>
-      </form>
-    </BaseCard>
+                <ejs-progressbutton
+                  v-else
+                  :enableProgress="true"
+                  content="Guardar"
+                  cssClass="e-flat e-success"
+                  iconCss="e-icons e-save"
+                  isPrimary="true"
+                  type="submit"
+                ></ejs-progressbutton>
+              </div>
+            </div>
+          </form>
+        </BaseCard>
+      </div>
+    </BasePageCard>
   </div>
 </template>
 
 <script>
-import PatientGeneralForm from "@/components/PatientGeneralForm.vue";
+import PatientGeneralForm from "@/components/patients/PatientGeneralForm.vue";
+import PatientDetails from "@/components/patients/PatientDetails.vue";
+import { ProgressButtonComponent } from "@syncfusion/ej2-vue-splitbuttons";
+import { usePatientsStore } from "@/store/patientsStore.js";
 import { markRaw } from "vue";
-import { usePatientStore } from "@/store/patientStore.js";
 import { mapActions } from "pinia";
-import PatientDetails from "@/components/PatientDetails.vue";
 import Swal from "sweetalert2";
 import router from "@/router/router.js";
-import { ProgressButtonComponent } from "@syncfusion/ej2-vue-splitbuttons";
 
 export default {
   name: "PatientAddPage",
@@ -102,7 +100,7 @@ export default {
     },
   },
   methods: {
-    ...mapActions(usePatientStore, {
+    ...mapActions(usePatientsStore, {
       addPatient: "addPatient",
     }),
     getCurrentPage() {
@@ -112,6 +110,12 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         this.currentStep++;
+      } else {
+        Swal.fire({
+          icon: "error",
+          title: "Los datos introducidos no son correctos",
+          timer: 1500,
+        });
       }
     },
     previousPage() {

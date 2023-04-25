@@ -16,6 +16,10 @@
 
 <script>
 import "animate.css";
+
+export default {
+  name: "TheLoadingLogo",
+};
 </script>
 
 <style scoped>

@@ -100,22 +100,33 @@ const routes = [
         path: "/consultas",
         name: "consultations",
         redirect: "/consultas/periodicas",
-        component: () => import("../views/medical-consultations/index.vue"),
+        component: () => import("../views/consultations/index.vue"),
         meta: {
           title: "Consultas médicas",
         },
         children: [
           {
+            path: "listado",
+            name: "ConsultationsListPage",
+            component: () =>
+              import("../views/consultations/ConsultationsListPage.vue"),
+          },
+          {
+            path: "agregar",
+            name: "ConsultationAddPage",
+            component: () =>
+              import("../views/consultations/ConsultationAddPage.vue"),
+          },
+          {
             path: "periodicas",
             name: "RegularVisitPage",
             component: () =>
-              import("../views/medical-consultations/RegularVisitPage.vue"),
+              import("../views/consultations/RegularVisitPage.vue"),
           },
           {
             path: "urgencias",
             name: "EmergencyPage",
-            component: () =>
-              import("../views/medical-consultations/EmergencyPage.vue"),
+            component: () => import("../views/consultations/EmergencyPage.vue"),
           },
         ],
       },
