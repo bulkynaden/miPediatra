@@ -1,5 +1,6 @@
 <template>
   <div>
+    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard
       parentTitle="Consultas médicas"
       subParentTitle="Añadir consultas"
@@ -62,16 +63,19 @@ import Swal from "sweetalert2";
 import { useConsultationsStore } from "@/store/consultationsStore.js";
 import { markRaw } from "vue";
 import EmergencyForm from "@/components/consultations/EmergencyForm.vue";
+import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 
 export default {
   name: "PatientAddPage",
   components: {
+    TheLoadingLogo,
     ConsultationGeneralForm,
   },
   data() {
     return {
+      isLoading: false,
       consultation: {
-        patient: null,
+        patient: { id: 0 },
         specialist: "",
         center: "",
         date: "",
@@ -100,6 +104,9 @@ export default {
     },
     hasNextPage() {
       return this.currentStep < this.pages.length - 1;
+    },
+    showLoadingLogo() {
+      return this.isLoading;
     },
   },
   methods: {
@@ -137,7 +144,9 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
+          this.isLoading = true;
           await this.addConsultation(this.consultation).then(() => {
+            this.isLoading = false;
             this.$router.push({ name: "ConsultationsListPage" });
             Swal.fire({
               icon: "success",
@@ -153,6 +162,7 @@ export default {
           });
         }
       } else {
+        this.isLoading = false;
         await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",

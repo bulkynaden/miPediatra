@@ -41,7 +41,7 @@ export const usePatientsStore = defineStore({
       if (!patient.photo || !patient.photo.blob) {
         patient.previewImage = null;
       } else {
-        const fileName = `${patient.photo.blob.name}`;
+        const fileName = Date.now() + "_" + `${patient.photo.blob.name}`;
         const storage = getStorage();
         const storageRef = ref(storage, `patients/${fileName}`);
 
@@ -55,7 +55,7 @@ export const usePatientsStore = defineStore({
           patient.photo.size = patient.photo.blob.size;
           patient.photo.name = fileName;
         } catch (error) {
-          console.log("Error uploading file", error);
+          throw error;
         }
       }
       return patient;
@@ -72,8 +72,8 @@ export const usePatientsStore = defineStore({
         if (editedPatient.photo && editedPatient.photo.url !== "") {
           try {
             await deleteObject(ref(getStorage(), editedPatient.photo.url));
-          } catch (e) {
-            console.log("Error deleting file");
+          } catch (error) {
+            throw error;
           }
           editedPatient.photo.url = "";
         }
@@ -97,7 +97,11 @@ export const usePatientsStore = defineStore({
           patientToDelete.photo &&
           patientToDelete.photo.url !== ""
         ) {
-          await deleteObject(ref(getStorage(), patientToDelete.photo.url));
+          try {
+            await deleteObject(ref(getStorage(), patientToDelete.photo.url));
+          } catch (error) {
+            throw error;
+          }
         }
 
         this.patients = this.patients.filter((patient) => patient.id !== id);

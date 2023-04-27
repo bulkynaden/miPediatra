@@ -16,15 +16,22 @@
         />
       </svg>
       <div class="ml-4 flex min-w-0 flex-1 gap-2">
-        <span class="truncate font-medium">{{ file.name }}</span>
+        <span class="truncate font-medium"
+          ><a href="#" @click.prevent="showFileContent(file.url)">{{
+            file.name
+          }}</a></span
+        >
         <span class="flex-shrink-0 text-gray-400"> {{ fileSize }}</span>
       </div>
     </div>
     <div class="ml-4 flex-shrink-0">
       <a
-        class="i-Eye font-medium text-indigo-600 hover:text-indigo-500 mr-4"
-        @click.prevent="showFileContent(file.url)"
-      />
+        class="font-medium text-indigo-600 hover:text-indigo-500 mr-4"
+        href="#"
+        @click.prevent="callDeleteFile(file)"
+      >
+        Eliminar</a
+      >
     </div>
   </li>
 </template>
@@ -35,6 +42,7 @@ import Swal from "sweetalert2";
 export default {
   name: "FileListItem",
   props: ["file"],
+  inject: ["deleteFile"],
   computed: {
     fileSize() {
       const size = this.file.size;
@@ -53,8 +61,9 @@ export default {
     async showFileContent(fileUrl) {
       try {
         await Swal.fire({
-          title: "Previsualización",
-          html: `<img src="${fileUrl}" alt="Image" style="width: 100%; object-fit: contain;">`,
+          imageUrl: fileUrl,
+          imageHeight: "80vh",
+          width: "80vw",
           confirmButtonText: "Cerrar",
           showClass: {
             popup: "animate__animated animate__zoomIn",
@@ -64,6 +73,9 @@ export default {
           },
         });
       } catch (error) {}
+    },
+    async callDeleteFile(file) {
+      await this.deleteFile(file);
     },
   },
 };

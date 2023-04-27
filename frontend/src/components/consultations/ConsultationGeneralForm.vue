@@ -1,7 +1,7 @@
 <template>
   <div v-if="loaded">
     <h2 class="pb-4">Datos generales</h2>
-    <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
+    <div v-if="mode === 'add'" class="grid sm:grid-cols-1 md:grid-cols-2 gap-4">
       <div class="md:col-span-1">
         <ConsultationsTypesCombo
           v-model="formData.consultationType"
@@ -16,7 +16,7 @@
     <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4 pt-4">
       <div class="md:col-span-1">
         <PatientsCombo
-          v-model="formData.patient"
+          v-model="formData.patient.id"
           @selected-item="handleSelectedPatient"
         />
         <label v-show="!isValidPatient" class="e-error"
@@ -59,13 +59,14 @@
       :formData="formData.measurements"
     />
 
-    <div class="bg-blue-50 p-6 rounded-lg mt-4">
+    <div v-if="mode === 'add'" class="bg-blue-50 p-6 rounded-lg mt-4">
       <div class="whitespace-nowrap text-align-right">Adjuntar archivos:</div>
       <ejs-uploader
         ref="uploader"
         :removing="onFileRemove"
         :selected="onFileSelect"
         allowedExtensions=".jpg, .png, .jpeg, .pdf"
+        autoUpload="true"
         locale="es"
         maxFileSize="5000000"
         name="UploadFiles"
@@ -121,17 +122,19 @@ export default {
       return this.mode === "add";
     },
     loadRegularVisit() {
-      return this.isRegularVisit;
+      return this.formData.consultationType === "RegularVisit";
     },
   },
   methods: {
     onFileSelect(args) {
+      if (!this.formData.blobFiles) {
+        this.formData.blobFiles = [];
+      }
       for (const file of args.filesData) {
         if (file.statusCode === "1") {
           this.formData.blobFiles.push(file);
         }
       }
-      console.log(this.formData.blobFiles);
     },
     onFileRemove(args) {
       for (const file of args.filesData) {

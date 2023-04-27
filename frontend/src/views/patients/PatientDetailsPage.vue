@@ -1,5 +1,6 @@
 <template>
   <div v-if="patient">
+    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard :subParentTitle="patientData" parentTitle="Mis pacientes">
       <template #title>
         <div class="flex justify-between items-center">
@@ -72,11 +73,14 @@ import { publicImagesPath } from "@/router/publicPath.js";
 import genders from "@/data/genderData.json";
 import autonomousCommunities from "@/data/autonomousCommunitiesData.json";
 import Swal from "sweetalert2";
+import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 
 export default {
   name: "PatientDetailsPage",
+  components: { TheLoadingLogo },
   data() {
     return {
+      isLoading: false,
       patient: null,
     };
   },
@@ -97,6 +101,9 @@ export default {
       return this.patient
         ? `Detalles de ${this.patient.name} ${this.patient.lastName}`
         : "Detalles de paciente";
+    },
+    showLoadingLogo() {
+      return this.isLoading;
     },
   },
   methods: {
@@ -169,7 +176,9 @@ export default {
     },
   },
   async beforeMount() {
+    this.isLoading = true;
     this.patient = await this.getPatient(this.$route.params.id);
+    this.isLoading = false;
     if (!this.patient) {
       await Swal.fire({
         icon: "error",

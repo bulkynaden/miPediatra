@@ -1,5 +1,6 @@
 <template>
   <div>
+    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard
       v-if="consultation"
       parentTitle="Consultas médicas"
@@ -63,6 +64,21 @@
           </div>
         </div>
       </BaseCard>
+      <div class="mt-4 flex flex-wrap justify-between">
+        <router-link
+          :to="{
+            name: 'ConsultationEditPage',
+            params: { id: consultation.id },
+          }"
+        >
+          <BaseBtn class="i-Pen-3" text=" Editar"></BaseBtn>
+        </router-link>
+        <BaseBtn
+          class="i-Eraser-2 e-danger"
+          text=" Borrar"
+          @click="confirmDeleteConsultation"
+        ></BaseBtn>
+      </div>
     </BasePageCard>
   </div>
 </template>
@@ -76,12 +92,20 @@ import ConsultationDetailsItem from "@/components/consultations/ConsultationDeta
 import FileListItem from "@/components/consultations/FileListItem.vue";
 import FileList from "@/components/consultations/FileList.vue";
 import BaseCard from "../../components/base/BaseCard.vue";
+import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 
 export default {
   name: "ConsultationDetailsPage",
-  components: { BaseCard, FileList, FileListItem, ConsultationDetailsItem },
+  components: {
+    TheLoadingLogo,
+    BaseCard,
+    FileList,
+    FileListItem,
+    ConsultationDetailsItem,
+  },
   data() {
     return {
+      isLoading: false,
       consultation: null,
     };
   },
@@ -115,6 +139,9 @@ export default {
         })
       );
     },
+    showLoadingLogo() {
+      return this.isLoading;
+    },
   },
   methods: {
     ...mapActions(useConsultationsStore, {
@@ -130,7 +157,9 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
+            this.isLoading = true;
             await this.deleteConsultation(this.consultation.id).then(() => {
+              this.isLoading = false;
               this.$router.push({ name: "ConsultationsListPage" });
             });
             await Swal.fire(
@@ -139,6 +168,7 @@ export default {
               "success"
             );
           } catch (error) {
+            this.isLoading = false;
             this.$swal.fire({
               icon: "error",
               title: "Ha ocurrido un error inesperado",
@@ -148,10 +178,48 @@ export default {
         }
       });
     },
+    async deleteFile(file) {
+      try {
+        await Swal.fire({
+          title: "¿Está seguro de que desea eliminar el archivo?",
+          text: "Esta acción no se puede deshacer.",
+          icon: "warning",
+          showCancelButton: true,
+        }).then((result) => {
+          if (result.value) {
+            try {
+              this.isLoading = true;
+              useConsultationsStore().deleteFile(file, this.consultation);
+              this.isLoading = false;
+              Swal.fire(
+                "Eliminado!",
+                "El archivo ha sido eliminado.",
+                "success"
+              );
+            } catch (error) {
+              this.isLoading = false;
+              this.$swal.fire({
+                icon: "error",
+                title: "Ha ocurrido un error inesperado",
+                timer: 1500,
+              });
+            }
+          }
+        });
+      } catch (error) {
+        this.isLoading = false;
+      }
+    },
+  },
+  provide() {
+    return {
+      deleteFile: this.deleteFile,
+    };
   },
   async beforeMount() {
+    this.isLoading = true;
     this.consultation = await this.getConsultation(this.$route.params.id);
-    console.log(this.consultation);
+    this.isLoading = false;
     if (!this.consultation) {
       await Swal.fire({
         icon: "error",

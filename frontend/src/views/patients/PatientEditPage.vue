@@ -1,5 +1,6 @@
 <template>
   <div>
+    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard
       v-if="patient"
       :subParentTitle="patientData"
@@ -36,27 +37,30 @@ import { usePatientsStore } from "@/store/patientsStore.js";
 import PatientGeneralForm from "@/components/patients/PatientGeneralForm.vue";
 import Swal from "sweetalert2";
 import BaseCard from "@/components/base/BaseCard.vue";
+import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 
 export default {
   name: "PatientEditPage",
   components: {
+    TheLoadingLogo,
     BaseCard,
     PatientGeneralForm,
   },
   data() {
     return {
+      isLoading: false,
       patient: null,
       formIsValid: false,
     };
   },
   computed: {
-    loaded() {
-      return this.patient !== null;
-    },
     patientData() {
       return this.patient
         ? `Detalles de ${this.patient.name} ${this.patient.lastName}`
         : "Detalles de paciente";
+    },
+    showLoadingLogo() {
+      return this.isLoading;
     },
   },
   methods: {
@@ -68,7 +72,9 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
+          this.isLoading = true;
           await this.editPatient(this.patient).then(() => {
+            this.isLoading = false;
             this.$router.push({ name: "PatientsListPage" });
           });
           await Swal.fire({
@@ -77,6 +83,7 @@ export default {
             timer: 1500,
           });
         } catch (error) {
+          this.isLoading = false;
           await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
@@ -96,8 +103,9 @@ export default {
     },
   },
   async beforeMount() {
-    let realPatient = await this.getPatient(this.$route.params.id);
-    this.patient = { ...realPatient };
+    this.isLoading = true;
+    this.patient = await this.getPatient(this.$route.params.id);
+    this.isLoading = false;
     if (!this.patient) {
       await Swal.fire({
         icon: "error",

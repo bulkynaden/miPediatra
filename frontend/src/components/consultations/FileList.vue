@@ -15,7 +15,7 @@
         v-else
         class="mt-1 text-sm leading-6 text-gray-700 sm:col-span-2 sm:mt-0"
       >
-        No existen archivos.
+        No existen archivos
       </div>
     </div>
   </div>
@@ -28,6 +28,7 @@ export default {
   name: "FileList",
   components: { FileListItem },
   props: ["files"],
+  methods: {},
 };
 </script>
 
