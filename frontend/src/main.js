@@ -1,5 +1,6 @@
 import { createApp } from "vue";
 import App from "./App.vue";
+import "./services/l10n.js";
 
 // CSS Globales
 import "./assets/scss/global.scss";
@@ -11,6 +12,10 @@ import { createPinia } from "pinia";
 // Router
 import router from "./router/router.js";
 
+// Firebase
+import { initializeApp } from "firebase/app";
+import { getStorage } from "firebase/storage";
+
 // PerfectScrollbar
 import PerfectScrollbar from "vue3-perfect-scrollbar";
 import "vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css";
@@ -19,7 +24,12 @@ import "vue3-perfect-scrollbar/dist/vue3-perfect-scrollbar.css";
 import { registerLicense } from "@syncfusion/ej2-base";
 import { ButtonPlugin } from "@syncfusion/ej2-vue-buttons";
 import { DialogPlugin, TooltipPlugin } from "@syncfusion/ej2-vue-popups";
-import { TextBoxPlugin, UploaderPlugin } from "@syncfusion/ej2-vue-inputs";
+import {
+  NumericTextBoxPlugin,
+  TextBoxPlugin,
+  UploaderPlugin,
+} from "@syncfusion/ej2-vue-inputs";
+import { DatePickerPlugin } from "@syncfusion/ej2-vue-calendars";
 
 // SweetAlert2
 import VueSweetalert2 from "vue-sweetalert2";
@@ -29,26 +39,42 @@ import "sweetalert2/dist/sweetalert2.min.css";
 import VueApexCharts from "vue3-apexcharts";
 
 // Los componentes base
-import BaseCard from "./components/Base/BaseCard.vue";
-import BaseBtn from "./components/Base/BaseBtn.vue";
-import Breadcrumbs from "@/components/BreadCrumbs.vue";
+import BaseCard from "./components/base/BaseCard.vue";
+import BaseBtn from "./components/base/BaseBtn.vue";
+import BaseFormInput from "./components/base/BaseFormInput.vue";
+import BreadCrumbs from "./components/base/BaseBreadCrumbs.vue";
+import BasePageCard from "./components/base/BasePageCard.vue";
 
-registerLicense(
-    "ORg4AjUWIQA/Gnt2VVhkQlFadVdJXGFWfVJpTGpQdk5xdV9DaVZUTWY/P1ZhSXxQdkZiWH5fcXVRT2ZdU0w="
-);
+registerLicense(import.meta.env.VITE_APP_SYNCFUSION_LICENSE);
+
+const firebaseConfig = {
+  apiKey: import.meta.env.VITE_APP_API_KEY,
+  authDomain: import.meta.env.VITE_APP_AUTH_DOMAIN,
+  databaseURL: import.meta.env.VITE_APP_DATABASE_URL,
+  projectId: import.meta.env.VITE_APP_PROJECT_ID,
+  storageBucket: import.meta.env.VITE_APP_STORAGE_BUCKET,
+  messagingSenderId: import.meta.env.VITE_APP_MESSAGING_SENDER_ID,
+  appId: import.meta.env.VITE_APP_APP_ID,
+};
+
+getStorage(initializeApp(firebaseConfig));
 
 createApp(App)
-    .component("BaseCard", BaseCard)
-    .component("BaseBtn", BaseBtn)
-    .component("Breadcrumbs", Breadcrumbs)
-    .use(VueSweetalert2)
-    .use(ButtonPlugin)
-    .use(TooltipPlugin)
-    .use(UploaderPlugin)
-    .use(DialogPlugin)
-    .use(TextBoxPlugin)
-    .use(PerfectScrollbar)
-    .use(VueApexCharts)
-    .use(createPinia())
-    .use(router)
-    .mount("#app");
+  .component("BaseCard", BaseCard)
+  .component("BaseBtn", BaseBtn)
+  .component("BaseFormInput", BaseFormInput)
+  .component("BreadCrumbs", BreadCrumbs)
+  .component("BasePageCard", BasePageCard)
+  .use(VueSweetalert2)
+  .use(ButtonPlugin)
+  .use(TooltipPlugin)
+  .use(DialogPlugin)
+  .use(TextBoxPlugin)
+  .use(DatePickerPlugin)
+  .use(NumericTextBoxPlugin)
+  .use(UploaderPlugin)
+  .use(PerfectScrollbar)
+  .use(VueApexCharts)
+  .use(createPinia())
+  .use(router)
+  .mount("#app");

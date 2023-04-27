@@ -1,17 +1,18 @@
 <template>
-  <div class="container mx-auto">
-    <Breadcrumbs parentTitle="Inicio" subParentTitle="Resumen"/>
-    <h1>Logo y descripición de la página. Enlaces a documentación y tutoriales</h1>
+  <div>
+    <BasePageCard parentTitle="Inicio" subParentTitle="Resumen">
+      <template #title>Inicio</template>
+      <div class="container mx-auto">
+        Logo y descripción de la página. Enlaces a documentación y tutoriales
+      </div>
+    </BasePageCard>
   </div>
 </template>
 
 <script>
-
 export default {
   name: "HomePage",
-}
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

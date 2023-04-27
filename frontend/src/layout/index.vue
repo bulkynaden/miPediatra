@@ -1,41 +1,88 @@
-<script>
-import {useLargeSidebarStore} from '@/store/largeSidebarStore';
-import {mapState} from "pinia";
-import TheFooter from "@/layout/TheFooter.vue";
-import TheSidebar from "@/layout/TheSidebar.vue";
-import TheHeader from "@/layout/TheHeader.vue";
-
-export default {
-  components: {TheHeader, TheSidebar, TheFooter},
-  computed: {
-    ...mapState(useLargeSidebarStore, {
-      sidebarToggleProperties: "sidebarToggleProperties"
-    })
-  },
-}
-</script>
-
 <template>
   <div class="app">
-    <TheHeader/>
-    <TheSidebar/>
-    <div :class="this.sidebarToggleProperties.isSideNavOpen === true
-                    ? ''
-                    : 'full'" class="main-content-wrap">
+    <TheHeader />
+    <TheSidebar />
+    <div
+      :class="this.sidebarToggleProperties.isSideNavOpen === true ? '' : 'full'"
+      class="main-content-wrap"
+    >
       <main>
         <div class="main-content-wrap flex flex-col flex-grow print-area pt-10">
+          <TheLoadingLogo v-if="showLoadingLogo" />
           <router-view v-slot="{ Component }">
             <transition mode="out-in" name="scale">
-              <component :is="Component"/>
+              <component :is="Component" />
             </transition>
           </router-view>
           <div class="flex-grow-1"></div>
-          <TheFooter/>
+          <TheFooter />
         </div>
       </main>
     </div>
   </div>
 </template>
+
+<script>
+import { useLargeSidebarStore } from "@/store/largeSidebarStore";
+import { mapState } from "pinia";
+import { usePatientsStore } from "@/store/patientsStore.js";
+import { useConsultationsStore } from "@/store/consultationsStore.js";
+import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
+import TheFooter from "@/layout/TheFooter.vue";
+import TheHeader from "@/layout/TheHeader.vue";
+import TheSidebar from "@/layout/TheSidebar.vue";
+import { useFilesStore } from "@/store/filesStore.js";
+
+export default {
+  components: { TheSidebar, TheHeader, TheFooter, TheLoadingLogo },
+  data() {
+    return {
+      isLoading: null,
+    };
+  },
+  computed: {
+    ...mapState(useLargeSidebarStore, {
+      sidebarToggleProperties: "sidebarToggleProperties",
+    }),
+    showLoadingLogo() {
+      return this.isLoading;
+    },
+  },
+  async beforeMount() {
+    this.isLoading = true;
+    await this.fetchFiles();
+    await this.fetchPatients();
+    await this.fetchConsultations();
+    this.isLoading = false;
+  },
+  methods: {
+    async fetchPatients() {
+      const patientsStore = usePatientsStore();
+      try {
+        await patientsStore.fetchPatients();
+      } catch (error) {
+        console.error("Error fetching patients:", error);
+      }
+    },
+    async fetchConsultations() {
+      const consultationsStore = useConsultationsStore();
+      try {
+        await consultationsStore.fetchConsultations();
+      } catch (error) {
+        console.error("Error fetching consultations:", error);
+      }
+    },
+    async fetchFiles() {
+      const filesStore = useFilesStore();
+      try {
+        await filesStore.fetchFiles();
+      } catch (error) {
+        console.error("Error fetching files:", error);
+      }
+    },
+  },
+};
+</script>
 
 <style lang="scss" scoped>
 .scale-enter-active,

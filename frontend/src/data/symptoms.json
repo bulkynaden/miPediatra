@@ -1,0 +1,85 @@
+{
+  "symptoms": [
+    {
+      "id": 1,
+      "nombre": "Cambios en la micción"
+    },
+    {
+      "id": 2,
+      "nombre": "Diarrea"
+    },
+    {
+      "id": 3,
+      "nombre": "Dolor abdominal"
+    },
+    {
+      "id": 4,
+      "nombre": "Dolor de cabeza"
+    },
+    {
+      "id": 5,
+      "nombre": "Dolor de espalda"
+    },
+    {
+      "id": 6,
+      "nombre": "Dolor de garganta"
+    },
+    {
+      "id": 7,
+      "nombre": "Dolor en las articulaciones"
+    },
+    {
+      "id": 8,
+      "nombre": "Dolor en el pecho"
+    },
+    {
+      "id": 9,
+      "nombre": "Dolor muscular"
+    },
+    {
+      "id": 10,
+      "nombre": "Fatiga"
+    },
+    {
+      "id": 11,
+      "nombre": "Fiebre"
+    },
+    {
+      "id": 12,
+      "nombre": "Mareo"
+    },
+    {
+      "id": 13,
+      "nombre": "Náuseas"
+    },
+    {
+      "id": 14,
+      "nombre": "Pérdida del apetito"
+    },
+    {
+      "id": 15,
+      "nombre": "Picazón"
+    },
+    {
+      "id": 16,
+      "nombre": "Sangrado"
+    },
+    {
+      "id": 18,
+      "nombre": "Sarpullido"
+    },
+    {
+      "id": 18,
+      "nombre": "Tos"
+    },
+    {
+      "id": 19,
+      "nombre": "Cambios en la visión"
+    },
+    {
+      "id": 20,
+      "nombre": "Otros",
+      "descripcion": ""
+    }
+  ]
+}

@@ -1,6 +1,6 @@
 <template>
   <div class="container mx-auto">
-    <Breadcrumbs parentTitle="Mediciones" subParentTitle="Altura"/>
+    <BreadCrumbs parentTitle="Mediciones" subParentTitle="Altura"/>
     <h1>Altura</h1>
   </div>
 </template>

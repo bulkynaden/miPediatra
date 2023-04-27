@@ -1,16 +1,16 @@
 <template>
-    <div class="container mx-auto">
-        <Breadcrumbs parentTitle="Mis pacientes" subParentTitle="Notas pacientes"/>
-        <h1>Notas paciente</h1>
-    </div>
+  <div>
+    <BasePageCard parentTitle="Mis pacientes" subParentTitle="Notas">
+      <template #title>Notas de los pacientes</template>
+      <div class="container mx-auto">Sin notas</div>
+    </BasePageCard>
+  </div>
 </template>
 
 <script>
 export default {
-    name: "PatientsNotesPage",
-}
+  name: "PatientsNotesPage",
+};
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

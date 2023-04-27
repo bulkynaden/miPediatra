@@ -1,0 +1,12 @@
+[
+  {
+    "id": "HOMBRE",
+    "value": "Chico",
+    "icon": "i-Male-2"
+  },
+  {
+    "id": "MUJER",
+    "value": "Chica",
+    "icon": "i-Female-2"
+  }
+]
