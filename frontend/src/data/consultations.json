@@ -9,16 +9,23 @@
       "specialist": "Dr. Juan",
       "center": "Hospital San Jorge",
       "date": "2018-11-07T09:00:00.000Z",
+      "diagnosis": "Tiene cuentitis",
+      "treatment": "Mano dura",
       "symptoms": [
         {
           "id": "1",
           "name": "Fiebre",
-          "description": "Fiebre"
+          "description": ""
         },
         {
           "id": "2",
           "name": "Gastroenteritis",
-          "description": "Gastroenteritis aguda y le duele mucho"
+          "description": ""
+        },
+        {
+          "id": "3",
+          "name": "Otros",
+          "description": "Tos aguda"
         }
       ],
       "comments": "Visita de prueba",
