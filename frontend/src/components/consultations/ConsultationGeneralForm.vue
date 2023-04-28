@@ -46,6 +46,7 @@
       </div>
       <div class="md:col-span-2">
         <ejs-textbox
+          v-model="formData.comments"
           :floatLabelType="'Auto'"
           :multiline="true"
           :rows="4"

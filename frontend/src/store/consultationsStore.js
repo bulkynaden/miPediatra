@@ -105,11 +105,18 @@ export const useConsultationsStore = defineStore({
           size: blobFile.size,
           name: fileName,
         };
+
         fileUploaded.url = await getDownloadURL(snapshot.ref);
         return fileUploaded;
       } catch (error) {
         return null;
       }
+    },
+    async uploadFile(file, consultation) {
+      let fileUploaded = await this.handleConsultationFile(file);
+
+      await consultation.files.push(fileUploaded);
+      //TODO: ACTUALIZAR LA CONSULTA EN LA BASE DE DATOS
     },
     async deleteFile(file, consultation) {
       let index = consultation.files.findIndex((f) => f.url === file.url);

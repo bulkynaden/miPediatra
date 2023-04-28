@@ -79,7 +79,9 @@ export default {
         : publicImagesPath + "no-photo-girl.png";
     },
     altText() {
-      return this.patient.photo && this.patient.photo.url !== ""
+      return !this.patient
+        ? "Sin datos"
+        : this.patient.photo && this.patient.photo.url !== ""
         ? `Foto de ${this.patient.name}`
         : `No hay foto disponible para ${this.patient.name}`;
     },

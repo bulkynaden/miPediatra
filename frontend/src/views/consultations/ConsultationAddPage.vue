@@ -87,6 +87,8 @@ export default {
           weight: 0,
           cranialDiameter: 0,
         },
+        symptoms: [],
+
         files: [],
       },
       formIsValid: false,
@@ -144,6 +146,7 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
+          console.log(this.consultation.consultationType);
           this.isLoading = true;
           await this.addConsultation(this.consultation).then(() => {
             this.isLoading = false;

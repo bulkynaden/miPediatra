@@ -30,6 +30,7 @@ import {
   UploaderPlugin,
 } from "@syncfusion/ej2-vue-inputs";
 import { DatePickerPlugin } from "@syncfusion/ej2-vue-calendars";
+import { MultiSelectPlugin } from "@syncfusion/ej2-vue-dropdowns";
 
 // SweetAlert2
 import VueSweetalert2 from "vue-sweetalert2";
@@ -73,6 +74,7 @@ createApp(App)
   .use(DatePickerPlugin)
   .use(NumericTextBoxPlugin)
   .use(UploaderPlugin)
+  .use(MultiSelectPlugin)
   .use(PerfectScrollbar)
   .use(VueApexCharts)
   .use(createPinia())

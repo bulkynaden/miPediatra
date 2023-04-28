@@ -1,10 +1,12 @@
 <template>
   <ejs-dropdownlist
     v-model="data"
+    :allowFiltering="true"
     :dataSource="comboData.data"
     :fields="comboData.fields"
     :filtering="onFiltering"
     :placeholder="comboData.placeholder"
+    locale="es"
     popupHeight="450px"
     @change="onSelectionChange"
   >

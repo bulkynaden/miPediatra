@@ -3,10 +3,10 @@
     <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard
       v-if="consultation"
+      :subParentTitle="consultationTypeAction"
       parentTitle="Consultas médicas"
-      subParentTitle="Detalles de consulta"
     >
-      <template #title>Detalles de consulta</template>
+      <template #title>{{ consultationTypeAction }}</template>
       <BaseCard>
         <div class="flex justify-center">
           <div class="w-full md:w-3/4 space-y-4">
@@ -58,7 +58,10 @@
               />
             </section>
             <section v-else>
-              <!-- TODO: Datos visita urgencia-->
+              {{ consultation.diagnosis }} - {{ consultation.treatment }}
+              <div v-for="symptom in consultation.symptoms" :key="symptom.id">
+                {{ symptom.name }}
+              </div>
             </section>
             <FileList :files="consultation.files" />
           </div>
@@ -142,6 +145,11 @@ export default {
     showLoadingLogo() {
       return this.isLoading;
     },
+    consultationTypeAction() {
+      return this.consultation.consultationType === "Emergency"
+        ? "Detalles de emergencia"
+        : "Detalles de visita rutinaria";
+    },
   },
   methods: {
     ...mapActions(useConsultationsStore, {
@@ -210,10 +218,30 @@ export default {
         this.isLoading = false;
       }
     },
+    async uploadFile(file) {
+      try {
+        this.isLoading = true;
+        await useConsultationsStore().uploadFile(file, this.consultation);
+        this.isLoading = false;
+        await Swal.fire(
+          "¡Subido!",
+          "El archivo ha sido subido con éxito.",
+          "success"
+        );
+      } catch (error) {
+        this.isLoading = false;
+        this.$swal.fire({
+          icon: "error",
+          title: "Ha ocurrido un error inesperado",
+          timer: 1500,
+        });
+      }
+    },
   },
   provide() {
     return {
       deleteFile: this.deleteFile,
+      uploadFile: this.uploadFile,
     };
   },
   async beforeMount() {
