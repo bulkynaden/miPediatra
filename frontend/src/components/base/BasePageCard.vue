@@ -1,25 +1,27 @@
 <template>
-  <BreadCrumbs
-    :parent-title="parentTitle"
-    :sub-parent-title="subParentTitle"
-  ></BreadCrumbs>
-  <div class="page-card">
-    <div v-if="hasHeader">
-      <div class="page-card-header">
-        <div
-          class="header-content flex flex-wrap items-center justify-center md:justify-between"
-        >
-          <div class="title mb-2 md:mb-0">
-            <slot name="title" />
-          </div>
-          <div class="button">
-            <slot name="button" />
+  <div>
+    <BreadCrumbs
+      :parent-title="parentTitle"
+      :sub-parent-title="subParentTitle"
+    ></BreadCrumbs>
+    <div class="page-card">
+      <div v-if="hasHeader">
+        <div class="page-card-header">
+          <div
+            class="header-content flex flex-wrap items-center justify-center md:justify-between"
+          >
+            <div class="title mb-2 md:mb-0">
+              <slot name="title" />
+            </div>
+            <div class="button">
+              <slot name="button" />
+            </div>
           </div>
         </div>
       </div>
-    </div>
-    <div class="page-card-body">
-      <slot />
+      <div class="page-card-body">
+        <slot />
+      </div>
     </div>
   </div>
 </template>
@@ -34,7 +36,7 @@ export default {
     },
     subParentTitle: {
       type: String,
-      required: true,
+      required: false,
     },
   },
   components: { BreadCrumbs },

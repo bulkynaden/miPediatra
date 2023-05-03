@@ -1,0 +1,64 @@
+{
+  "vaccineDetails": [
+    {
+      "id": 1,
+      "name": "Hepatitis B",
+      "shortname": "HepB"
+    },
+    {
+      "id": 2,
+      "name": "Polio",
+      "shortname": "IPV"
+    },
+    {
+      "id": 3,
+      "name": "Difteria",
+      "shortname": "DT"
+    },
+    {
+      "id": 4,
+      "name": "Tétanos",
+      "shortname": "TT"
+    },
+    {
+      "id": 5,
+      "name": "Tosferina",
+      "shortname": "Pertussis"
+    },
+    {
+      "id": 6,
+      "name": "Haemophilus inf. b",
+      "shortname": "Hib"
+    },
+    {
+      "id": 7,
+      "name": "Neumococo",
+      "shortname": "PCV"
+    },
+    {
+      "id": 8,
+      "name": "Meningococo C",
+      "shortname": "MenC"
+    },
+    {
+      "id": 9,
+      "name": "Sarampión",
+      "shortname": "Measles"
+    },
+    {
+      "id": 10,
+      "name": "Rubeola",
+      "shortname": "Rubella"
+    },
+    {
+      "id": 11,
+      "name": "Parotiditis",
+      "shortname": "Mumps"
+    },
+    {
+      "id": 12,
+      "name": "Meningococo B",
+      "shortname": "MenB"
+    }
+  ]
+}

@@ -53,6 +53,7 @@
         </BaseCard>
       </div>
     </BasePageCard>
+    <BaseBtn text="Volver" type="button" @click="returnToList" />
   </div>
 </template>
 
@@ -75,7 +76,7 @@ export default {
     return {
       isLoading: false,
       consultation: {
-        patient: { id: 0 },
+        patient: { id: -1 },
         specialist: "",
         center: "",
         date: "",
@@ -87,6 +88,8 @@ export default {
           weight: 0,
           cranialDiameter: 0,
         },
+        symptoms: [],
+
         files: [],
       },
       formIsValid: false,
@@ -139,6 +142,9 @@ export default {
           this.pages.pop();
         }
       }
+    },
+    returnToList() {
+      this.$router.push({ name: "ConsultationsListPage" });
     },
     async submitForm() {
       this.$refs.formPage.validateAll();

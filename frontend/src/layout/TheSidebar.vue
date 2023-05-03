@@ -119,27 +119,31 @@ export default {
             </li>
             <li
               :class="selectedParentMenu === 'patients' ? 'active' : ''"
-              :data-submenu="true"
               class="nav-item border-b border-gray-200 dark:border-dark"
               data-item="patients"
               @mouseenter="toggleSubMenu"
             >
-              <a class="nav-item-hold">
+              <router-link
+                :to="{ name: 'PatientsListPage' }"
+                class="nav-item-hold"
+              >
                 <i class="i-Baby text-3xl"></i>
                 <p>Mis pacientes</p>
-              </a>
+              </router-link>
             </li>
             <li
               :class="selectedParentMenu === 'consultations' ? 'active' : ''"
-              :data-submenu="true"
               class="nav-item border-b border-gray-200 dark:border-dark"
               data-item="consultations"
               @mouseenter="toggleSubMenu"
             >
-              <a class="nav-item-hold">
+              <router-link
+                :to="{ name: 'ConsultationsListPage' }"
+                class="nav-item-hold"
+              >
                 <i class="i-Hospital1 text-3xl"></i>
                 <p>Consultas médicas</p>
-              </a>
+              </router-link>
             </li>
             <li
               :class="selectedParentMenu === 'measurements' ? 'active' : ''"
@@ -187,50 +191,6 @@ export default {
             <router-link :to="{ name: 'TimelinePage' }">
               <i class="nav-icon i-Calendar mr-2"></i>
               <span class="item-name"> Calendario </span>
-            </router-link>
-          </li>
-        </ul>
-        <ul
-          :class="selectedParentMenu === 'patients' ? 'block' : 'hidden'"
-          class="mb-4 childNav"
-          data-parent="patients"
-        >
-          <li>
-            <router-link :to="{ name: 'PatientsListPage' }">
-              <i class="nav-icon i-Align-Justify-Right mr-2"></i>
-              <span class="item-name"> Listado </span>
-            </router-link>
-          </li>
-
-          <li>
-            <router-link :to="{ name: 'PatientsNotesPage' }" class>
-              <i class="nav-icon i-Notepad text-base mr-2"></i>
-              <span class="item-name"> Notas </span>
-            </router-link>
-          </li>
-        </ul>
-        <ul
-          :class="selectedParentMenu === 'consultations' ? 'block' : 'hidden'"
-          class="mb-4 childNav"
-          data-parent="consultations"
-        >
-          <li>
-            <router-link :to="{ name: 'ConsultationsListPage' }">
-              <i class="nav-icon i-Align-Justify-Right mr-2"></i>
-              <span class="item-name"> Listado </span>
-            </router-link>
-          </li>
-
-          <li>
-            <router-link :to="{ name: 'RegularVisitPage' }" class>
-              <i class="nav-icon i-Stethoscope mr-2"></i>
-              <span class="item-name"> Visitas periódicas </span>
-            </router-link>
-          </li>
-          <li>
-            <router-link :to="{ name: 'EmergencyPage' }" class>
-              <i class="nav-icon i-Danger mr-2"></i>
-              <span class="item-name"> Urgencias </span>
             </router-link>
           </li>
         </ul>

@@ -1,34 +1,32 @@
 {
   "consultations": [
     {
-      "id": "1",
+      "id": 1,
       "consultationType": "Emergency",
       "patient": {
-        "id": "1"
+        "id": 1
       },
       "specialist": "Dr. Juan",
       "center": "Hospital San Jorge",
       "date": "2018-11-07T09:00:00.000Z",
-      "symptoms": [
+      "diagnosis": "Tiene cuentitis",
+      "treatment": "Mano dura",
+      "consultationsSymptoms": [
         {
-          "id": "1",
-          "name": "Fiebre",
-          "description": "Fiebre"
+          "id": 1
         },
         {
-          "id": "2",
-          "name": "Gastroenteritis",
-          "description": "Gastroenteritis aguda y le duele mucho"
+          "id": 2
         }
       ],
       "comments": "Visita de prueba",
       "files": []
     },
     {
-      "id": "2",
+      "id": 2,
       "consultationType": "RegularVisit",
       "patient": {
-        "id": "1"
+        "id": 1
       },
       "specialist": "Dr. Juan",
       "center": "Hospital Miguel Servet",
@@ -42,10 +40,10 @@
       "files": []
     },
     {
-      "id": "3",
+      "id": 3,
       "consultationType": "RegularVisit",
       "patient": {
-        "id": "2"
+        "id": 2
       },
       "specialist": "Dr. Marco",
       "center": "Hospital Miguel Servet",

@@ -1,10 +1,12 @@
 <template>
   <ejs-dropdownlist
     v-model="data"
+    :allowFiltering="true"
     :dataSource="comboData.data"
     :fields="comboData.fields"
     :filtering="onFiltering"
     :placeholder="comboData.placeholder"
+    locale="es"
     popupHeight="450px"
     @change="onSelectionChange"
   >
@@ -13,7 +15,7 @@
 
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
-import autonomousCommunities from "../../data/autonomousCommunitiesData.json";
+import autonomousCommunities from "../../../data/autonomousCommunitiesData.json";
 import { Query } from "@syncfusion/ej2-data";
 
 export default {

@@ -13,7 +13,7 @@
 
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
-import gendersList from "../../data/genderData.json";
+import gendersList from "../../../data/genderData.json";
 
 export default {
   name: "GendersCombo",

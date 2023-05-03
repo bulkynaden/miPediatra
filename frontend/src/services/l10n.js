@@ -22,5 +22,9 @@ L10n.load({
       size: "Tamaño",
       invalidSelection: "Archivos no válidos seleccionados",
     },
+    "drop-down-list": {
+      noRecordsTemplate: "No se encontraron registros",
+      actionFailureTemplate: "La solicitud falló",
+    },
   },
 });

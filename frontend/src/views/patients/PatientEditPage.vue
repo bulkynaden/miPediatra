@@ -28,6 +28,7 @@
         </BaseCard>
       </div>
     </BasePageCard>
+    <BaseBtn text="Volver" type="button" @click="returnToList" />
   </div>
 </template>
 
@@ -68,6 +69,12 @@ export default {
       getPatient: "getPatient",
       editPatient: "editPatient",
     }),
+    returnToList() {
+      this.$router.push({
+        name: "PatientDetailsPage",
+        params: this.patient.id,
+      });
+    },
     async submitForm() {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {

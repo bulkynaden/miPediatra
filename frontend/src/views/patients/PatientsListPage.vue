@@ -44,7 +44,7 @@ export default {
   computed: {
     patients() {
       const patientStore = usePatientsStore();
-      return patientStore.getPatients;
+      return patientStore.patients;
     },
   },
   methods: {},

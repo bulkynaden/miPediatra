@@ -46,7 +46,7 @@ import autonomousCommunities from "../../data/autonomousCommunitiesData.json";
 import { publicImagesPath } from "@/router/publicPath.js";
 
 export default {
-  name: "PatientDetails",
+  name: "PatientDetailsForm",
   props: ["formData"],
   computed: {
     formatDate() {

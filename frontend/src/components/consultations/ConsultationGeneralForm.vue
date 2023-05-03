@@ -16,7 +16,8 @@
     <div class="grid sm:grid-cols-1 md:grid-cols-2 gap-4 pt-4">
       <div class="md:col-span-1">
         <PatientsCombo
-          v-model="formData.patient.id"
+          v-model="formData.patient"
+          :selected-id="formData.patient.id"
           @selected-item="handleSelectedPatient"
         />
         <label v-show="!isValidPatient" class="e-error"
@@ -46,6 +47,7 @@
       </div>
       <div class="md:col-span-2">
         <ejs-textbox
+          v-model="formData.comments"
           :floatLabelType="'Auto'"
           :multiline="true"
           :rows="4"
@@ -82,8 +84,8 @@ import {
   TextBoxComponent,
   UploaderComponent,
 } from "@syncfusion/ej2-vue-inputs";
-import PatientsCombo from "@/components/patients/PatientsCombo.vue";
-import ConsultationsTypesCombo from "@/components/consultations/ConsultationsTypesCombo.vue";
+import PatientsCombo from "@/components/patients/combos/PatientsCombo.vue";
+import ConsultationsTypesCombo from "@/components/consultations/combos/ConsultationsTypesCombo.vue";
 import MeasurementsForm from "@/components/consultations/MeasurementsForm.vue";
 
 export default {
@@ -145,7 +147,8 @@ export default {
       }
     },
     validatePatient() {
-      this.isValidPatient = !!this.formData.patient;
+      this.isValidPatient =
+        !!this.formData.patient && this.formData.patient.id !== -1;
     },
     validateDate() {
       this.isValidDate = !!this.formData.date;

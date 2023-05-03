@@ -54,6 +54,7 @@
         </BaseCard>
       </div>
     </BasePageCard>
+    <BaseBtn text="Volver" type="button" @click="returnToList" />
   </div>
 </template>
 
@@ -109,8 +110,8 @@ export default {
     },
     consultationTypeAction() {
       return this.consultationType === "Emergency"
-        ? "Editar emergencia"
-        : "Editar visita rutinaria";
+        ? "Editar consulta de urgencias"
+        : "Editar consulta rutinaria";
     },
   },
   methods: {
@@ -118,6 +119,9 @@ export default {
       editConsultation: "editConsultation",
       getConsultation: "getConsultation",
     }),
+    returnToList() {
+      this.$router.push({ name: "ConsultationsListPage" });
+    },
     getCurrentPage() {
       return this.pages[this.currentStep];
     },

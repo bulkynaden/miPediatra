@@ -23,12 +23,12 @@ export default {
         {
           id: 0,
           type: "RegularVisit",
-          text: "Visita rutinaria",
+          text: "Consulta rutinaria",
         },
         {
           id: 1,
           type: "Emergency",
-          text: "Emergencia",
+          text: "Consulta de urgencias",
         },
       ],
       consultationData: {

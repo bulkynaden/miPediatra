@@ -8,7 +8,7 @@
           parentTitle
         }}</a>
       </li>
-      <li class="inline">
+      <li v-if="subParentTitle" class="inline">
         <svg
           class="h-5 w-5 text-gray-400"
           fill="currentColor"
@@ -19,7 +19,7 @@
           />
         </svg>
       </li>
-      <li class="inline text-gray-600 dark:text-gray-400">
+      <li v-if="subParentTitle" class="inline text-gray-600 dark:text-gray-400">
         {{ subParentTitle }}
       </li>
     </ul>
@@ -35,7 +35,7 @@ export default {
     },
     subParentTitle: {
       type: String,
-      required: true,
+      required: false,
     },
   },
 };

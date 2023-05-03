@@ -10,18 +10,20 @@ import {
   ref,
   uploadBytes,
 } from "firebase/storage";
+import { useSymptomsStore } from "@/store/symptomsStore.js";
 
 export const useConsultationsStore = defineStore({
   id: "consultationsStore",
   state: () => ({
     consultations: [],
   }),
-  getters: {
-    getConsultations() {
+  actions: {
+    async getConsultations() {
+      if (this.consultations.length === 0) {
+        await this.fetchConsultations();
+      }
       return this.consultations;
     },
-  },
-  actions: {
     async fetchConsultations() {
       this.consultations = await new Promise((resolve) => {
         setTimeout(() => {
@@ -42,15 +44,18 @@ export const useConsultationsStore = defineStore({
       if (this.consultations.length === 0) {
         await this.fetchConsultations();
       }
-      return new Promise((resolve) => {
+      return new Promise(async (resolve) => {
         const consultation = this.consultations.find(
-          (consultation) => consultation.id === id
+          (consultation) => consultation.id === parseInt(id, 10)
+        );
+        consultation.symptoms = await useSymptomsStore().getSymptoms(
+          consultation.id
         );
         resolve(consultation);
       });
     },
     async addConsultation(consultation) {
-      consultation.id = this.consultations.length + 1 + "";
+      consultation.id = this.consultations.length + 1;
 
       for (const file of consultation.blobFiles) {
         let fileUploaded = await this.handleConsultationFile(file);
@@ -59,13 +64,30 @@ export const useConsultationsStore = defineStore({
           consultation.files.push(fileUploaded);
         }
       }
+
       //TODO: AÑADIR LA CONSULTA EN LA BASE DE DATOS
+      usePatientsStore().addConsultationToPatient(
+        consultation.patient.id,
+        consultation
+      );
+
+      consultation.consultationsSymptoms = [];
+      for (const symptom of consultation.symptoms) {
+        consultation.consultationsSymptoms.push(
+          await useSymptomsStore().addSymptom(
+            consultation.id,
+            symptom.id,
+            symptom.description
+          )
+        );
+      }
       this.consultations.push(consultation);
       return consultation;
     },
 
     async editConsultation(editedConsultation) {
       //TODO: ACTUALIZAR LA CONSULTA EN LA BASE DE DATOS
+      await useSymptomsStore().editSymptoms(editedConsultation);
       this.consultations = this.consultations.map((consultation) => {
         if (consultation.id === editedConsultation.id) {
           return editedConsultation;
@@ -82,7 +104,12 @@ export const useConsultationsStore = defineStore({
         for (const file of consultationToDelete.files) {
           await deleteObject(ref(getStorage(), file.url));
         }
+
         //TODO: BORRAR LA CONSULTA EN LA BASE DE DATOS
+        usePatientsStore().removeConsultationFromPatient(
+          consultationToDelete.patient.id,
+          consultationToDelete
+        );
         this.consultations = this.consultations.filter(
           (consultation) => consultation.id !== id
         );
@@ -105,11 +132,18 @@ export const useConsultationsStore = defineStore({
           size: blobFile.size,
           name: fileName,
         };
+
         fileUploaded.url = await getDownloadURL(snapshot.ref);
         return fileUploaded;
       } catch (error) {
         return null;
       }
+    },
+    async uploadFile(file, consultation) {
+      let fileUploaded = await this.handleConsultationFile(file);
+
+      await consultation.files.push(fileUploaded);
+      //TODO: ACTUALIZAR LA CONSULTA EN LA BASE DE DATOS
     },
     async deleteFile(file, consultation) {
       let index = consultation.files.findIndex((f) => f.url === file.url);

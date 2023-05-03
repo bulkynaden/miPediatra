@@ -1,5 +1,6 @@
 <template>
   <ejs-dropdownlist
+    ref="dropdown"
     :dataSource="patients"
     :fields="patientData.fields"
     :itemTemplate="patientItemTemplate"
@@ -12,12 +13,13 @@
 
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
-import { usePatientsStore } from "../../store/patientsStore.js";
-import { publicImagesPath } from "../../router/publicPath.js";
+import { usePatientsStore } from "@/store/patientsStore.js";
+import { publicImagesPath } from "@/router/publicPath.js";
 
 export default {
   name: "PatientsCombo",
   components: { "ejs-dropdownlist": DropDownListComponent },
+  props: ["selectedId"],
   data() {
     return {
       patientData: {
@@ -34,13 +36,14 @@ export default {
   computed: {
     patients() {
       const patientStore = usePatientsStore();
-      const patients = patientStore.getPatients;
+      const patients = patientStore.patients;
       return patients.map((patient) => ({
         ...patient,
         photoUrl: this.photoSrc(patient),
       }));
     },
   },
+
   methods: {
     photoSrc(patient) {
       const patientToShow = patient;
@@ -53,6 +56,9 @@ export default {
     onSelectionChange(e) {
       this.$emit("selected-item", e.itemData);
     },
+  },
+  mounted() {
+    this.$refs.dropdown.ej2Instances.value = this.selectedId;
   },
 };
 </script>

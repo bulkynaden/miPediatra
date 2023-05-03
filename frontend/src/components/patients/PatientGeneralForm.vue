@@ -144,9 +144,9 @@
 </template>
 
 <script>
-import GenderCombo from "@/components/patients/GendersCombo.vue";
-import AutonomousCommunityCombo from "@/components/patients/AutonomousCommunitiesCombo.vue";
-import BloodTypesCombo from "@/components/patients/BloodTypesCombo.vue";
+import GenderCombo from "@/components/patients/combos/GendersCombo.vue";
+import AutonomousCommunityCombo from "@/components/patients/combos/AutonomousCommunitiesCombo.vue";
+import BloodTypesCombo from "@/components/patients/combos/BloodTypesCombo.vue";
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
 import { DateTimePickerComponent } from "@syncfusion/ej2-vue-calendars";
 import {

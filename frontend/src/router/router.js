@@ -79,14 +79,6 @@ const routes = [
               title: "Detalles paciente",
             },
           },
-          {
-            path: "notas",
-            name: "PatientsNotesPage",
-            component: () => import("../views/patients/PatientsNotesPage.vue"),
-            meta: {
-              title: "Notas paciente",
-            },
-          },
         ],
       },
       {
@@ -132,23 +124,6 @@ const routes = [
               import("../views/consultations/ConsultationDetailsPage.vue"),
             meta: {
               title: "Detalles consulta",
-            },
-          },
-          {
-            path: "periodicas",
-            name: "RegularVisitPage",
-            component: () =>
-              import("../views/consultations/RegularVisitPage.vue"),
-            meta: {
-              title: "Visitas rutinarias",
-            },
-          },
-          {
-            path: "urgencias",
-            name: "EmergencyPage",
-            component: () => import("../views/consultations/EmergencyPage.vue"),
-            meta: {
-              title: "Emergencias",
             },
           },
         ],

@@ -5,13 +5,13 @@
         v-if="consultation.consultationType === 'Emergency'"
         class="bg-red-600 text-white text-xs font-semibold px-2 py-1 rounded-full"
       >
-        Emergencia</span
+        Urgencias</span
       >
       <span
         v-else
         class="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-full"
       >
-        Visita rutinaria</span
+        Rutinaria</span
       >
     </div>
     <img
@@ -79,7 +79,9 @@ export default {
         : publicImagesPath + "no-photo-girl.png";
     },
     altText() {
-      return this.patient.photo && this.patient.photo.url !== ""
+      return !this.patient
+        ? "Sin datos"
+        : this.patient.photo && this.patient.photo.url !== ""
         ? `Foto de ${this.patient.name}`
         : `No hay foto disponible para ${this.patient.name}`;
     },

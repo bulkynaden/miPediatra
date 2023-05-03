@@ -1,6 +1,7 @@
 <template>
   <div v-if="patient">
     <TheLoadingLogo v-if="showLoadingLogo" />
+
     <BasePageCard :subParentTitle="patientData" parentTitle="Mis pacientes">
       <template #title>
         <div class="flex justify-between items-center">
@@ -16,72 +17,66 @@
           </div>
         </div>
       </template>
-
-      <div class="container mx-auto">
-        <BaseCard>
-          <div class="grid md:grid-cols-2 gap-4">
-            <div class="space-y-4">
-              <p><strong>Nombre:</strong> {{ patient.name }}</p>
-              <p><strong>Apellido:</strong> {{ patient.lastName }}</p>
-              <p>
-                <strong>Sexo: </strong>
-                <span>{{ getGenderDisplay().text }}</span>
-                <i :class="getGenderDisplay().icon" class="pl-1"></i>
-              </p>
-              <p>
-                <strong>Fecha de nacimiento:</strong>
-                {{ formatDate(patient.birthdate) }}
-              </p>
-            </div>
-            <div class="space-y-4">
-              <p>
-                <strong>Peso al nacer:</strong> {{ patient.birthWeight }} kg
-              </p>
-              <p>
-                <strong>Comunidad autónoma:</strong>
-                {{ getAutonomousCommunityDisplay(patient.autonomousCommunity) }}
-              </p>
-              <p><strong>Tipo de sangre:</strong> {{ patient.bloodType }}</p>
-              <p><strong>DNI:</strong> {{ patient.dni }}</p>
-            </div>
+      <BaseCard>
+        <div class="container mx-auto">
+          <div class="mb-4 flex border-b border-gray-300 overflow-x-auto">
+            <button
+              v-for="(tab, index) in tabs"
+              :key="index"
+              :class="[
+                'text-xs sm:text-sm font-semibold text-gray-600 py-2 px-2 sm:px-4 whitespace-nowrap',
+                activeTab === index
+                  ? 'border-b-4 border-blue-500 text-blue-500'
+                  : '',
+              ]"
+              @click="changeTab(index)"
+              @mouseleave="unhoverTab(index)"
+              @mouseover="hoverTab(index)"
+            >
+              {{ tab }}
+            </button>
           </div>
-          <div class="space-y-4 mt-4">
-            <p><strong>Comentarios:</strong> {{ patient.comments }}</p>
-          </div>
-        </BaseCard>
-        <div class="mt-4 flex flex-wrap justify-between">
-          <router-link
-            :to="{ name: 'PatientEditPage', params: { id: patient.id } }"
-          >
-            <BaseBtn class="i-Pen-3" text=" Editar"></BaseBtn>
-          </router-link>
-          <BaseBtn
-            class="i-Eraser-2 e-danger"
-            text=" Borrar"
-            @click="confirmDeletePatient"
-          ></BaseBtn>
+          <transition mode="out-in" name="fade">
+            <component
+              :is="activeComponent"
+              :consultations="consultations"
+              :patient="patient"
+            ></component>
+          </transition>
         </div>
-      </div>
+      </BaseCard>
     </BasePageCard>
+    <BaseBtn text="Volver" type="button" @click="returnToList" />
   </div>
 </template>
 
 <script>
 import { usePatientsStore } from "@/store/patientsStore.js";
-import { mapActions } from "pinia";
 import { publicImagesPath } from "@/router/publicPath.js";
-import genders from "@/data/genderData.json";
-import autonomousCommunities from "@/data/autonomousCommunitiesData.json";
 import Swal from "sweetalert2";
 import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
+import PatientDetailsTab from "@/components/patients/PatientDetailsTab.vue";
+import ConsultationsList from "@/components/consultations/ConsultationsList.vue";
+import BaseCard from "@/components/base/BaseCard.vue";
+import VaccinesList from "@/components/vaccines/VaccinesList.vue";
 
 export default {
   name: "PatientDetailsPage",
-  components: { TheLoadingLogo },
+  components: {
+    BaseCard,
+    TheLoadingLogo,
+    PatientDetailsTab,
+    ConsultationsList,
+    VaccinesList,
+  },
   data() {
     return {
       isLoading: false,
       patient: null,
+      consultations: [],
+      vaccines: [],
+      activeTab: 0,
+      tabs: ["Detalles", "Consultas médicas", "Vacunas"],
     };
   },
   computed: {
@@ -105,79 +100,47 @@ export default {
     showLoadingLogo() {
       return this.isLoading;
     },
+    activeComponent() {
+      switch (this.activeTab) {
+        case 1:
+          return ConsultationsList;
+        case 2:
+          return VaccinesList;
+        default:
+          return PatientDetailsTab;
+      }
+    },
+    getConsultations() {},
   },
   methods: {
-    ...mapActions(usePatientsStore, {
-      getPatient: "getPatient",
-      deletePatient: "deletePatient",
-    }),
-    formatDate(date) {
-      return (
-        new Date(date).toLocaleDateString("es-ES", {
-          weekday: "long",
-          year: "numeric",
-          month: "long",
-          day: "numeric",
-        }) +
-        " a las " +
-        new Date(date).toLocaleTimeString("es-ES", {
-          hour: "numeric",
-          minute: "2-digit",
-        })
-      );
+    returnToList() {
+      this.$router.push({ name: "PatientsListPage" });
     },
-    getGenderDisplay() {
-      let selectedGender;
-      if (this.patient.gender) {
-        selectedGender = genders.find(
-          (gender) => gender.id === this.patient.gender
-        );
+    changeTab(index) {
+      this.activeTab = index;
+    },
+    hoverTab(index) {
+      if (index !== this.activeTab) {
+        this.$el
+          .querySelectorAll("button")
+          [index].classList.add("text-blue-500");
       }
-      return {
-        text: selectedGender ? selectedGender.value : "",
-        icon: selectedGender ? selectedGender.icon : "",
-      };
     },
-    getAutonomousCommunityDisplay(id) {
-      let selectedAutonomousCommunity = "";
-      if (id) {
-        selectedAutonomousCommunity = autonomousCommunities.find(
-          (community) => community.id === id
-        ).name;
+    unhoverTab(index) {
+      if (index !== this.activeTab) {
+        this.$el
+          .querySelectorAll("button")
+          [index].classList.remove("text-blue-500");
       }
-      return selectedAutonomousCommunity;
-    },
-    confirmDeletePatient() {
-      Swal.fire({
-        title: "¿Estas seguro de borrar este paciente?",
-        text: "No podrás recuperar a este paciente",
-        icon: "warning",
-        showCancelButton: true,
-      }).then(async (result) => {
-        if (result.isConfirmed) {
-          try {
-            await this.deletePatient(this.patient.id).then(() => {
-              this.$router.push({ name: "PatientsListPage" });
-            });
-            await Swal.fire(
-              "¡Borrado!",
-              "El paciente ha sido borrado con éxito.",
-              "success"
-            );
-          } catch (error) {
-            this.$swal.fire({
-              icon: "error",
-              title: "Ha ocurrido un error inesperado",
-              timer: 1500,
-            });
-          }
-        }
-      });
     },
   },
   async beforeMount() {
     this.isLoading = true;
-    this.patient = await this.getPatient(this.$route.params.id);
+    this.patient = await usePatientsStore().getPatient(this.$route.params.id);
+    this.consultations = await usePatientsStore().getConsultations(
+      this.patient
+    );
+    this.vaccines = await usePatientsStore().getVaccines(this.patient);
     this.isLoading = false;
     if (!this.patient) {
       await Swal.fire({
@@ -190,4 +153,19 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s;
+}
+
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
+
+button {
+  outline: none;
+  transition: all 0.3s;
+}
+</style>

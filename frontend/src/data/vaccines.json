@@ -1,0 +1,88 @@
+{
+  "vaccines": [
+    {
+      "id": 1,
+      "vaccineDetails": {
+        "id": 1
+      },
+      "dose": 1,
+      "vaccineDosePeriods": [
+        {
+          "id": 1
+        },
+        {
+          "id": 2
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "vaccineDetails": {
+        "id": 1
+      },
+      "dose": 2,
+      "vaccineDosePeriods": [
+        {
+          "id": 3
+        },
+        {
+          "id": 4
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "vaccineDetails": {
+        "id": 2
+      },
+      "dose": 1,
+      "vaccineDosePeriods": [
+        {
+          "id": 5
+        },
+        {
+          "id": 6
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "vaccineDetails": {
+        "id": 2
+      },
+      "dose": 2,
+      "vaccineDosePeriods": [
+        {
+          "id": 7
+        },
+        {
+          "id": 8
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "vaccineDetails": {
+        "id": 12
+      },
+      "dose": 1,
+      "vaccineDosePeriods": [
+        {
+          "id": 9
+        }
+      ]
+    },
+    {
+      "id": 6,
+      "vaccineDetails": {
+        "id": 12
+      },
+      "dose": 2,
+      "vaccineDosePeriods": [
+        {
+          "id": 10
+        }
+      ]
+    }
+  ]
+}

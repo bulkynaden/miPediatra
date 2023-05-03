@@ -48,12 +48,13 @@
         </BaseCard>
       </div>
     </BasePageCard>
+    <BaseBtn text="Volver" type="button" @click="returnToList" />
   </div>
 </template>
 
 <script>
 import PatientGeneralForm from "@/components/patients/PatientGeneralForm.vue";
-import PatientDetails from "@/components/patients/PatientDetails.vue";
+import PatientDetailsForm from "@/components/patients/PatientDetailsForm.vue";
 import { usePatientsStore } from "@/store/patientsStore.js";
 import { markRaw } from "vue";
 import { mapActions } from "pinia";
@@ -84,7 +85,7 @@ export default {
         },
       },
       formIsValid: false,
-      pages: [markRaw(PatientGeneralForm), markRaw(PatientDetails)],
+      pages: [markRaw(PatientGeneralForm), markRaw(PatientDetailsForm)],
       currentStep: 0,
       currentComponent: PatientGeneralForm,
     };
@@ -107,6 +108,9 @@ export default {
     ...mapActions(usePatientsStore, {
       addPatient: "addPatient",
     }),
+    returnToList() {
+      this.$router.push({ name: "PatientsListPage" });
+    },
     getCurrentPage() {
       return this.pages[this.currentStep];
     },
@@ -158,6 +162,9 @@ export default {
     handleValidation(isValid) {
       this.formIsValid = isValid;
     },
+  },
+  beforeMount() {
+    console.log(this.formData);
   },
 };
 </script>
