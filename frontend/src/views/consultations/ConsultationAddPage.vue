@@ -150,6 +150,7 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
+          console.log(this.consultation.consultationType);
           this.isLoading = true;
           await this.addConsultation(this.consultation).then(() => {
             this.isLoading = false;
