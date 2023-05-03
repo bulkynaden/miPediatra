@@ -58,7 +58,7 @@ import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 import PatientDetailsTab from "@/components/patients/PatientDetailsTab.vue";
 import ConsultationsList from "@/components/consultations/ConsultationsList.vue";
 import BaseCard from "@/components/base/BaseCard.vue";
-import VaccinesList from "@/components/vaccines/VaccinesList.vue";
+import VaccinesListTab from "@/components/patients/VaccinesListTab.vue";
 
 export default {
   name: "PatientDetailsPage",
@@ -67,7 +67,7 @@ export default {
     TheLoadingLogo,
     PatientDetailsTab,
     ConsultationsList,
-    VaccinesList,
+    VaccinesListTab,
   },
   data() {
     return {
@@ -105,7 +105,7 @@ export default {
         case 1:
           return ConsultationsList;
         case 2:
-          return VaccinesList;
+          return VaccinesListTab;
         default:
           return PatientDetailsTab;
       }

@@ -108,8 +108,9 @@ export default {
     },
     confirmDeletePatient() {
       Swal.fire({
-        title: "¿Estas seguro de borrar este paciente?",
+        title: "¿Estás seguro de eliminar este paciente?",
         text: "No podrás recuperar a este paciente",
+        cancelButtonText: "Cancelar",
         icon: "warning",
         showCancelButton: true,
       }).then(async (result) => {
@@ -121,8 +122,8 @@ export default {
                 this.$router.push({ name: "PatientsListPage" });
               });
             await Swal.fire(
-              "¡Borrado!",
-              "El paciente ha sido borrado con éxito.",
+              "¡Eliminado!",
+              "El paciente ha sido eliminado con éxito.",
               "success"
             );
           } catch (error) {

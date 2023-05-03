@@ -52,8 +52,6 @@ export const usePatientsStore = defineStore({
     async getConsultations(patient) {
       const consultationsStore = useConsultationsStore();
       const allConsultations = await consultationsStore.getConsultations();
-      console.log(patient);
-      console.log(allConsultations);
       return allConsultations.filter(
         (consultation) => consultation.patient.id === patient.id
       );

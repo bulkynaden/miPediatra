@@ -167,8 +167,9 @@ export default {
     },
     confirmDeleteConsultation() {
       Swal.fire({
-        title: "¿Estas seguro de borrar esta consulta?",
+        title: "¿Estás seguro de eliminar esta consulta?",
         text: "No podrás recuperar los datos de esta consulta",
+        cancelButtonText: "Cancelar",
         icon: "warning",
         showCancelButton: true,
       }).then(async (result) => {
@@ -180,8 +181,8 @@ export default {
               this.$router.push({ name: "ConsultationsListPage" });
             });
             await Swal.fire(
-              "¡Borrado!",
-              "La consulta ha sido borrada con éxito.",
+              "¡Eliminada!",
+              "La consulta ha sido eliminada con éxito.",
               "success"
             );
           } catch (error) {
