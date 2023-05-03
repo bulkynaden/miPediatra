@@ -1,0 +1,98 @@
+{
+  "patients": [
+    {
+      "id": 1,
+      "name": "María",
+      "lastName": "García Alvarado",
+      "gender": "MUJER",
+      "birthWeight": 2.4,
+      "autonomousCommunity": 1,
+      "bloodType": "A+",
+      "dni": "34567890D",
+      "birthdate": "2016-05-12T12:10:00",
+      "comments": "Cumple con el tratamiento",
+      "photo": {
+        "id": 1
+      },
+      "consultations": [
+        {
+          "id": 1
+        },
+        {
+          "id": 2
+        }
+      ],
+      "vaccines": [
+        {
+          "id": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "name": "Juan",
+      "lastName": "Pérez Gómez",
+      "gender": "HOMBRE",
+      "birthWeight": 2.4,
+      "autonomousCommunity": 1,
+      "bloodType": "B+",
+      "dni": "34567890E",
+      "birthdate": "2020-04-10T17:30:00",
+      "comments": "Hay que vigilar su peso",
+      "photo": {
+        "id": 2
+      },
+      "consultations": [
+        {
+          "id": 3
+        }
+      ],
+      "vaccines": []
+    },
+    {
+      "id": 3,
+      "name": "Carlota",
+      "lastName": "González Martín",
+      "gender": "MUJER",
+      "birthWeight": 2.0,
+      "autonomousCommunity": 2,
+      "bloodType": "A-",
+      "dni": "34567890F",
+      "birthdate": "2022-06-12T23:11:28",
+      "comments": "Crece adecuadamente",
+      "photo": null,
+      "consultations": [],
+      "vaccines": []
+    },
+    {
+      "id": 4,
+      "name": "Pedro",
+      "lastName": "Sánchez López",
+      "gender": "HOMBRE",
+      "birthWeight": 3.2,
+      "autonomousCommunity": 3,
+      "bloodType": "O+",
+      "dni": "12345678A",
+      "birthdate": "2015-01-20T00:10:22",
+      "comments": "Requiere atención médica especializada",
+      "photo": null,
+      "consultations": [],
+      "vaccines": []
+    },
+    {
+      "id": 5,
+      "name": "Carmen",
+      "lastName": "Fernández González",
+      "gender": "MUJER",
+      "birthWeight": 2.8,
+      "autonomousCommunity": 4,
+      "bloodType": "B-",
+      "dni": "23456789B",
+      "birthdate": "2018-11-05T00:12:30",
+      "comments": "Presenta alergias alimentarias",
+      "photo": null,
+      "consultations": [],
+      "vaccines": []
+    }
+  ]
+}

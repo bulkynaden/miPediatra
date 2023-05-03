@@ -1,0 +1,16 @@
+{
+  "consultationsSymptoms": [
+    {
+      "id": 1,
+      "consultation": 1,
+      "symptom": 1,
+      "description": ""
+    },
+    {
+      "id": 2,
+      "consultation": 1,
+      "symptom": 20,
+      "description": "Tos aguda"
+    }
+  ]
+}

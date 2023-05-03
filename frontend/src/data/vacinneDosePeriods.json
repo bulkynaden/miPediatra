@@ -1,0 +1,94 @@
+{
+  "vaccineDosePeriods": [
+    {
+      "id": 1,
+      "vaccine": {
+        "id": 1
+      },
+      "autonomousCommunity": 2,
+      "timeToDose": "0Y2M0D",
+      "required": true
+    },
+    {
+      "id": 2,
+      "vaccine": {
+        "id": 1
+      },
+      "autonomousCommunity": 5,
+      "timeToDose": "0Y2M0D",
+      "required": true
+    },
+    {
+      "id": 3,
+      "vaccine": {
+        "id": 2
+      },
+      "autonomousCommunity": 2,
+      "timeToDose": "0Y4M0D",
+      "required": true
+    },
+    {
+      "id": 4,
+      "vaccine": {
+        "id": 2
+      },
+      "autonomousCommunity": 5,
+      "timeToDose": "0Y4M0D",
+      "required": true
+    },
+    {
+      "id": 5,
+      "vaccine": {
+        "id": 3
+      },
+      "autonomousCommunity": 2,
+      "timeToDose": "0Y4M0D",
+      "required": true
+    },
+    {
+      "id": 6,
+      "vaccine": {
+        "id": 3
+      },
+      "autonomousCommunity": 5,
+      "timeToDose": "0Y4M0D",
+      "required": true
+    },
+    {
+      "id": 7,
+      "vaccine": {
+        "id": 4
+      },
+      "autonomousCommunity": 2,
+      "timeToDose": "0Y4M0D",
+      "required": true
+    },
+    {
+      "id": 8,
+      "vaccine": {
+        "id": 4
+      },
+      "autonomousCommunity": 5,
+      "timeToDose": "0Y4M0D",
+      "required": true
+    },
+    {
+      "id": 9,
+      "vaccine": {
+        "id": 5
+      },
+      "autonomousCommunity": 5,
+      "timeToDose": "0Y3M0D",
+      "required": true
+    },
+    {
+      "id": 10,
+      "vaccine": {
+        "id": 6
+      },
+      "autonomousCommunity": 5,
+      "timeToDose": "0Y5M0D",
+      "required": true
+    }
+  ]
+}
