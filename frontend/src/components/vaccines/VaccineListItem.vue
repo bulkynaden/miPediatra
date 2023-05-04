@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-1 md:grid-cols-6 gap-4 w-full">
+  <div class="grid grid-cols-2 md:grid-cols-6 gap-4 w-full">
     <div class="col-span-1 flex flex-col justify-center items-center">
       <span
         class="bg-yellow-600 text-white text-xs font-semibold px-2 py-1 rounded-full"
@@ -10,7 +10,9 @@
     <div class="col-span-1 flex justify-center items-center">
       <strong class="mr-2">Dosis:</strong>{{ vaccine.vaccine.dose }}º
     </div>
-    <div class="col-span-1 flex flex-col justify-center items-center">
+    <div
+      class="col-span-2 md:col-span-1 flex flex-col justify-center items-center"
+    >
       <span
         v-if="vaccine.hasBeenAdministered"
         class="bg-green-600 text-white text-xs font-semibold px-2 py-1 rounded-full"
@@ -23,7 +25,10 @@
         >Prevista
       </span>
     </div>
-    <div v-if="vaccine.hasBeenAdministered" class="col-span-2">
+    <div
+      v-if="vaccine.hasBeenAdministered"
+      class="col-span-2 md:col-span-2 flex flex-col justify-center items-center"
+    >
       <p class="text-sm font-semibold leading-6 text-gray-900">
         {{ dateFormatted(vaccine.date) }}
       </p>
@@ -37,7 +42,7 @@
         {{ dateFormatted(vaccine.expectedDate) }}
       </p>
     </div>
-    <div class="col-span-1 flex flex-col items-end">
+    <div class="col-span-2 md:col-span-1 flex flex-col items-end">
       <div class="flex flex-row space-x-1">
         <ejs-tooltip v-if="vaccine.photo.url" content="Ver foto">
           <i
