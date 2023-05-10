@@ -1,6 +1,6 @@
 <template>
   <ejs-dropdownlist
-    v-model="data"
+    v-model="model"
     :dataSource="comboData.data"
     :fields="comboData.fields"
     :placeholder="comboData.placeholder"
@@ -21,9 +21,9 @@ export default {
   emits: ["update:modelValue"],
   data() {
     return {
-      data: this.modelValue,
+      model: this.modelValue,
       comboData: {
-        fields: { text: "value", value: "value" },
+        fields: { text: "name", value: "id" },
         placeholder: "Grupo sanguíneo",
         data: bloodTypes,
       },
@@ -31,8 +31,13 @@ export default {
   },
   methods: {
     onSelectionChange(e) {
-      this.$emit("update:modelValue", this.data);
+      this.$emit("update:modelValue", e.itemData);
     },
+  },
+  beforeMount() {
+    if (this.modelValue) {
+      this.model = this.modelValue.id;
+    }
   },
 };
 </script>

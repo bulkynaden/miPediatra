@@ -41,12 +41,13 @@ import { usePatientsStore } from "@/store/patientsStore.js";
 export default {
   name: "PatientsListPage",
   components: { PatientCard },
-  computed: {
-    patients() {
-      const patientStore = usePatientsStore();
-      return patientStore.patients;
-    },
+  data() {
+    return {
+      patients: null,
+    };
   },
-  methods: {},
+  async beforeMount() {
+    this.patients = await usePatientsStore().getPatients();
+  },
 };
 </script>

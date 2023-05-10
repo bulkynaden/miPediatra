@@ -1,6 +1,6 @@
 <template>
   <ejs-dropdownlist
-    v-model="data"
+    v-model="model"
     :allowFiltering="true"
     :dataSource="comboData.data"
     :fields="comboData.fields"
@@ -15,8 +15,8 @@
 
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
-import autonomousCommunities from "../../../data/autonomousCommunitiesData.json";
 import { Query } from "@syncfusion/ej2-data";
+import { useAutonomousCommunitiesStore } from "@/store/autonomousCommunitiesStore.js";
 
 export default {
   name: "AutonomousCommunitiesCombo",
@@ -25,20 +25,20 @@ export default {
   emits: ["update:modelValue"],
   data() {
     return {
-      data: this.modelValue,
+      model: this.modelValue,
       comboData: {
         fields: {
           text: "name",
           value: "id",
         },
         placeholder: "Comunidad autónoma",
-        data: autonomousCommunities,
+        data: null,
       },
     };
   },
   methods: {
     onSelectionChange(e) {
-      this.$emit("update:modelValue", this.data);
+      this.$emit("update:modelValue", e.itemData);
     },
     onFiltering(e) {
       let query = new Query();
@@ -46,6 +46,13 @@ export default {
         e.text !== "" ? query.where("name", "contains", e.text, true) : query;
       e.updateData(this.comboData.data, query);
     },
+  },
+  async beforeMount() {
+    if (this.modelValue) {
+      this.model = this.modelValue.id;
+    }
+    const store = useAutonomousCommunitiesStore();
+    this.comboData.data = await store.getAutonomousCommunities();
   },
 };
 </script>

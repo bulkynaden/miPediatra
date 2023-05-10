@@ -1,22 +1,17 @@
 import { defineStore } from "pinia";
-import data from "../data/files.json";
+import axios from "axios";
 
 export const useFilesStore = defineStore({
   id: "filesStore",
-  state: () => ({
-    files: [],
-  }),
-  getters: {
-    getFiles() {
-      return this.files;
-    },
-  },
   actions: {
-    async fetchFiles() {
-      this.files = data.files;
-    },
-    async getFileById(id) {
-      return this.files.find((file) => file.id === id);
+    async uploadFile(rawFile) {
+      const formData = new FormData();
+      formData.append("file", rawFile);
+      return await axios.post("http://localhost:8080/api/upload", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
     },
   },
 });

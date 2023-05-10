@@ -25,11 +25,7 @@ export const useConsultationsStore = defineStore({
       return this.consultations;
     },
     async fetchConsultations() {
-      this.consultations = await new Promise((resolve) => {
-        setTimeout(() => {
-          resolve([...data.consultations]);
-        }, 500);
-      });
+      this.consultations = [...data.consultations];
 
       for (const consultation of this.consultations) {
         consultation.patient = await usePatientsStore().getPatient(

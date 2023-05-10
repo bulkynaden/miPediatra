@@ -2,26 +2,29 @@
   <div class="container mx-auto">
     <div class="grid md:grid-cols-2 gap-4">
       <div class="space-y-4">
-        <p><strong>Nombre:</strong> {{ patient.name }}</p>
-        <p><strong>Apellido:</strong> {{ patient.lastName }}</p>
+        <p><strong>Nombre: </strong> {{ patient.name }}</p>
+        <p><strong>Apellido: </strong> {{ patient.lastName }}</p>
         <p>
           <strong>Sexo: </strong>
           <span>{{ getGenderDisplay().text }}</span>
           <i :class="getGenderDisplay().icon" class="pl-1"></i>
         </p>
         <p>
-          <strong>Fecha de nacimiento:</strong>
+          <strong>Fecha de nacimiento: </strong>
           {{ formatDate(patient.birthdate) }}
         </p>
       </div>
       <div class="space-y-4">
         <p><strong>Peso al nacer:</strong> {{ patient.birthWeight }} kg</p>
         <p>
-          <strong>Comunidad autónoma:</strong>
-          {{ getAutonomousCommunityDisplay(patient.autonomousCommunity) }}
+          <strong>Comunidad autónoma: </strong>
+          {{ patient.autonomousCommunity.name }}
         </p>
-        <p><strong>Tipo de sangre:</strong> {{ patient.bloodType }}</p>
-        <p><strong>DNI:</strong> {{ patient.dni }}</p>
+        <p>
+          <strong>Grupo sanguíneo: </strong>
+          <span v-if="patient.bloodType">{{ patient.bloodType.name }}</span>
+          <span v-else>No especificado</span>
+        </p>
       </div>
     </div>
     <div class="space-y-4 mt-4">
@@ -46,7 +49,6 @@
 <script>
 import { publicImagesPath } from "@/router/publicPath.js";
 import genders from "@/data/genderData.json";
-import autonomousCommunities from "@/data/autonomousCommunitiesData.json";
 import Swal from "sweetalert2";
 import { usePatientsStore } from "@/store/patientsStore.js";
 
@@ -55,18 +57,23 @@ export default {
   props: ["patient"],
   computed: {
     photoSrc() {
-      return this.consultation.patient.photo &&
-        this.consultation.patient.photo.url !== ""
-        ? this.consultation.patient.photo.url
-        : this.consultation.patient.gender === "HOMBRE"
-        ? publicImagesPath + "no-photo-boy.png"
-        : publicImagesPath + "no-photo-girl.png";
+      if (this.patient.photo && this.patient.photo.data) {
+        return (
+          "data:" +
+          this.patient.photo.type +
+          ";base64," +
+          this.patient.photo.data
+        );
+      } else {
+        return this.patient.gender === "HOMBRE"
+          ? publicImagesPath + "no-photo-boy.png"
+          : publicImagesPath + "no-photo-girl.png";
+      }
     },
     altText() {
-      return this.consultation.patient.photo &&
-        this.consultation.patient.photo.url !== ""
-        ? `Foto de ${this.consultation.patient.name}`
-        : `No hay foto disponible para ${this.consultation.patient.name}`;
+      return this.patient.photo
+        ? `Foto de ${this.patient.name}`
+        : `No hay foto disponible para ${this.patient.name}`;
     },
   },
   methods: {
@@ -97,15 +104,6 @@ export default {
         icon: selectedGender ? selectedGender.icon : "",
       };
     },
-    getAutonomousCommunityDisplay(id) {
-      let selectedAutonomousCommunity = "";
-      if (id) {
-        selectedAutonomousCommunity = autonomousCommunities.find(
-          (community) => community.id === id
-        ).name;
-      }
-      return selectedAutonomousCommunity;
-    },
     confirmDeletePatient() {
       Swal.fire({
         title: "¿Estás seguro de eliminar este paciente?",
@@ -130,7 +128,7 @@ export default {
             this.$swal.fire({
               icon: "error",
               title: "Ha ocurrido un error inesperado",
-              timer: 1500,
+              timer: 1000,
             });
           }
         }

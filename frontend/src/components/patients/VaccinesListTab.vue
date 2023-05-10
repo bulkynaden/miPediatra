@@ -114,7 +114,7 @@ export default {
                     icon: "success",
                     title: "¡Eliminada!",
                     text: "La vacuna ha sido eliminada con éxito",
-                    timer: 1500,
+                    timer: 1000,
                   })
                 );
 
@@ -123,7 +123,7 @@ export default {
               this.$swal.fire({
                 icon: "error",
                 title: "Ha ocurrido un error inesperado",
-                timer: 1500,
+                timer: 1000,
               });
             }
           }

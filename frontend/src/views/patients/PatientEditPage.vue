@@ -87,21 +87,21 @@ export default {
           await Swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
-            timer: 1500,
+            timer: 1000,
           });
         } catch (error) {
           this.isLoading = false;
           await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
-            timer: 1500,
+            timer: 1000,
           });
         }
       } else {
         await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },

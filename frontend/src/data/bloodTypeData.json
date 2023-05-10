@@ -1,26 +1,34 @@
 [
   {
-    "value": "A+"
+    "id": "A_POSITIVE",
+    "name": "A+"
   },
   {
-    "value": "A-"
+    "id": "A_NEGATIVE",
+    "name": "A-"
   },
   {
-    "value": "B+"
+    "id": "B_POSITIVE",
+    "name": "B+"
   },
   {
-    "value": "B-"
+    "id": "B_NEGATIVE",
+    "name": "B-"
   },
   {
-    "value": "AB+"
+    "id": "AB_POSITIVE",
+    "name": "AB+"
   },
   {
-    "value": "AB-"
+    "id": "AB_NEGATIVE",
+    "name": "AB-"
   },
   {
-    "value": "O+"
+    "id": "O_POSITIVE",
+    "name": "O+"
   },
   {
-    "value": "O-"
+    "id": "O_NEGATIVE",
+    "name": "O-"
   }
 ]

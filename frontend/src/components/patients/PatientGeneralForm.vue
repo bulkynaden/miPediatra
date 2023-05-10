@@ -1,7 +1,7 @@
 <template>
   <div v-if="loaded">
     <h2 class="pb-4">Datos generales</h2>
-    <div v-show="!isAdd">
+    <div v-if="!isAdd">
       <div class="grid sm:grid-cols-1 md:grid-cols-3 gap-4">
         <div class="md:col-span-1">
           <img
@@ -196,10 +196,11 @@ export default {
       return this.mode === "add";
     },
     photoSrc() {
-      return this.formData.photo &&
-        this.formData.photo.url !== "" &&
-        !this.formData.changedPhoto
-        ? this.formData.photo.url
+      return this.formData.photo && !this.formData.changedPhoto
+        ? "data:" +
+            this.formData.photo.type +
+            ";base64," +
+            this.formData.photo.data
         : this.formData.previewImage
         ? this.formData.previewImage
         : this.formData.gender === "HOMBRE"
@@ -207,15 +208,13 @@ export default {
         : publicImagesPath + "no-photo-girl.png";
     },
     altText() {
-      return this.formData.photo && this.formData.photo.url !== ""
+      return this.formData.photo
         ? `Foto de ${this.formData.name}`
         : `No hay foto disponible para ${this.formData.name}`;
     },
     showRemoveButton() {
       return (
-        (this.formData.photo &&
-          this.formData.photo.url !== "" &&
-          !this.formData.changedPhoto) ||
+        (this.formData.photo && !this.formData.changedPhoto) ||
         this.formData.previewImage
       );
     },
@@ -227,17 +226,17 @@ export default {
       } else {
         this.formData.changedPhoto = true;
         this.isValidPhoto = true;
-        this.formData.photo.blob = args.filesData[0];
+        this.formData.photo = args.filesData[0];
         const reader = new FileReader();
         reader.onload = (event) => {
           this.formData.previewImage = event.target.result;
         };
-        reader.readAsDataURL(this.formData.photo.blob.rawFile);
+        reader.readAsDataURL(this.formData.photo.rawFile);
       }
     },
     onFileRemove() {
       if (this.isValidPhoto) {
-        this.formData.photo.blob = null;
+        this.formData.photo = null;
         this.formData.previewImage = null;
         this.formData.changedPhoto = true;
       }

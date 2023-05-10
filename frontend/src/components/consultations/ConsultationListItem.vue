@@ -72,16 +72,21 @@ export default {
   },
   computed: {
     photoSrc() {
-      return this.patient.photo && this.patient.photo.url !== ""
-        ? this.patient.photo.url
-        : this.patient.gender === "HOMBRE"
-        ? publicImagesPath + "no-photo-boy.png"
-        : publicImagesPath + "no-photo-girl.png";
+      if (this.patient.photo && this.patient.photo.data) {
+        return (
+          "data:" +
+          this.patient.photo.type +
+          ";base64," +
+          this.patient.photo.data
+        );
+      } else {
+        return this.patient.gender === "HOMBRE"
+          ? publicImagesPath + "no-photo-boy.png"
+          : publicImagesPath + "no-photo-girl.png";
+      }
     },
     altText() {
-      return !this.patient
-        ? "Sin datos"
-        : this.patient.photo && this.patient.photo.url !== ""
+      return this.patient.photo
         ? `Foto de ${this.patient.name}`
         : `No hay foto disponible para ${this.patient.name}`;
     },

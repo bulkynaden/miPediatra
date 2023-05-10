@@ -31,7 +31,6 @@ import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 import TheFooter from "@/layout/TheFooter.vue";
 import TheHeader from "@/layout/TheHeader.vue";
 import TheSidebar from "@/layout/TheSidebar.vue";
-import { useFilesStore } from "@/store/filesStore.js";
 
 export default {
   components: { TheSidebar, TheHeader, TheFooter, TheLoadingLogo },
@@ -50,7 +49,6 @@ export default {
   },
   async beforeMount() {
     this.isLoading = true;
-    await this.fetchFiles();
     await this.fetchPatients();
     await this.fetchConsultations();
     this.isLoading = false;
@@ -70,14 +68,6 @@ export default {
         await consultationsStore.fetchConsultations();
       } catch (error) {
         console.error("Error fetching consultations:", error);
-      }
-    },
-    async fetchFiles() {
-      const filesStore = useFilesStore();
-      try {
-        await filesStore.fetchFiles();
-      } catch (error) {
-        console.error("Error fetching files:", error);
       }
     },
   },

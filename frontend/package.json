@@ -21,6 +21,7 @@
     "@syncfusion/ej2-vue-popups": "^21.1.41",
     "animate.css": "^4.1.1",
     "apexcharts": "^3.36.0",
+    "axios": "^1.4.0",
     "cldr-data": "^36.0.1",
     "firebase": "^9.20.0",
     "pinia": "^2.0.33",

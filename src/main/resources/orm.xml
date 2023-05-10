@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<entity-mappings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                 xmlns="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/persistence/orm"
+                 version="2.2">
+
+    <entity class="entities.Patient" access="FIELD">
+        <inheritance strategy="SINGLE_TABLE"/>
+        <discriminator-column name="patient_type" discriminator-type="STRING"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="applicable" target-entity="entities.ApplicablePatients"/>
+            <one-to-many name="consultations" target-entity="entities.Consultation"/>
+            <one-to-one name="photo" target-entity="entities.File" cascade="ALL" orphan-removal="true"/>
+        </attributes>
+    </entity>
+
+    <entity class="entities.Person" access="FIELD">
+        <discriminator-value value="Person"/>
+        <attributes>
+            <many-to-one name="autonomousCommunity" target-entity="entities.AutonomousCommunity">
+                <join-column name="autonomous_community_id" referenced-column-name="id"/>
+            </many-to-one>
+            <basic name="bloodType">
+                <enumerated>STRING</enumerated>
+            </basic>
+            <basic name="gender">
+                <enumerated>STRING</enumerated>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="entities.ApplicablePatients" access="FIELD">
+        <table name="applicable_patients"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-one name="photo" target-entity="entities.File"/>
+            <many-to-one name="applicable" target-entity="entities.Vaccine">
+                <join-column name="applicable_id" referenced-column-name="id"/>
+            </many-to-one>
+            <many-to-one name="patient" target-entity="entities.Patient">
+                <join-column name="patient_id" referenced-column-name="id"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <entity class="entities.Vaccine" access="FIELD">
+        <table name="vaccines"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="dosePeriods" target-entity="entities.VaccineDosePeriod"/>
+            <many-to-one name="vaccineDetails" target-entity="entities.VaccineDetails">
+                <join-column name="vaccine_details_id" referenced-column-name="id"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <entity class="entities.VaccineDetails" access="FIELD">
+        <table name="vaccine_details"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="vaccines" target-entity="entities.Vaccine"/>
+        </attributes>
+    </entity>
+
+    <entity class="entities.VaccineDosePeriod" access="FIELD">
+        <table name="vaccine_dose_periods"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <many-to-one name="vaccine" target-entity="entities.Vaccine">
+                <join-column name="vaccine_id" referenced-column-name="id"/>
+            </many-to-one>
+            <many-to-one name="autonomousCommunity" target-entity="entities.AutonomousCommunity">
+                <join-column name="autonomous_community_id" referenced-column-name="id"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <entity class="entities.Consultation" access="FIELD">
+        <inheritance strategy="SINGLE_TABLE"/>
+        <discriminator-column name="consultation_type" discriminator-type="STRING"/>
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="files" target-entity="entities.File"/>
+            <many-to-one name="patient" target-entity="entities.Patient">
+                <join-column name="patient_id" referenced-column-name="id"/>
+            </many-to-one>
+        </attributes>
+    </entity>
+
+    <entity class="entities.File" access="FIELD">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <basic name="data" fetch="LAZY">
+                <lob/>
+                <column name="data" column-definition="BLOB"/>
+            </basic>
+        </attributes>
+    </entity>
+
+    <entity class="entities.AutonomousCommunity" access="FIELD">
+        <attributes>
+            <id name="id">
+                <generated-value strategy="IDENTITY"/>
+            </id>
+            <one-to-many name="vaccineDosePeriods" target-entity="entities.VaccineDosePeriod"/>
+            <one-to-many name="persons" target-entity="entities.Person"/>
+        </attributes>
+    </entity>
+</entity-mappings>

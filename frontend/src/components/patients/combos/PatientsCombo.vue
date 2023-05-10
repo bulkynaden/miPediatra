@@ -46,12 +46,13 @@ export default {
 
   methods: {
     photoSrc(patient) {
-      const patientToShow = patient;
-      return patientToShow.photo && patientToShow.photo.url !== ""
-        ? patientToShow.photo.url
-        : patientToShow.gender === "HOMBRE"
-        ? publicImagesPath + "no-photo-boy.png"
-        : publicImagesPath + "no-photo-girl.png";
+      if (patient.photo && patient.photo.data) {
+        return "data:" + patient.photo.type + ";base64," + patient.photo.data;
+      } else {
+        return patient.gender === "HOMBRE"
+          ? publicImagesPath + "no-photo-boy.png"
+          : publicImagesPath + "no-photo-girl.png";
+      }
     },
     onSelectionChange(e) {
       this.$emit("selected-item", e.itemData);

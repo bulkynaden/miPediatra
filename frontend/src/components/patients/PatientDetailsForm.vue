@@ -26,13 +26,12 @@
         <strong>Fecha de nacimiento:</strong>
         <span>{{ formatDate }}</span>
         <strong>Comunidad Autónoma:</strong>
-        <span>{{
-          getAutonomousCommunityDisplay(formData.autonomousCommunity)
-        }}</span>
+        <span>{{ formData.autonomousCommunity.name }}</span>
         <strong>Peso al nacer:</strong>
         <span>{{ formData.birthWeight }} kg</span>
-        <strong>Tipo de sangre:</strong>
-        <span>{{ formData.bloodType }}</span>
+        <strong>Grupo sanguíneo:</strong>
+        <span v-if="formData.bloodType">{{ formData.bloodType.name }}</span>
+        <span v-else>No especificado</span>
         <strong>Comentarios:</strong>
         <span>{{ formData.comments }}</span>
       </div>
@@ -42,12 +41,18 @@
 
 <script>
 import genders from "../../data/genderData.json";
-import autonomousCommunities from "../../data/autonomousCommunitiesData.json";
 import { publicImagesPath } from "@/router/publicPath.js";
+import { useAutonomousCommunitiesStore } from "@/store/autonomousCommunitiesStore.js";
 
 export default {
   name: "PatientDetailsForm",
   props: ["formData"],
+  data() {
+    return {
+      autonomousCommunities: null,
+      autonomousCommunityDisplay: "",
+    };
+  },
   computed: {
     formatDate() {
       if (!this.formData.birthdate) return "";
@@ -61,8 +66,7 @@ export default {
         reader.onload = (event) => {
           this.formData.previewImage = event.target.result;
         };
-        reader.readAsDataURL(this.formData.photo.blob.rawFile);
-        imageSrc = this.formData.previewImage;
+        imageSrc = URL.createObjectURL(this.formData.photo.rawFile);
       } else {
         imageSrc =
           this.formData.gender === "HOMBRE"
@@ -73,7 +77,7 @@ export default {
       return imageSrc;
     },
     altText() {
-      return this.formData.photo.url !== ""
+      return this.formData.photo
         ? `Foto de ${this.formData.name}`
         : `No hay foto disponible para ${this.formData.name}`;
     },
@@ -91,20 +95,14 @@ export default {
         icon: selectedGender ? selectedGender.icon : "",
       };
     },
-    getAutonomousCommunityDisplay(id) {
-      let selectedAutonomousCommunity = "";
-      if (id) {
-        selectedAutonomousCommunity = autonomousCommunities.find(
-          (community) => community.id === id
-        ).name;
-      }
-      return selectedAutonomousCommunity;
-    },
     validateAll() {
       this.$emit("validation", true);
     },
   },
-  filters: {},
+  async beforeMount() {
+    this.autonomousCommunities =
+      await useAutonomousCommunitiesStore().getAutonomousCommunities();
+  },
 };
 </script>
 

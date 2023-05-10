@@ -78,7 +78,7 @@ export default {
         birthdate: null,
         bloodType: null,
         birthWeight: 0,
-        autonomousCommunity: "",
+        autonomousCommunity: null,
         photo: {
           id: null,
           url: "",
@@ -132,8 +132,8 @@ export default {
     async submitForm() {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
+        this.isLoading = true;
         try {
-          this.isLoading = true;
           await this.addPatient(this.formData).then(() => {
             this.isLoading = false;
             this.$router.push({ name: "PatientsListPage" });
@@ -141,30 +141,27 @@ export default {
           await Swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
-            timer: 1500,
+            timer: 1000,
           });
-        } catch (error) {
+        } catch {
           this.isLoading = false;
           await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
-            timer: 1500,
+            timer: 1000,
           });
         }
       } else {
         await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
     handleValidation(isValid) {
       this.formIsValid = isValid;
     },
-  },
-  beforeMount() {
-    console.log(this.formData);
   },
 };
 </script>
