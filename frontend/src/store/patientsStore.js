@@ -15,7 +15,10 @@ export const usePatientsStore = defineStore({
   }),
   actions: {
     async fetchPatients() {
-      const response = await axios.get("http://localhost:8080/api/patients");
+      const response = await axios.get(
+        import.meta.env.VITE_APP_API_URL + "patients"
+      );
+
       this.patients = response.data._embedded.persons.map((patient) => {
         const selfLink = patient._links.self.href;
         return {
@@ -46,7 +49,7 @@ export const usePatientsStore = defineStore({
 
     async getPatientDetails(id) {
       const patientData = await axios.get(
-        "http://localhost:8080/api/patients/" + id
+        import.meta.env.VITE_APP_API_URL + "patients/" + id
       );
       const patient = patientData.data;
 
@@ -90,7 +93,7 @@ export const usePatientsStore = defineStore({
       }
 
       const patientReturned = await axios.post(
-        "http://localhost:8080/api/patients",
+        import.meta.env.VITE_APP_API_URL + "patients",
         patientToAdd
       );
 
@@ -124,7 +127,7 @@ export const usePatientsStore = defineStore({
       }
 
       const editedPatientData = await axios.put(
-        "http://localhost:8080/api/patients/" + editedPatient.id,
+        import.meta.env.VITE_APP_API_URL + "patients/" + editedPatient.id,
         editedPatient
       );
 

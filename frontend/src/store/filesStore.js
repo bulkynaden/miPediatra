@@ -7,11 +7,15 @@ export const useFilesStore = defineStore({
     async uploadFile(rawFile) {
       const formData = new FormData();
       formData.append("file", rawFile);
-      return await axios.post("http://localhost:8080/api/upload", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      return await axios.post(
+        import.meta.env.VITE_APP_API_URL + "upload",
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
     },
   },
 });

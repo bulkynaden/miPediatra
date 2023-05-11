@@ -9,7 +9,7 @@ export const useAutonomousCommunitiesStore = defineStore({
   actions: {
     async fetchAutonomousCommunities() {
       const response = await axios.get(
-        "http://localhost:8080/api/autonomous_communities"
+        import.meta.env.VITE_APP_API_URL + "autonomous_communities"
       );
       this.autonomousCommunities =
         response.data._embedded.autonomousCommunityListModels.map((ac) => {
