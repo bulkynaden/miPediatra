@@ -107,7 +107,7 @@
             </id>
             <basic name="data" fetch="LAZY">
                 <lob/>
-                <column name="data" column-definition="BLOB"/>
+                <column name="data" column-definition="bytea"/>
             </basic>
         </attributes>
     </entity>
