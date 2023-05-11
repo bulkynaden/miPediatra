@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { deleteObject, getStorage, ref } from "firebase/storage";
 import { useFilesStore } from "@/store/filesStore.js";
 import { useConsultationsStore } from "@/store/consultationsStore.js";
 import { useSymptomsStore } from "@/store/symptomsStore.js";
@@ -19,13 +18,17 @@ export const usePatientsStore = defineStore({
         import.meta.env.VITE_APP_API_URL + "patients"
       );
 
-      this.patients = response.data._embedded.persons.map((patient) => {
-        const selfLink = patient._links.self.href;
-        return {
-          id: getIdFromLink(selfLink),
-          ...patient,
-        };
-      });
+      if (response.data._embedded) {
+        this.patients = response.data._embedded.persons.map((patient) => {
+          const selfLink = patient._links.self.href;
+          return {
+            id: getIdFromLink(selfLink),
+            ...patient,
+          };
+        });
+      } else {
+        this.patients = [];
+      }
     },
 
     async getPatients() {
@@ -142,26 +145,8 @@ export const usePatientsStore = defineStore({
     },
 
     async deletePatient(id) {
-      return new Promise(async (resolve) => {
-        const patientToDelete = this.patients.find(
-          (patient) => patient.id === id
-        );
-
-        if (
-          patientToDelete &&
-          patientToDelete.photo &&
-          patientToDelete.photo.url !== ""
-        ) {
-          try {
-            await deleteObject(ref(getStorage(), patientToDelete.photo.url));
-          } catch (error) {
-            throw error;
-          }
-        }
-
-        this.patients = this.patients.filter((patient) => patient.id !== id);
-        resolve();
-      });
+      await axios.delete("http://localhost:8080/api/patients/" + id);
+      this.patients = this.patients.filter((patient) => patient.id !== id);
     },
 
     addConsultationToPatient(patientId, consultation) {

@@ -83,4 +83,9 @@ public class PatientsController {
 
         return patientAssembler.toModel(patient);
     }
+
+    @DeleteMapping("{id}")
+    public void delete(@PathVariable Long id) {
+        patientRepository.deleteById(id);
+    }
 }

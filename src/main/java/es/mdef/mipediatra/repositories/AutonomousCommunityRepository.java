@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public interface AutonomousCommunityRepository extends JpaRepository<AutonomousCommunity, Long> {
-
+    AutonomousCommunity findByName(String name);
 }

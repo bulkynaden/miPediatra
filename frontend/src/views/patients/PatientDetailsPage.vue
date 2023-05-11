@@ -143,17 +143,20 @@ export default {
   },
   async beforeMount() {
     this.isLoading = true;
-    this.patient = await usePatientsStore().getPatientDetails(
-      this.$route.params.id
-    );
-    this.consultations = await usePatientsStore().getConsultations(
-      this.patient
-    );
-    this.isLoading = false;
-    if (!this.patient) {
+    try {
+      this.patient = await usePatientsStore().getPatientDetails(
+        this.$route.params.id
+      );
+      this.consultations = await usePatientsStore().getConsultations(
+        this.patient
+      );
+      this.isLoading = false;
+    } catch {
+      this.isLoading = false;
       await Swal.fire({
         icon: "error",
         title: "No se han podido cargar los datos",
+        timer: 1000,
       });
       await this.$router.push({ name: "PatientsListPage" });
     }

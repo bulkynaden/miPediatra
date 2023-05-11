@@ -87,21 +87,21 @@ export default {
           await Swal.fire({
             icon: "success",
             title: "Los datos se han registrado correctamente",
-            timer: 1000,
+            timer: 1500,
           });
         } catch (error) {
           this.isLoading = false;
           await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
-            timer: 1000,
+            timer: 1500,
           });
         }
       } else {
         await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1000,
+          timer: 1500,
         });
       }
     },
@@ -111,12 +111,15 @@ export default {
   },
   async beforeMount() {
     this.isLoading = true;
-    this.patient = await this.getPatientCopy(this.$route.params.id);
-    this.isLoading = false;
-    if (!this.patient) {
+    try {
+      this.patient = await this.getPatientCopy(this.$route.params.id);
+      this.isLoading = false;
+    } catch {
+      this.isLoading = false;
       await Swal.fire({
         icon: "error",
         title: "No se han podido cargar los datos",
+        timer: 1000,
       });
       await this.$router.push({ name: "PatientsListPage" });
     }
