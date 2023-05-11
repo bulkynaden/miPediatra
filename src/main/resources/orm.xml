@@ -105,9 +105,9 @@
             <id name="id">
                 <generated-value strategy="IDENTITY"/>
             </id>
-            <basic name="data" fetch="LAZY">
+            <basic name="data">
                 <lob/>
-                <column name="data" column-definition="bytea"/>
+                <column name="data"/>
             </basic>
         </attributes>
     </entity>
