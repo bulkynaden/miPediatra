@@ -46,7 +46,7 @@
                 <join-column name="vaccine_id" referenced-column-name="id" column-definition="long"/>
             </many-to-one>
             <many-to-one name="person" target-entity="es.mdef.mipediatralib.entities.Person">
-                <join-column name="patient_id" referenced-column-name="id" column-definition="long"/>
+                <join-column name="person_id" referenced-column-name="id" column-definition="long"/>
             </many-to-one>
         </attributes>
     </entity>
