@@ -40,13 +40,13 @@
                 <generated-value strategy="IDENTITY"/>
             </id>
             <one-to-one name="photo" target-entity="es.mdef.mipediatralib.entities.File">
-                <join-column name="photo_id" referenced-column-name="id" column-definition="long"/>
+                <join-column name="photo_id" referenced-column-name="id"/>
             </one-to-one>
             <many-to-one name="vaccine" target-entity="es.mdef.mipediatralib.entities.Vaccine">
-                <join-column name="vaccine_id" referenced-column-name="id" column-definition="long"/>
+                <join-column name="vaccine_id" referenced-column-name="id"/>
             </many-to-one>
             <many-to-one name="person" target-entity="es.mdef.mipediatralib.entities.Person">
-                <join-column name="person_id" referenced-column-name="id" column-definition="long"/>
+                <join-column name="person_id" referenced-column-name="id"/>
             </many-to-one>
         </attributes>
     </entity>
