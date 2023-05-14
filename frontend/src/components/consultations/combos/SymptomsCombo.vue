@@ -17,6 +17,7 @@ import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
 import symptomsList from "@/data/symptoms.json";
 import { Predicate, Query } from "@syncfusion/ej2-data";
 import { usePatientsStore } from "@/store/patientsStore.js";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "SymptomsComo",
@@ -48,6 +49,7 @@ export default {
   },
   methods: {
     async updateSymptoms() {
+      useLoadingStore().setLoading(true);
       const allSymptoms = symptomsList.symptoms.map((symptom) => ({
         ...symptom,
         state: "Todos",
@@ -63,6 +65,7 @@ export default {
         this.patientSymptoms = [];
         this.symptomsData.data = [...allSymptoms];
       }
+      useLoadingStore().setLoading(false);
     },
 
     onSelectionChange(e) {

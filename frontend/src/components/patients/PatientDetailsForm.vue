@@ -43,6 +43,7 @@
 import genders from "../../data/genderData.json";
 import { publicImagesPath } from "@/router/publicPath.js";
 import { useAutonomousCommunitiesStore } from "@/store/autonomousCommunitiesStore.js";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "PatientDetailsForm",
@@ -100,8 +101,10 @@ export default {
     },
   },
   async beforeMount() {
+    useLoadingStore().setLoading(true);
     this.autonomousCommunities =
       await useAutonomousCommunitiesStore().getAutonomousCommunities();
+    useLoadingStore().setLoading(false);
   },
 };
 </script>

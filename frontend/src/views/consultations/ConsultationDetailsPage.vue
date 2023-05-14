@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard
       v-if="consultation"
       :subParentTitle="consultationTypeAction"
@@ -116,6 +115,7 @@ import FileListItem from "@/components/consultations/FileListItem.vue";
 import FileList from "@/components/consultations/FileList.vue";
 import BaseCard from "../../components/base/BaseCard.vue";
 import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "ConsultationDetailsPage",
@@ -128,14 +128,10 @@ export default {
   },
   data() {
     return {
-      isLoading: false,
       consultation: null,
     };
   },
   computed: {
-    showLoadingLogo() {
-      return this.isLoading;
-    },
     consultationTypeAction() {
       return this.consultation.consultationType === "Emergency"
         ? "Detalles de consulta de urgencias"
@@ -175,9 +171,9 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
-            this.isLoading = true;
+            useLoadingStore().setLoading(true);
             await this.deleteConsultation(this.consultation.id).then(() => {
-              this.isLoading = false;
+              useLoadingStore().setLoading(false);
               this.$router.push({ name: "ConsultationsListPage" });
             });
             await Swal.fire(
@@ -186,64 +182,56 @@ export default {
               "success"
             );
           } catch (error) {
-            this.isLoading = false;
+            useLoadingStore().setLoading(false);
             this.$swal.fire({
               icon: "error",
               title: "Ha ocurrido un error inesperado",
-              timer: 1500,
+              timer: 1000,
             });
           }
         }
       });
     },
     async deleteFile(file) {
-      try {
-        await Swal.fire({
-          title: "¿Está seguro de que desea eliminar el archivo?",
-          text: "Esta acción no se puede deshacer.",
-          icon: "warning",
-          showCancelButton: true,
-        }).then((result) => {
-          if (result.value) {
-            try {
-              this.isLoading = true;
-              useConsultationsStore().deleteFile(file, this.consultation);
-              this.isLoading = false;
-              Swal.fire(
-                "Eliminado!",
-                "El archivo ha sido eliminado.",
-                "success"
-              );
-            } catch (error) {
-              this.isLoading = false;
-              this.$swal.fire({
-                icon: "error",
-                title: "Ha ocurrido un error inesperado",
-                timer: 1500,
-              });
-            }
+      await Swal.fire({
+        title: "¿Está seguro de que desea eliminar el archivo?",
+        text: "Esta acción no se puede deshacer.",
+        icon: "warning",
+        showCancelButton: true,
+      }).then((result) => {
+        if (result.value) {
+          try {
+            useLoadingStore().setLoading(true);
+            useConsultationsStore().deleteFile(file, this.consultation);
+            useLoadingStore().setLoading(false);
+            Swal.fire("Eliminado!", "El archivo ha sido eliminado.", "success");
+          } catch (error) {
+            useLoadingStore().setLoading(false);
+            this.$swal.fire({
+              icon: "error",
+              title: "Ha ocurrido un error inesperado",
+              timer: 1000,
+            });
           }
-        });
-      } catch (error) {
-        this.isLoading = false;
-      }
+        }
+      });
     },
     async uploadFile(file) {
       try {
-        this.isLoading = true;
+        useLoadingStore().setLoading(true);
         await useConsultationsStore().uploadFile(file, this.consultation);
-        this.isLoading = false;
+        useLoadingStore().setLoading(false);
         await Swal.fire(
           "¡Subido!",
           "El archivo ha sido subido con éxito.",
           "success"
         );
       } catch (error) {
-        this.isLoading = false;
+        useLoadingStore().setLoading(false);
         this.$swal.fire({
           icon: "error",
           title: "Ha ocurrido un error inesperado",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
@@ -255,9 +243,9 @@ export default {
     };
   },
   async beforeMount() {
-    this.isLoading = true;
+    useLoadingStore().setLoading(true);
     this.consultation = await this.getConsultation(this.$route.params.id);
-    this.isLoading = false;
+    useLoadingStore().setLoading(false);
     if (!this.consultation) {
       await Swal.fire({
         icon: "error",

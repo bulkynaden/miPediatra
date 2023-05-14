@@ -1,17 +1,17 @@
 package es.mdef.mipediatra.models.patient;
 
-import constants.BloodType;
-import constants.Gender;
-import entities.AutonomousCommunity;
-import entities.File;
 import es.mdef.mipediatra.constants.PatientType;
-import org.springframework.hateoas.RepresentationModel;
+import es.mdef.mipediatra.models.PutModel;
+import es.mdef.mipediatralib.constants.BloodType;
+import es.mdef.mipediatralib.constants.Gender;
+import es.mdef.mipediatralib.entities.AutonomousCommunity;
+import es.mdef.mipediatralib.entities.File;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
 
 @Relation(itemRelation = "patient")
-public class PatientPutModel extends RepresentationModel<PatientPutModel> {
+public class PatientPutModel extends PutModel {
     private String comments;
     private File photo;
     private PatientType type;

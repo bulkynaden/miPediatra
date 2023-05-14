@@ -5,8 +5,6 @@
     class="fixed z-10 inset-0 overflow-y-auto"
     role="dialog"
   >
-    <TheLoadingLogo v-if="showLoadingLogo" />
-
     <div class="flex items-center justify-center min-h-screen text-center">
       <div
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
@@ -27,7 +25,7 @@
               <div class="md:col-span-3">
                 <VaccinesCombo
                   v-model="formData.vaccineDetails"
-                  @update:modelValue="validateVaccine"
+                  @update:model-value="validateVaccine"
                 ></VaccinesCombo>
                 <label v-show="!isValidVaccine" class="e-error"
                   >Debe seleccionar una vacuna</label
@@ -127,14 +125,12 @@ import { SwitchComponent } from "@syncfusion/ej2-vue-buttons";
 import { UploaderComponent } from "@syncfusion/ej2-vue-inputs";
 import Swal from "sweetalert2";
 import GenderCombo from "@/components/patients/combos/GendersCombo.vue";
-import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 import { usePatientsStore } from "@/store/patientsStore.js";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "VaccineForm",
-
   components: {
-    TheLoadingLogo,
     GenderCombo,
     "ejs-uploader": UploaderComponent,
     "ejs-datepicker": DatePickerComponent,
@@ -150,15 +146,11 @@ export default {
       isValidPhoto: true,
       isValidDose: true,
       isValidVaccine: true,
-      isLoading: false,
     };
   },
   computed: {
     isAdministered() {
       return this.formData.hasBeenAdministered;
-    },
-    showLoadingLogo() {
-      return this.isLoading;
     },
     modeToDisplay() {
       return this.mode === "add" ? "Nueva vacuna" : "Editar vacuna";
@@ -171,13 +163,14 @@ export default {
       } else {
         this.formData.changedPhoto = true;
         this.isValidPhoto = true;
-        this.formData.photo.blob = args.filesData[0];
+        this.formData.photo = args.filesData[0];
+        console.log(this.formData.photo);
       }
     },
     onFileRemove() {
       if (this.isValidPhoto) {
         this.formData.changedPhoto = true;
-        this.formData.photo.blob = null;
+        this.formData.photo = null;
       }
       this.isValidPhoto = true;
     },
@@ -216,53 +209,53 @@ export default {
         await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
     async addVaccine() {
       try {
-        this.isLoading = true;
+        useLoadingStore().setLoading(true);
         await usePatientsStore()
           .addVaccine(this.patient, this.formData)
           .then(() => {
-            this.isLoading = false;
+            useLoadingStore().setLoading(false);
           });
         this.$emit("close");
         await Swal.fire({
           icon: "success",
           title: "Los datos se han registrado correctamente",
-          timer: 1500,
+          timer: 1000,
         });
       } catch (error) {
-        this.isLoading = false;
+        useLoadingStore().setLoading(false);
         await Swal.fire({
           icon: "error",
           title: "Ha ocurrido un error inesperado",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
     async editVaccine() {
       try {
-        this.isLoading = true;
+        useLoadingStore().setLoading(true);
         await usePatientsStore()
           .editVaccine(this.patient, this.formData)
           .then(() => {
-            this.isLoading = false;
+            useLoadingStore().setLoading(false);
           });
         this.$emit("close");
         await Swal.fire({
           icon: "success",
           title: "Los datos se han registrado correctamente",
-          timer: 1500,
+          timer: 1000,
         });
       } catch (error) {
-        this.isLoading = false;
+        useLoadingStore().setLoading(false);
         await Swal.fire({
           icon: "error",
           title: "Ha ocurrido un error inesperado",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },

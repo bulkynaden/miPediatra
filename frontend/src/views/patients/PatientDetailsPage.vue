@@ -1,7 +1,5 @@
 <template>
   <div v-if="patient">
-    <TheLoadingLogo v-if="showLoadingLogo" />
-
     <BasePageCard :subParentTitle="patientData" parentTitle="Mis pacientes">
       <template #title>
         <div class="flex justify-between items-center">
@@ -54,24 +52,22 @@
 import { usePatientsStore } from "@/store/patientsStore.js";
 import { publicImagesPath } from "@/router/publicPath.js";
 import Swal from "sweetalert2";
-import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 import PatientDetailsTab from "@/components/patients/PatientDetailsTab.vue";
 import ConsultationsList from "@/components/consultations/ConsultationsList.vue";
 import BaseCard from "@/components/base/BaseCard.vue";
 import VaccinesListTab from "@/components/patients/VaccinesListTab.vue";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "PatientDetailsPage",
   components: {
     BaseCard,
-    TheLoadingLogo,
     PatientDetailsTab,
     ConsultationsList,
     VaccinesListTab,
   },
   data() {
     return {
-      isLoading: false,
       patient: null,
       consultations: [],
       vaccines: [],
@@ -103,9 +99,6 @@ export default {
       return this.patient
         ? `Detalles de ${this.patient.name} ${this.patient.lastName}`
         : "Detalles de paciente";
-    },
-    showLoadingLogo() {
-      return this.isLoading;
     },
     activeComponent() {
       switch (this.activeTab) {
@@ -142,17 +135,17 @@ export default {
     },
   },
   async beforeMount() {
-    this.isLoading = true;
     try {
+      useLoadingStore().setLoading(true);
       this.patient = await usePatientsStore().getPatientDetails(
         this.$route.params.id
       );
       this.consultations = await usePatientsStore().getConsultations(
         this.patient
       );
-      this.isLoading = false;
+      useLoadingStore().setLoading(false);
     } catch {
-      this.isLoading = false;
+      useLoadingStore().setLoading(false);
       await Swal.fire({
         icon: "error",
         title: "No se han podido cargar los datos",

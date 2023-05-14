@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard parentTitle="Mis pacientes" subParentTitle="Añadir ">
       <template #title>Añadir paciente</template>
       <div class="flex justify-center">
@@ -59,17 +58,15 @@ import { usePatientsStore } from "@/store/patientsStore.js";
 import { markRaw } from "vue";
 import { mapActions } from "pinia";
 import Swal from "sweetalert2";
-import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "PatientAddPage",
   components: {
-    TheLoadingLogo,
     PatientGeneralForm,
   },
   data() {
     return {
-      isLoading: false,
       formData: {
         name: "",
         lastName: "",
@@ -100,9 +97,6 @@ export default {
     hasNextPage() {
       return this.currentStep < this.pages.length - 1;
     },
-    showLoadingLogo() {
-      return this.isLoading;
-    },
   },
   methods: {
     ...mapActions(usePatientsStore, {
@@ -122,7 +116,7 @@ export default {
         Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
@@ -132,19 +126,19 @@ export default {
     async submitForm() {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
-        this.isLoading = true;
         try {
+          useLoadingStore().setLoading(true);
           await this.addPatient(this.formData).then(() => {
-            this.isLoading = false;
+            useLoadingStore().setLoading(false);
+            Swal.fire({
+              icon: "success",
+              title: "Los datos se han registrado correctamente",
+              timer: 1000,
+            });
             this.$router.push({ name: "PatientsListPage" });
           });
-          await Swal.fire({
-            icon: "success",
-            title: "Los datos se han registrado correctamente",
-            timer: 1000,
-          });
         } catch {
-          this.isLoading = false;
+          useLoadingStore().setLoading(false);
           await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",

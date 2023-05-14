@@ -1,6 +1,6 @@
 package es.mdef.mipediatra.repositories;
 
-import entities.File;
+import es.mdef.mipediatralib.entities.File;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

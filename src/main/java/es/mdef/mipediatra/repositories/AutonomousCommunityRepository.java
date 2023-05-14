@@ -1,6 +1,6 @@
 package es.mdef.mipediatra.repositories;
 
-import entities.AutonomousCommunity;
+import es.mdef.mipediatralib.entities.AutonomousCommunity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

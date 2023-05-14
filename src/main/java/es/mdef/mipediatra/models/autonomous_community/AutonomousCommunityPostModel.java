@@ -1,10 +1,10 @@
 package es.mdef.mipediatra.models.autonomous_community;
 
-import org.springframework.hateoas.RepresentationModel;
+import es.mdef.mipediatra.models.PostModel;
 import org.springframework.hateoas.server.core.Relation;
 
 @Relation(itemRelation = "autonomous_community")
-public class AutonomousCommunityPostModel extends RepresentationModel<AutonomousCommunityPostModel> {
+public class AutonomousCommunityPostModel extends PostModel {
     private String name;
 
     public String getName() {

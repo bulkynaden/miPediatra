@@ -1,8 +1,8 @@
 package es.mdef.mipediatra.models.patient;
 
-import constants.BloodType;
-import constants.Gender;
 import es.mdef.mipediatra.models.autonomous_community.AutonomousCommunityModel;
+import es.mdef.mipediatralib.constants.BloodType;
+import es.mdef.mipediatralib.constants.Gender;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;

@@ -1,37 +1,95 @@
 import { defineStore } from "pinia";
-import vaccinesData from "@/data/vaccines.json";
-import vaccinesPatientData from "@/data/vaccinesPatients.json";
-import vaccinesDetailsData from "@/data/vaccineDetails.json";
-import {
-  deleteObject,
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytes,
-} from "firebase/storage";
+import { deleteObject, getStorage, ref } from "firebase/storage";
+import axios from "axios";
+import getIdFromLink from "@/services/parsers.js";
 import { useFilesStore } from "@/store/filesStore.js";
+import vaccineDetails from "@/components/vaccines/VaccineDetails.vue";
 
 export const useVaccinesStore = defineStore({
   id: "vaccinesStore",
   state: () => ({
-    vaccines: [...vaccinesData.vaccines],
-    vaccinesPatients: [...vaccinesPatientData.vaccinesPatients],
-    vaccinesDetails: [...vaccinesDetailsData.vaccineDetails],
+    vaccines: [],
+    vaccinesDetails: [],
     nextId: 2,
   }),
   actions: {
-    getVaccines() {
-      if (this.vaccines.length === 0) {
-        this.vaccines = [...vaccinesData.vaccines];
+    async loadData() {
+      if (this.vaccines === null || this.vaccines.length === 0) {
+        await this.fetchVaccines();
       }
+    },
+    async loadVaccinesDetails() {
+      if (this.vaccinesDetails === null || this.vaccinesDetails.length === 0) {
+        await this.fetchVaccinesDetails();
+      }
+    },
+    async fetchVaccines() {
+      const response = await axios.get(
+        import.meta.env.VITE_APP_API_URL + "vaccines"
+      );
+
+      if (response.data._embedded) {
+        this.vaccines = response.data._embedded.vaccines.map((vaccine) => {
+          const selfLink = vaccine._links.self.href;
+          return {
+            id: getIdFromLink(selfLink),
+            ...vaccine,
+          };
+        });
+      } else {
+        this.vaccines = [];
+      }
+    },
+
+    async fetchVaccinesDetails() {
+      const vaccinesDetailsData = await axios.get(
+        import.meta.env.VITE_APP_API_URL + "vaccineDetails"
+      );
+      if (vaccinesDetailsData.data._embedded) {
+        this.vaccinesDetails =
+          vaccinesDetailsData.data._embedded.vaccinesDetails.map((vaccine) => {
+            const selfLink = vaccine._links.self.href;
+            return {
+              id: selfLink,
+              ...vaccine,
+            };
+          });
+      } else {
+        this.vaccinesDetails = [];
+      }
+    },
+    async getVaccines() {
+      await this.loadData();
       return this.vaccines;
     },
-    getVaccinesDetails() {
-      if (this.vaccinesDetails.length === 0) {
-        this.vaccinesDetails = [...vaccinesData.vaccines];
-      }
+
+    async getVaccinesDetails() {
+      await this.loadVaccinesDetails();
       return this.vaccinesDetails;
     },
+
+    async getVaccinesDoses(vaccineDetails) {
+      let doses = [];
+      const vaccinesDosesData = await axios.get(
+        import.meta.env.VITE_APP_API_URL +
+          "vaccines/" +
+          getIdFromLink(vaccineDetails.id) +
+          "/doses"
+      );
+      if (vaccinesDosesData.data._embedded) {
+        doses = vaccinesDosesData.data._embedded.vaccines.map((vaccine) => {
+          const selfLink = vaccine._links.self.href;
+          return {
+            id: selfLink,
+            ...vaccine,
+          };
+        });
+      } else {
+        doses = [];
+      }
+      return doses;
+    },
+
     async getVaccine(id) {
       let vaccineToReturn;
       let foundVaccine;
@@ -62,23 +120,36 @@ export const useVaccinesStore = defineStore({
       return vaccineToReturn;
     },
     async addVaccine(patient, vaccine) {
-      let newId = this.nextId;
-      this.nextId++;
-      await this.handlePhoto(vaccine);
-      this.vaccinesPatients.push({
-        id: newId,
-        vaccine: {
-          id: vaccine.vaccine,
-          vaccineDetails: { id: vaccine.vaccineDetails },
-        },
-        patient: { id: patient.id },
-        date: vaccine.date,
-        expectedDate: vaccine.expectedDate,
-        photo: vaccine.photo,
-        reaction: vaccine.reaction,
-        hasBeenAdministered: vaccine.hasBeenAdministered,
-      });
-      return newId;
+      const vaccineToAdd = {
+        ...vaccine,
+        vaccine: vaccine.vaccine.id,
+        vaccineDetails: vaccineDetails.id,
+      };
+
+      console.log(vaccine);
+      if (vaccineToAdd.photo && vaccineToAdd.photo.rawFile) {
+        const response = await useFilesStore().uploadFile(
+          vaccineToAdd.photo.rawFile
+        );
+        vaccineToAdd.photo = response.data._links.self.href;
+      } else {
+        vaccineToAdd.photo = null;
+      }
+
+      const patientId = getIdFromLink(patient._links.self.href);
+      const vaccineToAddData = await axios.post(
+        import.meta.env.VITE_APP_API_URL +
+          "patients/" +
+          patientId +
+          "/add-vaccine",
+        vaccineToAdd
+      );
+      let addedVaccine;
+      if (vaccineToAddData.data._embedded) {
+        addedVaccine = vaccineToAddData.data;
+        addedVaccine.id = getIdFromLink(vaccineToAddData.data._links.self.href);
+      }
+      return addedVaccine;
     },
     async editVaccine(editedVaccine) {
       if (editedVaccine.changedPhoto) {
@@ -141,27 +212,6 @@ export const useVaccinesStore = defineStore({
         }
       }
       return foundVaccine;
-    },
-    async handlePhoto(vaccine) {
-      if (vaccine.photo && vaccine.photo.blob) {
-        const fileName = Date.now() + "_" + `${vaccine.photo.blob.name}`;
-        const storage = getStorage();
-        const storageRef = ref(storage, `vaccines/${fileName}`);
-
-        try {
-          const snapshot = await uploadBytes(
-            storageRef,
-            vaccine.photo.blob.rawFile
-          );
-          vaccine.photo.url = await getDownloadURL(snapshot.ref);
-          vaccine.photo.id = useFilesStore().getFiles.length + 1;
-          vaccine.photo.size = vaccine.photo.blob.size;
-          vaccine.photo.name = fileName;
-        } catch (error) {
-          throw error;
-        }
-        return vaccine;
-      }
     },
   },
 });

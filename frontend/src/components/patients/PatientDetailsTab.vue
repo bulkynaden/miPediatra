@@ -51,6 +51,7 @@ import { publicImagesPath } from "@/router/publicPath.js";
 import genders from "@/data/genderData.json";
 import Swal from "sweetalert2";
 import { usePatientsStore } from "@/store/patientsStore.js";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "PatientDetailsTab",
@@ -114,17 +115,20 @@ export default {
       }).then(async (result) => {
         if (result.isConfirmed) {
           try {
+            useLoadingStore().setLoading(true);
             await usePatientsStore()
               .deletePatient(this.patient.id)
               .then(() => {
                 this.$router.push({ name: "PatientsListPage" });
               });
+            useLoadingStore().setLoading(false);
             await Swal.fire(
               "¡Eliminado!",
               "El paciente ha sido eliminado con éxito.",
               "success"
             );
           } catch (error) {
+            useLoadingStore().setLoading(false);
             this.$swal.fire({
               icon: "error",
               title: "Ha ocurrido un error inesperado",

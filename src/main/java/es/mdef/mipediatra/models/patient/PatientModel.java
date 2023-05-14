@@ -1,14 +1,14 @@
 package es.mdef.mipediatra.models.patient;
 
 
+import es.mdef.mipediatra.models.Model;
 import es.mdef.mipediatra.models.file.FileModel;
-import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 @Relation(itemRelation = "patient")
-public class PatientModel extends RepresentationModel<PatientModel> {
+public class PatientModel extends Model {
     private String comments;
-    private FileModel photo;
+    private Model photo;
 
     public String getComments() {
         return comments;
@@ -18,7 +18,7 @@ public class PatientModel extends RepresentationModel<PatientModel> {
         this.comments = comments;
     }
 
-    public FileModel getPhoto() {
+    public Model getPhoto() {
         return photo;
     }
 

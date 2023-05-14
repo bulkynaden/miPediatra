@@ -31,27 +31,23 @@ import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
 import TheFooter from "@/layout/TheFooter.vue";
 import TheHeader from "@/layout/TheHeader.vue";
 import TheSidebar from "@/layout/TheSidebar.vue";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   components: { TheSidebar, TheHeader, TheFooter, TheLoadingLogo },
-  data() {
-    return {
-      isLoading: null,
-    };
-  },
   computed: {
     ...mapState(useLargeSidebarStore, {
       sidebarToggleProperties: "sidebarToggleProperties",
     }),
     showLoadingLogo() {
-      return this.isLoading;
+      return useLoadingStore().loading;
     },
   },
   async beforeMount() {
-    this.isLoading = true;
+    useLoadingStore().setLoading(true);
     await this.fetchPatients();
     await this.fetchConsultations();
-    this.isLoading = false;
+    useLoadingStore().setLoading(false);
   },
   methods: {
     async fetchPatients() {

@@ -1,17 +1,16 @@
 <template>
-  <div class="grid grid-cols-2 md:grid-cols-6 gap-4 w-full">
-    <div class="col-span-1 flex flex-col justify-center items-center">
+  <div class="grid grid-cols-2 md:grid-cols-12 gap-4 w-full">
+    <div
+      class="col-span-2 md:col-span-5 flex flex-col justify-center items-center"
+    >
       <span
         class="bg-yellow-600 text-white text-xs font-semibold px-2 py-1 rounded-full"
       >
-        {{ vaccine.vaccineDetails.name }}</span
+        {{ vaccine.name }}</span
       >
     </div>
-    <div class="col-span-1 flex justify-center items-center">
-      <strong class="mr-2">Dosis:</strong>{{ vaccine.vaccine.dose }}º
-    </div>
     <div
-      class="col-span-2 md:col-span-1 flex flex-col justify-center items-center"
+      class="col-span-1 md:col-span-2 flex flex-col justify-center items-center"
     >
       <span
         v-if="vaccine.hasBeenAdministered"
@@ -27,7 +26,7 @@
     </div>
     <div
       v-if="vaccine.hasBeenAdministered"
-      class="col-span-2 md:col-span-2 flex flex-col justify-center items-center"
+      class="col-span-1 md:col-span-3 flex flex-col justify-center items-center"
     >
       <p class="text-sm font-semibold leading-6 text-gray-900">
         {{ dateFormatted(vaccine.date) }}
@@ -37,14 +36,17 @@
         {{ vaccine.reaction }}
       </p>
     </div>
-    <div v-else class="col-span-2">
+    <div
+      v-else
+      class="col-span-1 md:col-span-3 flex flex-col justify-center items-center"
+    >
       <p class="text-sm font-semibold leading-6 text-gray-900">
         {{ dateFormatted(vaccine.expectedDate) }}
       </p>
     </div>
-    <div class="col-span-2 md:col-span-1 flex flex-col items-end">
+    <div class="col-span-2 flex flex-col items-end">
       <div class="flex flex-row space-x-1">
-        <ejs-tooltip v-if="vaccine.photo.url" content="Ver foto">
+        <ejs-tooltip v-if="vaccine.photo" content="Ver foto">
           <i
             class="i-Search-People hover:text-primary text-2xl"
             @click="openPhoto"
@@ -84,10 +86,15 @@ export default {
   },
   emits: ["editVaccine", "deleteVaccine"],
   methods: {
+    getImageUrl() {
+      return (
+        "data:" + this.vaccine.photo.type + ";base64," + this.vaccine.photo.data
+      );
+    },
     async openPhoto() {
       try {
         await Swal.fire({
-          imageUrl: this.vaccine.photo.url,
+          imageUrl: this.getImageUrl(),
           imageHeight: "80vh",
           width: "80vw",
           confirmButtonText: "Cerrar",

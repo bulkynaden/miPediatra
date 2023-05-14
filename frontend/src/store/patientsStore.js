@@ -1,11 +1,11 @@
 import { defineStore } from "pinia";
-import { useFilesStore } from "@/store/filesStore.js";
 import { useConsultationsStore } from "@/store/consultationsStore.js";
 import { useSymptomsStore } from "@/store/symptomsStore.js";
 import { useVaccinesStore } from "@/store/vaccinesStore.js";
 import axios from "axios";
 import getIdFromLink from "@/services/parsers.js";
 import { useBloodTypesStore } from "@/store/bloodTypesStore.js";
+import { useFilesStore } from "@/store/filesStore.js";
 
 export const usePatientsStore = defineStore({
   id: "patientsStore",
@@ -13,6 +13,11 @@ export const usePatientsStore = defineStore({
     patients: [],
   }),
   actions: {
+    async loadData() {
+      if (this.patients === null || this.patients.length === 0) {
+        await this.fetchPatients();
+      }
+    },
     async fetchPatients() {
       const response = await axios.get(
         import.meta.env.VITE_APP_API_URL + "patients"
@@ -32,16 +37,12 @@ export const usePatientsStore = defineStore({
     },
 
     async getPatients() {
-      if (this.patients === null || this.patients.length === 0) {
-        await this.fetchPatients();
-      }
+      await this.loadData();
       return this.patients;
     },
 
     async getPatient(id) {
-      if (this.patients.length === 0) {
-        await this.fetchPatients();
-      }
+      await this.loadData();
       return new Promise((resolve) => {
         const patient = this.patients.find(
           (patient) => patient.id === parseInt(id, 10)
@@ -206,19 +207,21 @@ export const usePatientsStore = defineStore({
     },
 
     async getVaccines(patient) {
-      const vaccines = [];
-
-      for (const vaccine of patient.vaccines) {
-        vaccines.push(await useVaccinesStore().getVaccine(vaccine.id));
+      let vaccines = [];
+      const vaccinesData = await axios.get(
+        import.meta.env.VITE_APP_API_URL +
+          "patients/" +
+          patient.id +
+          "/vaccines"
+      );
+      if (vaccinesData.data._embedded) {
+        vaccines = vaccinesData.data._embedded.vaccinesPersons;
       }
-
       return vaccines;
     },
 
     async addVaccine(patient, vaccine) {
-      patient.vaccines.push({
-        id: await useVaccinesStore().addVaccine(patient, vaccine),
-      });
+      await useVaccinesStore().addVaccine(patient, vaccine);
     },
 
     async editVaccine(patient, editedVaccine) {

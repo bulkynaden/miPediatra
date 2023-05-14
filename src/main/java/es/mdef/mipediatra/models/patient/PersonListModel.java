@@ -1,6 +1,6 @@
 package es.mdef.mipediatra.models.patient;
 
-import constants.Gender;
+import es.mdef.mipediatralib.constants.Gender;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;

@@ -14,6 +14,7 @@
 <script>
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
 import { useVaccinesStore } from "@/store/vaccinesStore.js";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "VaccineDosesCombo",
@@ -39,22 +40,22 @@ export default {
   },
   methods: {
     onSelectionChange(e) {
-      this.$emit("update:modelValue", this.data);
+      this.$emit("update:modelValue", e.itemData);
     },
-    updateDoses() {
-      if (this.vaccineDetails) {
-        this.vaccinesData.data = useVaccinesStore()
-          .getVaccines()
-          .filter(
-            (vaccine) => vaccine.vaccineDetails.id === this.vaccineDetails
-          );
+    async updateDoses() {
+      if (this.vaccineDetails.id !== -1) {
+        useLoadingStore().setLoading(true);
+        this.vaccinesData.data = await useVaccinesStore().getVaccinesDoses(
+          this.vaccineDetails
+        );
+        useLoadingStore().setLoading(false);
       } else {
         this.vaccinesData.data = [];
       }
     },
   },
   async beforeMount() {
-    this.updateDoses();
+    await this.updateDoses();
   },
 };
 </script>

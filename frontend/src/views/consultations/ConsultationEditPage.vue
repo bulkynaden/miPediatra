@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard
       v-if="consultation"
       :subParentTitle="consultationTypeAction"
@@ -65,17 +64,15 @@ import Swal from "sweetalert2";
 import { useConsultationsStore } from "@/store/consultationsStore.js";
 import { markRaw } from "vue";
 import EmergencyForm from "@/components/consultations/EmergencyForm.vue";
-import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "PatientAddPage",
   components: {
-    TheLoadingLogo,
     ConsultationGeneralForm,
   },
   data() {
     return {
-      isLoading: false,
       consultationType: null,
       consultation: null,
       formIsValid: false,
@@ -105,9 +102,6 @@ export default {
     hasNextPage() {
       return this.currentStep < this.pages.length - 1;
     },
-    showLoadingLogo() {
-      return this.isLoading;
-    },
     consultationTypeAction() {
       return this.consultationType === "Emergency"
         ? "Editar consulta de urgencias"
@@ -133,7 +127,7 @@ export default {
         Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
@@ -151,29 +145,29 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
-          this.isLoading = true;
+          useLoadingStore().setLoading(true);
           await this.editConsultation(this.consultation).then(() => {
-            this.isLoading = false;
+            useLoadingStore().setLoading(false);
             this.$router.push({ name: "ConsultationsListPage" });
             Swal.fire({
               icon: "success",
               title: "Los datos se han registrado correctamente",
-              timer: 1500,
+              timer: 1000,
             });
           });
         } catch (error) {
+          useLoadingStore().setLoading(false);
           await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
-            timer: 1500,
+            timer: 1000,
           });
         }
       } else {
-        this.isLoading = false;
         await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
@@ -182,9 +176,9 @@ export default {
     },
   },
   async beforeMount() {
-    this.isLoading = true;
+    useLoadingStore().setLoading(true);
     this.consultation = await this.getConsultationCopy(this.$route.params.id);
-    this.isLoading = false;
+    useLoadingStore().setLoading(false);
     if (!this.consultation) {
       await Swal.fire({
         icon: "error",

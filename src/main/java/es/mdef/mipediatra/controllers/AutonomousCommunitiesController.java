@@ -1,48 +1,30 @@
 package es.mdef.mipediatra.controllers;
 
-import entities.AutonomousCommunity;
-import es.mdef.mipediatra.assemblers.autonomous_community.AutonomousCommunityAssembler;
-import es.mdef.mipediatra.assemblers.autonomous_community.AutonomousCommunityListAssembler;
-import es.mdef.mipediatra.exceptions.EntityNotFoundException;
 import es.mdef.mipediatra.models.autonomous_community.AutonomousCommunityListModel;
 import es.mdef.mipediatra.models.autonomous_community.AutonomousCommunityModel;
 import es.mdef.mipediatra.models.autonomous_community.AutonomousCommunityPostModel;
-import es.mdef.mipediatra.repositories.AutonomousCommunityRepository;
-import org.springframework.hateoas.CollectionModel;
-import org.springframework.web.bind.annotation.*;
+import es.mdef.mipediatra.models.autonomous_community.AutonomousCommunityPutModel;
+import es.mdef.mipediatra.services.ControllerService;
+import es.mdef.mipediatra.services.CrudService;
+import es.mdef.mipediatra.services.impl.AutonomousCommunitiesService;
+import es.mdef.mipediatralib.entities.AutonomousCommunity;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/autonomous_communities")
-public class AutonomousCommunitiesController {
+public class AutonomousCommunitiesController implements ControllerService<AutonomousCommunity, AutonomousCommunityModel, AutonomousCommunityPostModel, AutonomousCommunityPutModel, AutonomousCommunityListModel> {
 
-    private final AutonomousCommunityRepository autonomousCommunityRepository;
-    private final AutonomousCommunityAssembler autonomousCommunityAssembler;
-    private final AutonomousCommunityListAssembler autonomousCommunityListAssembler;
+    private final AutonomousCommunitiesService autonomousCommunitiesService;
 
-    public AutonomousCommunitiesController(AutonomousCommunityRepository autonomousCommunityRepository,
-                                           AutonomousCommunityAssembler autonomousCommunityAssembler,
-                                           AutonomousCommunityListAssembler autonomousCommunityListAssembler) {
-        this.autonomousCommunityRepository = autonomousCommunityRepository;
-        this.autonomousCommunityAssembler = autonomousCommunityAssembler;
-        this.autonomousCommunityListAssembler = autonomousCommunityListAssembler;
+    public AutonomousCommunitiesController(AutonomousCommunitiesService autonomousCommunitiesService) {
+        this.autonomousCommunitiesService = autonomousCommunitiesService;
     }
 
-    @GetMapping("{id}")
-    public AutonomousCommunityModel getById(@PathVariable Long id) {
-        AutonomousCommunity autonomousCommunity = autonomousCommunityRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException(id, "comunidad autónoma"));
-        return autonomousCommunityAssembler.toModel(autonomousCommunity);
-    }
-
-    @GetMapping
-    public CollectionModel<AutonomousCommunityListModel> getAll() {
-        return autonomousCommunityListAssembler.toCollectionModel(autonomousCommunityRepository.findAll());
-    }
-
-    @PostMapping
-    public AutonomousCommunityModel create(@RequestBody AutonomousCommunityPostModel model) {
-        AutonomousCommunity autonomousCommunity = autonomousCommunityRepository.save(autonomousCommunityAssembler.toEntity(model));
-        return autonomousCommunityAssembler.toModel(autonomousCommunity);
+    @Override
+    public CrudService<AutonomousCommunity, AutonomousCommunityModel, AutonomousCommunityPostModel, AutonomousCommunityPutModel, AutonomousCommunityListModel> getService() {
+        return autonomousCommunitiesService;
     }
 }

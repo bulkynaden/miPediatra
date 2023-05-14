@@ -39,6 +39,7 @@ import ConsultationListItem from "@/components/consultations/ConsultationListIte
 import VaccineListItem from "@/components/vaccines/VaccineListItem.vue";
 import Swal from "sweetalert2";
 import { useVaccinesStore } from "@/store/vaccinesStore.js";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "VaccinesList",
@@ -107,6 +108,7 @@ export default {
         }).then(async (result) => {
           if (result.isConfirmed) {
             try {
+              useLoadingStore().setLoading(true);
               useVaccinesStore()
                 .deleteVaccine(this.patient, vaccine)
                 .then((r) =>
@@ -119,7 +121,9 @@ export default {
                 );
 
               await this.updateVaccinesList();
+              useLoadingStore().setLoading(false);
             } catch (error) {
+              useLoadingStore().setLoading(false);
               this.$swal.fire({
                 icon: "error",
                 title: "Ha ocurrido un error inesperado",

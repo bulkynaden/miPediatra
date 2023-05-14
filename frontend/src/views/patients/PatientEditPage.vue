@@ -1,6 +1,5 @@
 <template>
   <div>
-    <TheLoadingLogo v-if="showLoadingLogo" />
     <BasePageCard
       v-if="patient"
       :subParentTitle="patientData"
@@ -38,18 +37,16 @@ import { usePatientsStore } from "@/store/patientsStore.js";
 import PatientGeneralForm from "@/components/patients/PatientGeneralForm.vue";
 import Swal from "sweetalert2";
 import BaseCard from "@/components/base/BaseCard.vue";
-import TheLoadingLogo from "@/layout/TheLoadingLogo.vue";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "PatientEditPage",
   components: {
-    TheLoadingLogo,
     BaseCard,
     PatientGeneralForm,
   },
   data() {
     return {
-      isLoading: false,
       patient: null,
       formIsValid: false,
     };
@@ -59,9 +56,6 @@ export default {
       return this.patient
         ? `Detalles de ${this.patient.name} ${this.patient.lastName}`
         : "Detalles de paciente";
-    },
-    showLoadingLogo() {
-      return this.isLoading;
     },
   },
   methods: {
@@ -79,29 +73,29 @@ export default {
       this.$refs.formPage.validateAll();
       if (this.formIsValid) {
         try {
-          this.isLoading = true;
+          useLoadingStore().setLoading(true);
           await this.editPatient(this.patient).then(() => {
-            this.isLoading = false;
+            useLoadingStore().setLoading(false);
+            Swal.fire({
+              icon: "success",
+              title: "Los datos se han registrado correctamente",
+              timer: 1000,
+            });
             this.$router.push({ name: "PatientsListPage" });
           });
-          await Swal.fire({
-            icon: "success",
-            title: "Los datos se han registrado correctamente",
-            timer: 1500,
-          });
         } catch (error) {
-          this.isLoading = false;
+          useLoadingStore().setLoading(false);
           await Swal.fire({
             icon: "error",
             title: "Ha ocurrido un error inesperado",
-            timer: 1500,
+            timer: 1000,
           });
         }
       } else {
         await Swal.fire({
           icon: "error",
           title: "Los datos introducidos no son correctos",
-          timer: 1500,
+          timer: 1000,
         });
       }
     },
@@ -110,12 +104,12 @@ export default {
     },
   },
   async beforeMount() {
-    this.isLoading = true;
     try {
+      useLoadingStore().setLoading(true);
       this.patient = await this.getPatientCopy(this.$route.params.id);
-      this.isLoading = false;
+      useLoadingStore().setLoading(false);
     } catch {
-      this.isLoading = false;
+      useLoadingStore().setLoading(false);
       await Swal.fire({
         icon: "error",
         title: "No se han podido cargar los datos",

@@ -1,13 +1,14 @@
 package es.mdef.mipediatra.models.file;
 
-import org.springframework.hateoas.RepresentationModel;
+import es.mdef.mipediatra.models.Model;
 import org.springframework.hateoas.server.core.Relation;
 
 @Relation(itemRelation = "file")
-public class FileModel extends RepresentationModel<FileModel> {
+public class FileModel extends Model {
     private String name;
     private Long size;
     private byte[] data;
+    private String type;
 
     public String getName() {
         return name;
@@ -31,5 +32,13 @@ public class FileModel extends RepresentationModel<FileModel> {
 
     public void setData(byte[] data) {
         this.data = data;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 }

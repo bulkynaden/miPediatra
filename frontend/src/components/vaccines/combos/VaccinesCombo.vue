@@ -1,6 +1,6 @@
 <template>
   <ejs-dropdownlist
-    v-model="data"
+    v-model="model"
     :allowFiltering="true"
     :dataSource="vaccinesData.data"
     :fields="vaccinesData.fields"
@@ -17,6 +17,7 @@
 import { DropDownListComponent } from "@syncfusion/ej2-vue-dropdowns";
 import { Predicate, Query } from "@syncfusion/ej2-data";
 import { useVaccinesStore } from "@/store/vaccinesStore.js";
+import { useLoadingStore } from "@/store/loadingStore.js";
 
 export default {
   name: "VaccinesCombo",
@@ -25,7 +26,7 @@ export default {
   emits: ["update:modelValue"],
   data() {
     return {
-      data: this.modelValue,
+      model: this.modelValue,
       vaccinesData: {
         fields: { text: "name", value: "id" },
         placeholder: "Seleccione una vacuna...",
@@ -35,7 +36,7 @@ export default {
   },
   methods: {
     onSelectionChange(e) {
-      this.$emit("update:modelValue", this.data);
+      this.$emit("update:modelValue", e.itemData);
     },
     onFiltering(e) {
       let predicate = new Predicate("name", "contains", e.text, true);
@@ -45,7 +46,12 @@ export default {
     },
   },
   async beforeMount() {
+    if (this.modelValue) {
+      this.model = this.modelValue.id;
+    }
+    useLoadingStore().setLoading(true);
     this.vaccinesData.data = await useVaccinesStore().getVaccinesDetails();
+    useLoadingStore().setLoading(false);
   },
 };
 </script>

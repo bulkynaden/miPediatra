@@ -16,7 +16,7 @@ repositories {
 }
 
 dependencies {
-    implementation 'com.github.bulkynaden:mipediatralib:70e4a90'
+    implementation 'com.github.bulkynaden:mipediatralib:cb6258b'
     implementation 'org.springframework.boot:spring-boot-starter'
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
     implementation 'org.springframework.boot:spring-boot-starter-data-rest'
