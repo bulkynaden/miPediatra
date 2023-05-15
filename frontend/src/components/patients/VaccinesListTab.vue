@@ -63,7 +63,9 @@ export default {
   },
   methods: {
     async updateVaccinesList() {
+      useLoadingStore().setLoading(true);
       this.vaccines = await usePatientsStore().getVaccines(this.patient);
+      useLoadingStore().setLoading(false);
     },
     addVaccine() {
       this.vaccine = {
