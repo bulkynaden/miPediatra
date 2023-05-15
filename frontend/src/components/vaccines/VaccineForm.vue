@@ -277,8 +277,9 @@ export default {
               icon: "success",
               title: "Los datos se han registrado correctamente",
               timer: 1000,
+            }).then(() => {
+              this.$emit("close");
             });
-            this.$emit("close");
           });
       } catch (error) {
         useLoadingStore().setLoading(false);
@@ -300,8 +301,9 @@ export default {
               icon: "success",
               title: "Los datos se han registrado correctamente",
               timer: 1000,
+            }).then(() => {
+              this.$emit("close");
             });
-            this.$emit("close");
           });
       } catch (error) {
         useLoadingStore().setLoading(false);
