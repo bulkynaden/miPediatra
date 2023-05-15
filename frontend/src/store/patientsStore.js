@@ -85,17 +85,13 @@ export const usePatientsStore = defineStore({
         patientToAdd.bloodType = patientToAdd.bloodType.id;
       }
       if (patientToAdd.autonomousCommunity) {
-        patientToAdd.autonomousCommunity =
-          patientToAdd.autonomousCommunity.id.replace("http://", "https://");
+        patientToAdd.autonomousCommunity = patientToAdd.autonomousCommunity.id;
       }
       if (patientToAdd.photo && patientToAdd.photo.rawFile) {
         const response = await useFilesStore().uploadFile(
           patientToAdd.photo.rawFile
         );
-        patientToAdd.photo = response.data._links.self.href.replace(
-          "http://",
-          "https://"
-        );
+        patientToAdd.photo = response.data._links.self.href;
       } else {
         patientToAdd.photo = null;
       }
@@ -118,7 +114,7 @@ export const usePatientsStore = defineStore({
       }
       if (editedPatient.autonomousCommunity) {
         editedPatient.autonomousCommunity =
-          editedPatient.autonomousCommunity.id.replace("http://", "https://");
+          editedPatient.autonomousCommunity.id;
       }
 
       if (editedPatient.changedPhoto) {
@@ -126,19 +122,12 @@ export const usePatientsStore = defineStore({
           const response = await useFilesStore().uploadFile(
             editedPatient.photo.rawFile
           );
-          editedPatient.photo = response.data._links.self.href.replace(
-            "http://",
-            "https://"
-          );
+          editedPatient.photo = response.data._links.self.href;
         } else {
           editedPatient.photo = null;
         }
       } else {
-        if (editedPatient.photo)
-          editedPatient.photo = editedPatient.photo.id.replace(
-            "http://",
-            "https://"
-          );
+        if (editedPatient.photo) editedPatient.photo = editedPatient.photo.id;
       }
 
       const editedPatientData = await axios.put(
@@ -260,19 +249,13 @@ export const usePatientsStore = defineStore({
       patient.id = getIdFromLink(patient._links.self.href);
       if (patient.autonomousCommunity) {
         patient.autonomousCommunity.id =
-          patient.autonomousCommunity._links.self.href.replace(
-            "http://",
-            "https://"
-          );
+          patient.autonomousCommunity._links.self.href;
       }
       patient.bloodType = await useBloodTypesStore().getBloodTypeById(
         patient.bloodType
       );
       if (patient.photo) {
-        patient.photo.id = patient.photo._links.self.href.replace(
-          "http://",
-          "https://"
-        );
+        patient.photo.id = patient.photo._links.self.href;
       }
 
       return patient;
