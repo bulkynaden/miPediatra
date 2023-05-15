@@ -85,13 +85,17 @@ export const usePatientsStore = defineStore({
         patientToAdd.bloodType = patientToAdd.bloodType.id;
       }
       if (patientToAdd.autonomousCommunity) {
-        patientToAdd.autonomousCommunity = patientToAdd.autonomousCommunity.id;
+        patientToAdd.autonomousCommunity =
+          patientToAdd.autonomousCommunity.id.replace("http://", "https://");
       }
       if (patientToAdd.photo && patientToAdd.photo.rawFile) {
         const response = await useFilesStore().uploadFile(
           patientToAdd.photo.rawFile
         );
-        patientToAdd.photo = response.data._links.self.href;
+        patientToAdd.photo = response.data._links.self.href.replace(
+          "http://",
+          "https://"
+        );
       } else {
         patientToAdd.photo = null;
       }
@@ -114,7 +118,7 @@ export const usePatientsStore = defineStore({
       }
       if (editedPatient.autonomousCommunity) {
         editedPatient.autonomousCommunity =
-          editedPatient.autonomousCommunity.id;
+          editedPatient.autonomousCommunity.id.replace("http://", "https://");
       }
 
       if (editedPatient.changedPhoto) {
@@ -122,12 +126,19 @@ export const usePatientsStore = defineStore({
           const response = await useFilesStore().uploadFile(
             editedPatient.photo.rawFile
           );
-          editedPatient.photo = response.data._links.self.href;
+          editedPatient.photo = response.data._links.self.href.replace(
+            "http://",
+            "https://"
+          );
         } else {
           editedPatient.photo = null;
         }
       } else {
-        if (editedPatient.photo) editedPatient.photo = editedPatient.photo.id;
+        if (editedPatient.photo)
+          editedPatient.photo = editedPatient.photo.id.replace(
+            "http://",
+            "https://"
+          );
       }
 
       const editedPatientData = await axios.put(
@@ -227,7 +238,10 @@ export const usePatientsStore = defineStore({
           vac.id = getIdFromLink(vac._links.self.href);
           vac.vaccine = { id: vac._links.vaccine.href };
           vac.vaccineDetails = {
-            id: vaccine.data._links.vaccinedetails.href,
+            id: vaccine.data._links.vaccinedetails.href.replace(
+              "http://",
+              "https://"
+            ),
           };
           return vac;
         })
@@ -246,13 +260,19 @@ export const usePatientsStore = defineStore({
       patient.id = getIdFromLink(patient._links.self.href);
       if (patient.autonomousCommunity) {
         patient.autonomousCommunity.id =
-          patient.autonomousCommunity._links.self.href;
+          patient.autonomousCommunity._links.self.href.replace(
+            "http://",
+            "https://"
+          );
       }
       patient.bloodType = await useBloodTypesStore().getBloodTypeById(
         patient.bloodType
       );
       if (patient.photo) {
-        patient.photo.id = patient.photo._links.self.href;
+        patient.photo.id = patient.photo._links.self.href.replace(
+          "http://",
+          "https://"
+        );
       }
 
       return patient;
