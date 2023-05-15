@@ -273,13 +273,13 @@ export default {
           .addVaccine(this.patient, this.formData)
           .then(() => {
             useLoadingStore().setLoading(false);
+            Swal.fire({
+              icon: "success",
+              title: "Los datos se han registrado correctamente",
+              timer: 1000,
+            });
           });
         this.$emit("close");
-        await Swal.fire({
-          icon: "success",
-          title: "Los datos se han registrado correctamente",
-          timer: 1000,
-        });
       } catch (error) {
         useLoadingStore().setLoading(false);
         await Swal.fire({
@@ -296,13 +296,13 @@ export default {
           .editVaccine(this.formData)
           .then(() => {
             useLoadingStore().setLoading(false);
+            Swal.fire({
+              icon: "success",
+              title: "Los datos se han registrado correctamente",
+              timer: 1000,
+            });
           });
         this.$emit("close");
-        await Swal.fire({
-          icon: "success",
-          title: "Los datos se han registrado correctamente",
-          timer: 1000,
-        });
       } catch (error) {
         useLoadingStore().setLoading(false);
         await Swal.fire({
