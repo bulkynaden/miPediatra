@@ -146,7 +146,7 @@ export const usePatientsStore = defineStore({
     },
 
     async deletePatient(id) {
-      await axios.delete("http://localhost:8080/api/patients/" + id);
+      await axios.delete(import.meta.env.VITE_APP_API_URL + "patients/" + id);
       this.patients = this.patients.filter((patient) => patient.id !== id);
     },
 
@@ -219,7 +219,11 @@ export const usePatientsStore = defineStore({
       }
       return await Promise.all(
         vaccines.map(async (vac) => {
-          const vaccine = await axios.get(vac._links.vaccine.href);
+          const vaccine = await axios.get(
+            import.meta.env.VITE_APP_API_URL +
+              "vaccines/" +
+              getIdFromLink(vac._links.vaccine.href)
+          );
           vac.id = getIdFromLink(vac._links.self.href);
           vac.vaccine = { id: vac._links.vaccine.href };
           vac.vaccineDetails = {
