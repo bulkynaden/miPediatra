@@ -227,10 +227,7 @@ export const usePatientsStore = defineStore({
           vac.id = getIdFromLink(vac._links.self.href);
           vac.vaccine = { id: vac._links.vaccine.href };
           vac.vaccineDetails = {
-            id: vaccine.data._links.vaccinedetails.href.replace(
-              "http://",
-              "https://"
-            ),
+            id: vaccine.data._links.vaccinedetails.href,
           };
           return vac;
         })
