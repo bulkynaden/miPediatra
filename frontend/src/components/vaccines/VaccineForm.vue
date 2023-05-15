@@ -276,7 +276,7 @@ export default {
             Swal.fire({
               icon: "success",
               title: "Los datos se han registrado correctamente",
-              timer: 1000,
+              timer: 1500,
             }).then(() => {
               this.$emit("close");
             });
@@ -300,7 +300,7 @@ export default {
             Swal.fire({
               icon: "success",
               title: "Los datos se han registrado correctamente",
-              timer: 1000,
+              timer: 1500,
             }).then(() => {
               this.$emit("close");
             });
