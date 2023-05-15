@@ -101,7 +101,7 @@ export default {
           if (result.isConfirmed) {
             try {
               useLoadingStore().setLoading(true);
-              useVaccinesStore()
+              await useVaccinesStore()
                 .deleteVaccine(vaccine)
                 .then(async (r) => {
                   await this.updateVaccinesList();
