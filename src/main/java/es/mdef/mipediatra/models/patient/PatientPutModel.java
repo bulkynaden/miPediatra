@@ -8,7 +8,7 @@ import es.mdef.mipediatralib.entities.AutonomousCommunity;
 import es.mdef.mipediatralib.entities.File;
 import org.springframework.hateoas.server.core.Relation;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Relation(itemRelation = "patient")
 public class PatientPutModel extends PutModel {
@@ -21,7 +21,7 @@ public class PatientPutModel extends PutModel {
     private double birthWeight;
     private AutonomousCommunity autonomousCommunity;
     private BloodType bloodType;
-    private LocalDateTime birthdate;
+    private ZonedDateTime birthdate;
 
     public String getComments() {
         return comments;
@@ -95,11 +95,11 @@ public class PatientPutModel extends PutModel {
         this.bloodType = bloodType;
     }
 
-    public LocalDateTime getBirthdate() {
+    public ZonedDateTime getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDateTime birthdate) {
+    public void setBirthdate(ZonedDateTime birthdate) {
         this.birthdate = birthdate;
     }
 

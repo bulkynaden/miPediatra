@@ -1,4 +1,4 @@
-package es.mdef.mipediatra.services;
+package es.mdef.mipediatra.services.impl;
 
 import es.mdef.mipediatra.MiPediatraApplication;
 import es.mdef.mipediatra.assemblers.FileAssembler;
@@ -9,6 +9,8 @@ import es.mdef.mipediatra.models.PostModel;
 import es.mdef.mipediatra.models.PutModel;
 import es.mdef.mipediatra.models.file.FileModel;
 import es.mdef.mipediatra.repositories.FileRepository;
+import es.mdef.mipediatra.services.AssemblerService;
+import es.mdef.mipediatra.services.CrudService;
 import es.mdef.mipediatralib.entities.File;
 import org.slf4j.Logger;
 import org.springframework.data.jpa.repository.JpaRepository;

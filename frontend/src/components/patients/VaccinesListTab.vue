@@ -4,7 +4,7 @@
 
     <VaccineForm
       v-if="showModal"
-      :formData="selectedVaccine"
+      :formData="vaccine"
       :mode="mode"
       :patient="patient"
       @close="onClose"
@@ -61,11 +61,6 @@ export default {
       mode: "add",
     };
   },
-  computed: {
-    selectedVaccine() {
-      return this.vaccine;
-    },
-  },
   methods: {
     async updateVaccinesList() {
       this.vaccines = await usePatientsStore().getVaccines(this.patient);
@@ -78,21 +73,16 @@ export default {
         expectedDate: "",
         reaction: "",
         hasBeenAdministered: false,
-        photo: { blob: null },
+        photo: null,
       };
       this.mode = "add";
       this.showModal = true;
     },
     editVaccine(vaccine) {
       this.vaccine = {
-        id: vaccine.id,
-        vaccineDetails: vaccine.vaccineDetails.id,
+        ...vaccine,
         vaccine: vaccine.vaccine.id,
-        date: vaccine.date,
-        expectedDate: vaccine.expectedDate,
-        reaction: vaccine.reaction,
-        hasBeenAdministered: vaccine.hasBeenAdministered,
-        photo: vaccine.photo,
+        vaccineDetails: vaccine.vaccineDetails.id,
       };
       this.mode = "edit";
       this.showModal = true;
@@ -110,17 +100,16 @@ export default {
             try {
               useLoadingStore().setLoading(true);
               useVaccinesStore()
-                .deleteVaccine(this.patient, vaccine)
-                .then((r) =>
-                  Swal.fire({
+                .deleteVaccine(vaccine)
+                .then(async (r) => {
+                  await this.updateVaccinesList();
+                  await Swal.fire({
                     icon: "success",
                     title: "¡Eliminada!",
                     text: "La vacuna ha sido eliminada con éxito",
                     timer: 1000,
-                  })
-                );
-
-              await this.updateVaccinesList();
+                  });
+                });
               useLoadingStore().setLoading(false);
             } catch (error) {
               useLoadingStore().setLoading(false);

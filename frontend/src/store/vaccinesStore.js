@@ -1,5 +1,4 @@
 import { defineStore } from "pinia";
-import { deleteObject, getStorage, ref } from "firebase/storage";
 import axios from "axios";
 import getIdFromLink from "@/services/parsers.js";
 import { useFilesStore } from "@/store/filesStore.js";
@@ -68,12 +67,12 @@ export const useVaccinesStore = defineStore({
       return this.vaccinesDetails;
     },
 
-    async getVaccinesDoses(vaccineDetails) {
+    async getVaccinesDoses(vac) {
       let doses = [];
       const vaccinesDosesData = await axios.get(
         import.meta.env.VITE_APP_API_URL +
           "vaccines/" +
-          getIdFromLink(vaccineDetails.id) +
+          getIdFromLink(vac.id) +
           "/doses"
       );
       if (vaccinesDosesData.data._embedded) {
@@ -89,44 +88,14 @@ export const useVaccinesStore = defineStore({
       }
       return doses;
     },
-
-    async getVaccine(id) {
-      let vaccineToReturn;
-      let foundVaccine;
-      let vaccineDetails;
-      for (const vaccine of this.vaccinesPatients) {
-        if (vaccine.id === id) {
-          foundVaccine = vaccine;
-        }
-      }
-      if (foundVaccine) {
-        let vaccineData = this.vaccines.find(
-          (vaccine) => vaccine.id === foundVaccine.vaccine.id
-        );
-
-        vaccineDetails = this.vaccinesDetails.find(
-          (vaccineDetails) =>
-            vaccineDetails.id === vaccineData.vaccineDetails.id
-        );
-
-        if (vaccineDetails) {
-          vaccineToReturn = {
-            ...foundVaccine,
-            vaccineDetails: vaccineDetails,
-            vaccine: vaccineData,
-          };
-        }
-      }
-      return vaccineToReturn;
-    },
     async addVaccine(patient, vaccine) {
       const vaccineToAdd = {
         ...vaccine,
         vaccine: vaccine.vaccine.id,
+        person: patient._links.self.href,
         vaccineDetails: vaccineDetails.id,
       };
 
-      console.log(vaccine);
       if (vaccineToAdd.photo && vaccineToAdd.photo.rawFile) {
         const response = await useFilesStore().uploadFile(
           vaccineToAdd.photo.rawFile
@@ -136,82 +105,60 @@ export const useVaccinesStore = defineStore({
         vaccineToAdd.photo = null;
       }
 
-      const patientId = getIdFromLink(patient._links.self.href);
       const vaccineToAddData = await axios.post(
-        import.meta.env.VITE_APP_API_URL +
-          "patients/" +
-          patientId +
-          "/add-vaccine",
+        import.meta.env.VITE_APP_API_URL + "vaccines_persons",
         vaccineToAdd
       );
       let addedVaccine;
       if (vaccineToAddData.data._embedded) {
         addedVaccine = vaccineToAddData.data;
         addedVaccine.id = getIdFromLink(vaccineToAddData.data._links.self.href);
+
+        const vaccineId = getIdFromLink(addedVaccine._links.vaccine.href);
+
+        const vaccine = await axios.get(addedVaccine._links.vaccine.href);
+
+        addedVaccine.vaccine = { id: vaccineId };
+        addedVaccine.vaccineDetails = {
+          id: getIdFromLink(vaccine._links.vaccinedetails.href),
+        };
       }
       return addedVaccine;
     },
     async editVaccine(editedVaccine) {
-      if (editedVaccine.changedPhoto) {
-        if (
-          editedVaccine.photo &&
-          editedVaccine.photo.url &&
-          editedVaccine.photo.url !== ""
-        ) {
-          try {
-            await deleteObject(ref(getStorage(), editedVaccine.photo.url));
-          } catch (error) {
-            throw error;
-          }
-          editedVaccine.photo.url = "";
+      const vaccineToEdit = {
+        ...editedVaccine,
+        vaccine: editedVaccine.vaccine.id,
+        vaccineDetails: editedVaccine.vaccineDetails.id,
+      };
+
+      if (vaccineToEdit.changedPhoto) {
+        if (vaccineToEdit.photo && vaccineToEdit.photo.rawFile) {
+          const response = await useFilesStore().uploadFile(
+            vaccineToEdit.photo.rawFile
+          );
+          vaccineToEdit.photo = response.data._links.self.href;
+        } else {
+          vaccineToEdit.photo = null;
         }
-        await this.handlePhoto(editedVaccine);
+      } else {
+        if (vaccineToEdit.photo) vaccineToEdit.photo = vaccineToEdit.photo.id;
       }
 
-      let foundVaccine = this.vaccinesPatients.find(
-        (vaccine) => vaccine.id === editedVaccine.id
+      const response = await axios.put(
+        import.meta.env.VITE_APP_API_URL +
+          "vaccines_persons/" +
+          editedVaccine.id,
+        vaccineToEdit
       );
-
-      if (foundVaccine) {
-        foundVaccine.vaccine.id = editedVaccine.vaccine;
-        foundVaccine.date = editedVaccine.date;
-        foundVaccine.expectedDate = editedVaccine.expectedDate;
-        foundVaccine.photo = editedVaccine.photo;
-        foundVaccine.reaction = editedVaccine.reaction;
-        foundVaccine.hasBeenAdministered = editedVaccine.hasBeenAdministered;
-        foundVaccine.id = editedVaccine.id;
-      }
-      return foundVaccine;
+      return response.data;
     },
-    async deleteVaccine(patient, vaccineToDelete) {
-      let id = vaccineToDelete.id;
-      let foundVaccine = this.vaccinesPatients.find(
-        (vaccine) => vaccine.id === id
+    async deleteVaccine(vaccineToDelete) {
+      await axios.delete(
+        import.meta.env.VITE_APP_API_URL +
+          "vaccines_persons/" +
+          vaccineToDelete.id
       );
-      if (foundVaccine) {
-        if (
-          foundVaccine.photo &&
-          foundVaccine.photo.url &&
-          foundVaccine.photo.url !== ""
-        ) {
-          try {
-            await deleteObject(ref(getStorage(), foundVaccine.photo.url));
-          } catch (error) {
-            throw error;
-          }
-        }
-        this.vaccinesPatients.splice(
-          this.vaccinesPatients.indexOf(foundVaccine),
-          1
-        );
-
-        for (const vaccine of patient.vaccines) {
-          if (vaccine.id === id) {
-            patient.vaccines.splice(patient.vaccines.indexOf(vaccine), 1);
-          }
-        }
-      }
-      return foundVaccine;
     },
   },
 });

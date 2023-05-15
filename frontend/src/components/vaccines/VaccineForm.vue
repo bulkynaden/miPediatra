@@ -18,7 +18,7 @@
             id="modal-title"
             class="text-lg leading-6 font-medium text-gray-900"
           >
-            {{ modeToDisplay }}
+            {{ modeToDisplay }} vacuna
           </h3>
           <form class="text-start" @submit.prevent="submitForm">
             <div class="grid grid-cols-1 gap-4 pt-4 pb-4">
@@ -51,7 +51,7 @@
                 ></ejs-switch>
               </div>
 
-              <section v-if="isAdministered">
+              <section v-if="isAdministered" class="md:col-span-3">
                 <div class="md:col-span-3">
                   <ejs-datepicker
                     id="datepicker"
@@ -70,23 +70,45 @@
                 </div>
 
                 <div class="md:col-span-3">
-                  <div class="text-align-right pt-4">Añadir foto:</div>
-                  <div class="upload-area">
-                    <ejs-uploader
-                      ref="uploader"
-                      :autoUpload="false"
-                      :multiple="false"
-                      :removing="onFileRemove"
-                      :selected="onFileSelect"
-                      allowedExtensions=".jpg, .png, .jpeg, .pdf"
-                      locale="es"
-                      maxFileSize="5000000"
-                      name="UploadFiles"
-                    ></ejs-uploader>
+                  <div class="grid grid-cols-3 gap-4 pt-4 pb-4">
+                    <div class="col-span-3 md:col-span-1">
+                      <img
+                        :alt="altText"
+                        :src="photoSrc"
+                        class="m-auto shadow-lg h-28"
+                      />
+                      <div v-if="showRemoveButton" class="text-center pt-4">
+                        <BaseBtn
+                          class="e-danger i-Eraser-2"
+                          text=" Borrar"
+                          type="button"
+                          @click="removeImage"
+                        ></BaseBtn>
+                      </div>
+                    </div>
+                    <div class="col-span-3 md:col-span-2">
+                      <div class="text-align-right">
+                        {{ modeToDisplay }}
+                        foto:
+                      </div>
+                      <div class="upload-area">
+                        <ejs-uploader
+                          ref="uploader"
+                          :autoUpload="false"
+                          :multiple="false"
+                          :removing="onFileRemove"
+                          :selected="onFileSelect"
+                          allowedExtensions=".jpg, .png, .jpeg, .pdf"
+                          locale="es"
+                          maxFileSize="5000000"
+                          name="UploadFiles"
+                        ></ejs-uploader>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </section>
-              <section v-else>
+              <section v-else class="md:col-span-3">
                 <div class="md:col-span-3">
                   <ejs-datepicker
                     id="datepicker"
@@ -127,6 +149,7 @@ import Swal from "sweetalert2";
 import GenderCombo from "@/components/patients/combos/GendersCombo.vue";
 import { usePatientsStore } from "@/store/patientsStore.js";
 import { useLoadingStore } from "@/store/loadingStore.js";
+import { publicImagesPath } from "@/router/publicPath.js";
 
 export default {
   name: "VaccineForm",
@@ -153,7 +176,28 @@ export default {
       return this.formData.hasBeenAdministered;
     },
     modeToDisplay() {
-      return this.mode === "add" ? "Nueva vacuna" : "Editar vacuna";
+      return this.mode === "add" ? "Añadir" : "Editar";
+    },
+    photoSrc() {
+      return this.formData.photo && !this.formData.changedPhoto
+        ? "data:" +
+            this.formData.photo.type +
+            ";base64," +
+            this.formData.photo.data
+        : this.formData.previewImage
+        ? this.formData.previewImage
+        : publicImagesPath + "no-photo.jpg";
+    },
+    altText() {
+      return this.formData.photo
+        ? `Foto de ${this.formData.name}`
+        : `No hay foto disponible para ${this.formData.name}`;
+    },
+    showRemoveButton() {
+      return (
+        (this.formData.photo && !this.formData.changedPhoto) ||
+        this.formData.previewImage
+      );
     },
   },
   methods: {
@@ -164,15 +208,24 @@ export default {
         this.formData.changedPhoto = true;
         this.isValidPhoto = true;
         this.formData.photo = args.filesData[0];
-        console.log(this.formData.photo);
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          this.formData.previewImage = event.target.result;
+        };
+        reader.readAsDataURL(this.formData.photo.rawFile);
       }
     },
     onFileRemove() {
       if (this.isValidPhoto) {
         this.formData.changedPhoto = true;
         this.formData.photo = null;
+        this.formData.previewImage = null;
       }
       this.isValidPhoto = true;
+    },
+    removeImage() {
+      this.onFileRemove();
+      this.$refs.uploader.clearAll();
     },
     validateDate() {
       this.isValidDate = !!this.formData.date;
@@ -240,7 +293,7 @@ export default {
       try {
         useLoadingStore().setLoading(true);
         await usePatientsStore()
-          .editVaccine(this.patient, this.formData)
+          .editVaccine(this.formData)
           .then(() => {
             useLoadingStore().setLoading(false);
           });

@@ -64,6 +64,8 @@ public class PatientsController implements ControllerService<Patient, PatientMod
         return patientsService.getAssembler().toModel(patient);
     }
 
+    @PutMapping("/{id}/edit-vaccine/")
+
     @Override
     public CrudService<Patient, PatientModel, PatientPostModel, PatientPutModel, PatientListModel> getService() {
         return patientsService;

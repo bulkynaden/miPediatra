@@ -39,9 +39,8 @@
             <id name="id" column="id">
                 <generated-value strategy="IDENTITY"/>
             </id>
-            <one-to-one name="photo" target-entity="es.mdef.mipediatralib.entities.File">
-                <join-column name="photo_id" referenced-column-name="id"/>
-            </one-to-one>
+            <one-to-one name="photo" target-entity="es.mdef.mipediatralib.entities.File" cascade="ALL"
+                        orphan-removal="true"/>
             <many-to-one name="vaccine" target-entity="es.mdef.mipediatralib.entities.Vaccine">
                 <join-column name="vaccine_id" referenced-column-name="id"/>
             </many-to-one>
@@ -62,8 +61,6 @@
             <many-to-one name="vaccineDetails" target-entity="es.mdef.mipediatralib.entities.VaccineDetails">
                 <join-column name="vaccine_details_id" referenced-column-name="id"/>
             </many-to-one>
-            <one-to-one name="photo" target-entity="es.mdef.mipediatralib.entities.File" cascade="ALL"
-                        orphan-removal="true"/>
         </attributes>
     </entity>
 

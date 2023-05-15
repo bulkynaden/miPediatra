@@ -217,14 +217,24 @@ export const usePatientsStore = defineStore({
       if (vaccinesData.data._embedded) {
         vaccines = vaccinesData.data._embedded.vaccinesPersons;
       }
-      return vaccines;
+      return await Promise.all(
+        vaccines.map(async (vac) => {
+          const vaccine = await axios.get(vac._links.vaccine.href);
+          vac.id = getIdFromLink(vac._links.self.href);
+          vac.vaccine = { id: vac._links.vaccine.href };
+          vac.vaccineDetails = {
+            id: vaccine.data._links.vaccinedetails.href,
+          };
+          return vac;
+        })
+      );
     },
 
     async addVaccine(patient, vaccine) {
       await useVaccinesStore().addVaccine(patient, vaccine);
     },
 
-    async editVaccine(patient, editedVaccine) {
+    async editVaccine(editedVaccine) {
       await useVaccinesStore().editVaccine(editedVaccine);
     },
 

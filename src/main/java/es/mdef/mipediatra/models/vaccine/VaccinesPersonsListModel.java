@@ -4,14 +4,14 @@ import es.mdef.mipediatra.models.ListModel;
 import es.mdef.mipediatra.models.file.FileModel;
 import org.springframework.hateoas.server.core.Relation;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Relation(collectionRelation = "vaccinesPersons")
 
 public class VaccinesPersonsListModel extends ListModel {
     private String name;
-    private LocalDate date;
-    private LocalDate expectedDate;
+    private ZonedDateTime date;
+    private ZonedDateTime expectedDate;
     private FileModel photo;
     private String reaction;
     private boolean hasBeenAdministered;
@@ -24,19 +24,19 @@ public class VaccinesPersonsListModel extends ListModel {
         this.name = name;
     }
 
-    public LocalDate getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
-    public LocalDate getExpectedDate() {
+    public ZonedDateTime getExpectedDate() {
         return expectedDate;
     }
 
-    public void setExpectedDate(LocalDate expectedDate) {
+    public void setExpectedDate(ZonedDateTime expectedDate) {
         this.expectedDate = expectedDate;
     }
 

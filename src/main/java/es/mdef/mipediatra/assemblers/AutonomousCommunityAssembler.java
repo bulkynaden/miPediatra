@@ -17,7 +17,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class AutonomousCommunityAssembler extends AssemblerService<AutonomousCommunity, AutonomousCommunityModel, AutonomousCommunityPostModel, AutonomousCommunityPutModel, AutonomousCommunityListModel> {
 
     public AutonomousCommunityAssembler() {
-        super(() -> WebMvcLinkBuilder.linkTo(WebMvcLinkBuilder.methodOn(AutonomousCommunitiesController.class).getAll()).withSelfRel());
+        super(() -> linkTo(WebMvcLinkBuilder.methodOn(AutonomousCommunitiesController.class).getAll()).withSelfRel());
     }
 
     @Override

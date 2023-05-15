@@ -1,6 +1,5 @@
 package es.mdef.mipediatra.models.patient;
 
-
 import es.mdef.mipediatra.models.Model;
 import es.mdef.mipediatra.models.file.FileModel;
 import org.springframework.hateoas.server.core.Relation;

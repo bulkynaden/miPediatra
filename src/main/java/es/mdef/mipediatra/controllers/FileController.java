@@ -8,7 +8,7 @@ import es.mdef.mipediatra.models.PutModel;
 import es.mdef.mipediatra.models.file.FileModel;
 import es.mdef.mipediatra.services.ControllerService;
 import es.mdef.mipediatra.services.CrudService;
-import es.mdef.mipediatra.services.FileStorageService;
+import es.mdef.mipediatra.services.impl.FileStorageService;
 import es.mdef.mipediatralib.entities.File;
 import org.slf4j.Logger;
 import org.springframework.core.io.ByteArrayResource;

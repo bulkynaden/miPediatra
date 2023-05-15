@@ -1,6 +1,7 @@
 package es.mdef.mipediatra.assemblers.vaccine;
 
 import es.mdef.mipediatra.MiPediatraApplication;
+import es.mdef.mipediatra.controllers.VaccineDetailsController;
 import es.mdef.mipediatra.controllers.VaccinesController;
 import es.mdef.mipediatra.models.vaccine.VaccineModel;
 import es.mdef.mipediatralib.entities.Vaccine;
@@ -22,6 +23,7 @@ public class VaccineAssembler {
         model.setShortName(entity.getVaccineDetails().getShortName());
 
         model.add(linkTo(methodOn(VaccinesController.class).getById(entity.getId())).withSelfRel());
+        model.add(linkTo(methodOn(VaccineDetailsController.class).getById(entity.getVaccineDetails().getId())).withRel("vaccinedetails"));
         return model;
     }
 }

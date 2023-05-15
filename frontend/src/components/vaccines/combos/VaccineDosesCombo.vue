@@ -54,9 +54,6 @@ export default {
       }
     },
   },
-  async beforeMount() {
-    await this.updateDoses();
-  },
 };
 </script>
 

@@ -43,7 +43,7 @@ public class VaccinesPersonsAssembler extends AssemblerService<VaccinesPersons, 
         model.setReaction(entity.getReaction());
         model.setHasBeenAdministered(entity.isHasBeenAdministered());
 
-        model.add(linkTo(methodOn(PatientsController.class).getVaccines(entity.getPerson().getId())).withRel("patient"));
+        model.add(linkTo(methodOn(PatientsController.class).getById(entity.getPerson().getId())).withRel("patient"));
         model.add(linkTo(methodOn(VaccinesController.class).getById(entity.getVaccine().getId())).withRel("vaccine"));
         model.add(linkTo(methodOn(VaccinesPersonsController.class).getById(entity.getId())).withSelfRel());
         return model;
@@ -67,7 +67,7 @@ public class VaccinesPersonsAssembler extends AssemblerService<VaccinesPersons, 
         model.setReaction(entity.getReaction());
         model.setHasBeenAdministered(entity.isHasBeenAdministered());
 
-        model.add(linkTo(methodOn(PatientsController.class).getVaccines(entity.getPerson().getId())).withRel("patient"));
+        model.add(linkTo(methodOn(PatientsController.class).getById(entity.getPerson().getId())).withRel("patient"));
         model.add(linkTo(methodOn(VaccinesController.class).getById(entity.getVaccine().getId())).withRel("vaccine"));
         model.add(linkTo(methodOn(VaccinesPersonsController.class).getById(entity.getId())).withSelfRel());
         return model;
@@ -92,6 +92,12 @@ public class VaccinesPersonsAssembler extends AssemblerService<VaccinesPersons, 
 
     @Override
     public VaccinesPersons update(VaccinesPersons entity, VaccinesPersonsPutModel model) {
-        return null;
+        entity.setVaccine(model.getVaccine());
+        entity.setDate(model.getDate());
+        entity.setExpectedDate(model.getExpectedDate());
+        entity.setPhoto(model.getPhoto());
+        entity.setReaction(model.getReaction());
+        entity.setHasBeenAdministered(model.isHasBeenAdministered());
+        return entity;
     }
 }

@@ -47,7 +47,7 @@ export default {
   },
   async beforeMount() {
     if (this.modelValue) {
-      this.model = this.modelValue.id;
+      this.model = this.modelValue;
     }
     useLoadingStore().setLoading(true);
     this.vaccinesData.data = await useVaccinesStore().getVaccinesDetails();

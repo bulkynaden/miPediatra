@@ -6,14 +6,14 @@ import es.mdef.mipediatralib.entities.Person;
 import es.mdef.mipediatralib.entities.Vaccine;
 import org.springframework.hateoas.server.core.Relation;
 
-import java.time.LocalDate;
+import java.time.ZonedDateTime;
 
 @Relation(itemRelation = "vaccinesPersons")
 public class VaccinesPersonsPostModel extends PostModel {
     private Vaccine vaccine;
     private Person person;
-    private LocalDate date;
-    private LocalDate expectedDate;
+    private ZonedDateTime date;
+    private ZonedDateTime expectedDate;
     private File photo;
     private String reaction;
     private boolean hasBeenAdministered;
@@ -34,19 +34,19 @@ public class VaccinesPersonsPostModel extends PostModel {
         this.person = person;
     }
 
-    public LocalDate getDate() {
+    public ZonedDateTime getDate() {
         return date;
     }
 
-    public void setDate(LocalDate date) {
+    public void setDate(ZonedDateTime date) {
         this.date = date;
     }
 
-    public LocalDate getExpectedDate() {
+    public ZonedDateTime getExpectedDate() {
         return expectedDate;
     }
 
-    public void setExpectedDate(LocalDate expectedDate) {
+    public void setExpectedDate(ZonedDateTime expectedDate) {
         this.expectedDate = expectedDate;
     }
 

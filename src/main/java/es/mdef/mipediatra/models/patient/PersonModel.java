@@ -5,7 +5,7 @@ import es.mdef.mipediatralib.constants.BloodType;
 import es.mdef.mipediatralib.constants.Gender;
 import org.springframework.hateoas.server.core.Relation;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Relation(itemRelation = "person")
 public class PersonModel extends PatientModel {
@@ -14,7 +14,7 @@ public class PersonModel extends PatientModel {
     private Gender gender;
     private double birthWeight;
     private BloodType bloodType;
-    private LocalDateTime birthdate;
+    private ZonedDateTime birthdate;
     private AutonomousCommunityModel autonomousCommunity;
 
     public String getName() {
@@ -57,11 +57,11 @@ public class PersonModel extends PatientModel {
         this.bloodType = bloodType;
     }
 
-    public LocalDateTime getBirthdate() {
+    public ZonedDateTime getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDateTime birthdate) {
+    public void setBirthdate(ZonedDateTime birthdate) {
         this.birthdate = birthdate;
     }
 

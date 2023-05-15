@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.time.Period;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 
 @Service
 public class SeedDb {
@@ -412,7 +414,7 @@ public class SeedDb {
             person1.setName("Javier");
             person1.setLastName("Tomás Acín");
             person1.setGender(Gender.HOMBRE);
-            person1.setBirthdate(LocalDateTime.of(1988, 11, 9, 13, 0));
+            person1.setBirthdate(ZonedDateTime.of(LocalDateTime.of(1988, 11, 9, 13, 0), ZoneId.of("Europe/Madrid")));
             person1.setBirthWeight(3.4);
             person1.setComments("Hay que vigilarlo");
             person1.setAutonomousCommunity(autonomousCommunityRepository.findByName("Aragón"));
@@ -423,7 +425,7 @@ public class SeedDb {
             person2.setName("Isabel");
             person2.setLastName("Tomás Acín");
             person2.setGender(Gender.MUJER);
-            person2.setBirthdate(LocalDateTime.of(1989, 6, 2, 15, 45));
+            person2.setBirthdate(ZonedDateTime.of(LocalDateTime.of(1989, 6, 2, 15, 45), ZoneId.of("Europe/Madrid")));
             person2.setBirthWeight(2.8);
             person2.setComments("Crece adecuadamente");
             person2.setAutonomousCommunity(autonomousCommunityRepository.findByName("Aragón"));

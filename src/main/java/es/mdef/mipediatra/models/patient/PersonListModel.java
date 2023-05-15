@@ -3,14 +3,14 @@ package es.mdef.mipediatra.models.patient;
 import es.mdef.mipediatralib.constants.Gender;
 import org.springframework.hateoas.server.core.Relation;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 @Relation(collectionRelation = "persons")
 public class PersonListModel extends PatientListModel {
     private String name;
     private String lastName;
     private Gender gender;
-    private LocalDateTime birthdate;
+    private ZonedDateTime birthdate;
 
     public String getName() {
         return name;
@@ -36,11 +36,11 @@ public class PersonListModel extends PatientListModel {
         this.gender = gender;
     }
 
-    public LocalDateTime getBirthdate() {
+    public ZonedDateTime getBirthdate() {
         return birthdate;
     }
 
-    public void setBirthdate(LocalDateTime birthdate) {
+    public void setBirthdate(ZonedDateTime birthdate) {
         this.birthdate = birthdate;
     }
 }
