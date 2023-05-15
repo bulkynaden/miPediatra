@@ -105,6 +105,7 @@ export default {
                 .deleteVaccine(vaccine)
                 .then(async (r) => {
                   await this.updateVaccinesList();
+                  useLoadingStore().setLoading(false);
                   await Swal.fire({
                     icon: "success",
                     title: "¡Eliminada!",
@@ -112,7 +113,6 @@ export default {
                     timer: 1000,
                   });
                 });
-              useLoadingStore().setLoading(false);
             } catch (error) {
               useLoadingStore().setLoading(false);
               this.$swal.fire({
