@@ -116,7 +116,11 @@ export const useVaccinesStore = defineStore({
 
         const vaccineId = getIdFromLink(addedVaccine._links.vaccine.href);
 
-        const vaccine = await axios.get(addedVaccine._links.vaccine.href);
+        const vaccine = await axios.get(
+          import.meta.env.VITE_APP_API_URL +
+            "vaccines/" +
+            getIdFromLink(addedVaccine._links.vaccine.href)
+        );
 
         addedVaccine.vaccine = { id: vaccineId };
         addedVaccine.vaccineDetails = {
