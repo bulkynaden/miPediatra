@@ -14,6 +14,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class VaccinesPersonsService implements CrudService<VaccinesPersons, VaccinesPersonsModel, VaccinesPersonsPostModel, VaccinesPersonsPutModel, VaccinesPersonsListModel> {
@@ -41,6 +42,7 @@ public class VaccinesPersonsService implements CrudService<VaccinesPersons, Vacc
     }
 
     public List<VaccinesPersons> findVaccinesPersonsByPerson(Person person) {
-        return repository.findVaccinesPersonsByPerson(person);
+        List<VaccinesPersons> list = repository.findAll();
+        return list.stream().filter(e -> e.getPerson() == person).collect(Collectors.toList());
     }
 }
