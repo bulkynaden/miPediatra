@@ -1,6 +1,5 @@
 package es.mdef.mipediatra.services.impl;
 
-import es.mdef.mipediatra.MiPediatraApplication;
 import es.mdef.mipediatra.assemblers.FileAssembler;
 import es.mdef.mipediatra.exceptions.EntityNotFoundException;
 import es.mdef.mipediatra.exceptions.FileStorageException;
@@ -12,16 +11,18 @@ import es.mdef.mipediatra.repositories.FileRepository;
 import es.mdef.mipediatra.services.AssemblerService;
 import es.mdef.mipediatra.services.CrudService;
 import es.mdef.mipediatralib.entities.File;
-import org.slf4j.Logger;
+import net.coobird.thumbnailator.Thumbnails;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
 
 @Service
 public class FileStorageService implements CrudService<File, FileModel, PostModel, PutModel, ListModel> {
-    private final Logger log = MiPediatraApplication.log;
     private final FileRepository fileRepository;
     private final FileAssembler assembler;
 
@@ -32,15 +33,25 @@ public class FileStorageService implements CrudService<File, FileModel, PostMode
 
     public File storeFile(MultipartFile file) {
         try {
+            InputStream inputStream = new ByteArrayInputStream(file.getBytes());
+
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            Thumbnails.of(inputStream)
+                    .size(320, 320)
+                    .outputFormat("jpeg")
+                    .toOutputStream(baos);
+
+            byte[] compressedImage = baos.toByteArray();
+
             File fileEntity = new File();
             fileEntity.setName(file.getOriginalFilename());
             fileEntity.setType(file.getContentType());
-            fileEntity.setData(file.getBytes());
-            fileEntity.setSize(file.getSize());
+            fileEntity.setData(compressedImage);
+            fileEntity.setSize(compressedImage.length);
 
             return fileRepository.save(fileEntity);
-        } catch (IOException ex) {
-            throw new FileStorageException("Error al guardar " + file.getName() + ".", ex);
+        } catch (IOException e) {
+            throw new FileStorageException("Error al guardar " + file.getName() + ".", e);
         }
     }
 
