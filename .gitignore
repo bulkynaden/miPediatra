@@ -40,3 +40,4 @@ out/
 
 ### DevDataBase ###
 **/application-dev.properties
+/src/main/resources/keystore.jks
